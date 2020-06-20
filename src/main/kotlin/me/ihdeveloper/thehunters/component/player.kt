@@ -31,6 +31,7 @@ import me.ihdeveloper.thehunters.plugin
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerPickupItemEvent
@@ -40,6 +41,7 @@ const val TYPE_SCOREBOARD: Short = 101
 const val TYPE_NO_HUNGER: Short = 102
 const val TYPE_DISABLE_ITEM_COLLECT: Short = 103
 const val TYPE_DISABLE_ITEM_DROP: Short = 104
+const val TYPE_NO_DAMAGE: Short = 105
 
 class ScoreboardComponent (
         override val gameObject: GamePlayer
@@ -123,6 +125,30 @@ class DisableItemDropComponent (
 
     override fun onDestroy(player: GamePlayer) {
         PlayerDropItemEvent.getHandlerList().unregister(this)
+    }
+
+}
+
+class NoDamageComponent (
+        override val gameObject: GamePlayer
+) : GameComponentOf<GamePlayer>(), Listener {
+
+    override val type = TYPE_NO_DAMAGE
+
+    override fun onInit(player: GamePlayer) {
+        Bukkit.getPluginManager().registerEvents(this, plugin())
+    }
+
+    @EventHandler
+    private fun onDamage(event: EntityDamageEvent) {
+        if (event.entity.uniqueId !== gameObject.uniqueId)
+            return
+
+        event.isCancelled = true
+    }
+
+    override fun onDestroy(gameObject: GamePlayer) {
+        EntityDamageEvent.getHandlerList().unregister(this)
     }
 
 }
