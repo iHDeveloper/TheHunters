@@ -32,6 +32,8 @@ import me.ihdeveloper.thehunters.component.DisableBlockPlaceComponent
 import me.ihdeveloper.thehunters.component.DisableItemCollectComponent
 import me.ihdeveloper.thehunters.component.DisableItemDropComponent
 import me.ihdeveloper.thehunters.component.NoDamageComponent
+import me.ihdeveloper.thehunters.component.ScoreboardComponent
+import me.ihdeveloper.thehunters.component.TYPE_SCOREBOARD
 import me.ihdeveloper.thehunters.event.GameJoinEvent
 import me.ihdeveloper.thehunters.event.GamePlayerEvent
 import me.ihdeveloper.thehunters.event.GameQuitEvent
@@ -39,12 +41,16 @@ import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.scoreboard.DisplaySlot
+import org.bukkit.scoreboard.Objective
 
 private val COLOR_GRAY = ChatColor.GRAY
 private val COLOR_GREEN = ChatColor.GREEN
 private val COLOR_YELLOW = ChatColor.YELLOW
 private val COLOR_GOLD = ChatColor.GOLD
 private val COLOR_RED = ChatColor.RED
+
+const val TYPE_LOBBY_SCOREBOARD: Short = 200
 
 class Lobby : GameObject(), Listener {
 
@@ -89,6 +95,34 @@ class Lobby : GameObject(), Listener {
 
     override fun onDestroy() {
         GamePlayerEvent.getHandlerList().unregister(this)
+    }
+
+}
+
+class LobbyScoreboardComponent (
+        override val gameObject: GamePlayer
+) : GameComponentOf<GamePlayer>() {
+
+    override val type = TYPE_LOBBY_SCOREBOARD
+
+    private var sidebar: Objective? = null
+
+    override fun onInit(player: GamePlayer) {
+        val component = player.get<ScoreboardComponent>(TYPE_SCOREBOARD)
+        val scoreboard = component.scoreboard!!
+
+        sidebar = scoreboard.getObjective(DisplaySlot.SIDEBAR)
+
+        if (sidebar == null) {
+            sidebar = scoreboard.registerNewObjective("sidebar", "dummy")
+        }
+
+        sidebar!!.getScore("${ChatColor.YELLOW}By").score = -1
+        sidebar!!.getScore("${ChatColor.RED}iHDeveloper").score = -2
+    }
+
+    override fun onDestroy(player: GamePlayer) {
+        player.get<ScoreboardComponent>(TYPE_SCOREBOARD).reset()
     }
 
 }

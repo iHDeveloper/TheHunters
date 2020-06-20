@@ -58,8 +58,11 @@ class ScoreboardComponent (
     var scoreboard: Scoreboard? = null
 
     override fun onInit(gameObject: GamePlayer) {
-        scoreboard = Bukkit.getScoreboardManager().newScoreboard
+        reset()
+    }
 
+    fun reset() {
+        scoreboard = Bukkit.getScoreboardManager().newScoreboard
         gameObject.entity.scoreboard = scoreboard
     }
 
