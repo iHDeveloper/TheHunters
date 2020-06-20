@@ -28,8 +28,11 @@ package me.ihdeveloper.thehunters.component
 import me.ihdeveloper.thehunters.GameComponentOf
 import me.ihdeveloper.thehunters.GamePlayer
 import me.ihdeveloper.thehunters.plugin
+import net.minecraft.server.v1_8_R3.IChatBaseComponent
+import net.minecraft.server.v1_8_R3.PacketPlayOutTitle
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
@@ -48,6 +51,7 @@ const val TYPE_NO_DAMAGE: Short = 105
 const val TYPE_ADVENTURE: Short = 106
 const val TYPE_DISABLE_BLOCK_PLACE: Short = 107
 const val TYPE_DISABLE_BLOCK_BREAK: Short = 108
+const val TYPE_TITLE: Short = 109
 
 class ScoreboardComponent (
         override val gameObject: GamePlayer
@@ -237,5 +241,45 @@ class DisableBlockBreakComponent (
     override fun onDestroy(gameObject: GamePlayer) {
         BlockBreakEvent.getHandlerList().unregister(this)
     }
+
+}
+
+class TitleComponent (
+        override val gameObject: GamePlayer
+) : GameComponentOf<GamePlayer>() {
+
+    override val type = TYPE_TITLE
+
+    override fun onInit(player: GamePlayer) {}
+
+    fun title(value: String) {
+        val packet = PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TITLE, toChatComponent(value))
+        connection().sendPacket(packet)
+    }
+
+    fun subtitle(value: String) {
+        val packet = PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.SUBTITLE, toChatComponent(value))
+        connection().sendPacket(packet)
+    }
+
+    fun time(fadeIn: Int, interval: Int, fadeOut: Int) {
+        val packet = PacketPlayOutTitle(fadeIn, interval, fadeOut)
+        connection().sendPacket(packet)
+    }
+
+    fun clear() {
+        val packet = PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.CLEAR, toChatComponent())
+        connection().sendPacket(packet)
+    }
+
+    fun reset() {
+        val packet = PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.RESET, toChatComponent())
+        connection().sendPacket(packet)
+    }
+
+    private fun toChatComponent(value: String = "") = IChatBaseComponent.ChatSerializer.a("""{"text":"$value"}""")
+    private fun connection() = (gameObject.entity as CraftPlayer).handle.playerConnection
+
+    override fun onDestroy(gameObject: GamePlayer) {}
 
 }
