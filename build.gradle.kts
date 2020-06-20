@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets
 
 plugins {
     java
+    kotlin("jvm") version "1.3.72"
     id ("de.undercouch.download") version "4.0.4"
     id ("com.github.johnrengelman.shadow") version "5.2.0"
 }
@@ -30,6 +31,9 @@ repositories {
 dependencies {
     // Include the server jar source
     compileOnly(files(buildTools.serverJar.absolutePath))
+
+    // Kotlin standard library
+    implementation(kotlin("stdlib-jdk8"))
 
     testCompileOnly("junit", "junit", "4.12")
 }
