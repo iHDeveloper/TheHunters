@@ -78,6 +78,7 @@ open class GameObject (
     }
 
     fun remove(type: Short) {
+        components[type]!!.destroy()
         components.remove(type)
     }
 
