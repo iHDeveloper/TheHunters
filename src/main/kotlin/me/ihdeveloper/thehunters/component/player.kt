@@ -40,6 +40,7 @@ import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.player.PlayerDropItemEvent
+import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerPickupItemEvent
 import org.bukkit.scoreboard.Scoreboard
 
@@ -52,6 +53,7 @@ const val TYPE_ADVENTURE: Short = 106
 const val TYPE_DISABLE_BLOCK_PLACE: Short = 107
 const val TYPE_DISABLE_BLOCK_BREAK: Short = 108
 const val TYPE_TITLE: Short = 109
+const val TYPE_NO_INTERACT: Short = 110
 
 class ScoreboardComponent (
         override val gameObject: GamePlayer
@@ -281,5 +283,30 @@ class TitleComponent (
     private fun connection() = (gameObject.entity as CraftPlayer).handle.playerConnection
 
     override fun onDestroy(gameObject: GamePlayer) {}
+
+}
+
+class NoInteractComponent (
+        override val gameObject: GamePlayer
+) : GameComponentOf<GamePlayer>(), Listener {
+
+    override val type = TYPE_NO_INTERACT
+
+    override fun onInit(gameObject: GamePlayer) {
+        Bukkit.getPluginManager().registerEvents(this, plugin())
+    }
+
+    @EventHandler
+    private fun onInteract(event: PlayerInteractEvent) {
+        if (event.player.uniqueId !== gameObject.uniqueId) {
+            return
+        }
+
+        event.isCancelled = true
+    }
+
+    override fun onDestroy(gameObject: GamePlayer) {
+        PlayerInteractEvent.getHandlerList().unregister(this)
+    }
 
 }

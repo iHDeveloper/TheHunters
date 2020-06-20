@@ -33,6 +33,7 @@ import me.ihdeveloper.thehunters.component.DisableItemCollectComponent
 import me.ihdeveloper.thehunters.component.DisableItemDropComponent
 import me.ihdeveloper.thehunters.component.LobbyScoreboardComponent
 import me.ihdeveloper.thehunters.component.NoDamageComponent
+import me.ihdeveloper.thehunters.component.NoInteractComponent
 import me.ihdeveloper.thehunters.component.TYPE_TITLE
 import me.ihdeveloper.thehunters.component.TitleComponent
 import me.ihdeveloper.thehunters.event.player.GameJoinEvent
@@ -64,6 +65,7 @@ class Lobby : GameObject(), Listener {
         player.add(NoDamageComponent(player))
         player.add(DisableBlockPlaceComponent(player))
         player.add(DisableBlockBreakComponent(player))
+        player.add(NoInteractComponent(player))
 
         player.add(LobbyScoreboardComponent(player))
 
