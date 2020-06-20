@@ -32,6 +32,7 @@ import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
@@ -46,6 +47,7 @@ const val TYPE_DISABLE_ITEM_DROP: Short = 104
 const val TYPE_NO_DAMAGE: Short = 105
 const val TYPE_ADVENTURE: Short = 106
 const val TYPE_DISABLE_BLOCK_PLACE: Short = 107
+const val TYPE_DISABLE_BLOCK_BREAK: Short = 108
 
 class ScoreboardComponent (
         override val gameObject: GamePlayer
@@ -210,4 +212,27 @@ class DisableBlockPlaceComponent (
 
 }
 
+class DisableBlockBreakComponent (
+        override val gameObject: GamePlayer
+) : GameComponentOf<GamePlayer>(), Listener {
 
+    override val type = TYPE_DISABLE_BLOCK_BREAK
+
+    override fun onInit(gameObject: GamePlayer) {
+        Bukkit.getPluginManager().registerEvents(this, plugin())
+    }
+
+    @EventHandler
+    private fun onBreak(event: BlockBreakEvent) {
+        if (event.player.uniqueId !== gameObject.uniqueId) {
+            return
+        }
+
+        event.isCancelled = true
+    }
+
+    override fun onDestroy(gameObject: GamePlayer) {
+        BlockBreakEvent.getHandlerList().unregister(this)
+    }
+
+}
