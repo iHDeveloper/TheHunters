@@ -25,6 +25,8 @@
 
 package me.ihdeveloper.thehunters
 
+import org.bukkit.plugin.java.JavaPlugin
+
 interface GameComponent {
     val type: Short
 
@@ -133,4 +135,18 @@ class GameInstance (
         children = children
 ) {
     val logger = GameLogger(name)
+}
+
+class GameEntryPoint<T : GameInstance> (
+        private val instance: T
+) : JavaPlugin() {
+
+    override fun onEnable() {
+        instance.init()
+    }
+
+    override fun onDisable() {
+        instance.destroy()
+    }
+
 }
