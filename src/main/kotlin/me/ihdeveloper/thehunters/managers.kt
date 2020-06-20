@@ -79,3 +79,13 @@ class PlayersManager : GameObject(), Listener {
     }
 
 }
+
+class WorldsManager : GameObject() {
+
+    override fun onInit() {
+        for (world in Bukkit.getWorlds()) {
+            world.isAutoSave = false
+        }
+    }
+
+}
