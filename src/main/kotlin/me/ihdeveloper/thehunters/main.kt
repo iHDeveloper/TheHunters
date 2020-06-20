@@ -25,4 +25,24 @@
 
 package me.ihdeveloper.thehunters
 
-class Main : GameEntryPoint<Game>(Game())
+import org.bukkit.plugin.java.JavaPlugin
+
+private var _plugin: JavaPlugin? = null
+
+class Main : GameEntryPoint<Game>(Game()) {
+
+    init {
+        _plugin = this
+    }
+
+    override fun onDisable() {
+        super.onDisable()
+
+        _plugin = null
+    }
+
+}
+
+fun plugin(): JavaPlugin {
+    return _plugin!!
+}
