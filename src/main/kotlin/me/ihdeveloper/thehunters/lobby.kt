@@ -34,6 +34,8 @@ import me.ihdeveloper.thehunters.component.DisableItemDropComponent
 import me.ihdeveloper.thehunters.component.NoDamageComponent
 import me.ihdeveloper.thehunters.component.ScoreboardComponent
 import me.ihdeveloper.thehunters.component.TYPE_SCOREBOARD
+import me.ihdeveloper.thehunters.component.TYPE_TITLE
+import me.ihdeveloper.thehunters.component.TitleComponent
 import me.ihdeveloper.thehunters.event.GameJoinEvent
 import me.ihdeveloper.thehunters.event.GamePlayerEvent
 import me.ihdeveloper.thehunters.event.GameQuitEvent
@@ -83,6 +85,11 @@ class Lobby : GameObject(), Listener {
         message.append("${COLOR_GRAY}${player.entity.name} ")
         message.append("$COLOR_GOLD joined the game!")
         Bukkit.broadcastMessage(message.toString())
+
+        val titleComponent = player.get<TitleComponent>(TYPE_TITLE)
+        titleComponent.title("$COLOR_GRAY${COLOR_BOLD}The Hunters")
+        titleComponent.subtitle("${COLOR_YELLOW}Prove that you can't be hunted!")
+        titleComponent.time(20, 40, 20)
     }
 
     @EventHandler
