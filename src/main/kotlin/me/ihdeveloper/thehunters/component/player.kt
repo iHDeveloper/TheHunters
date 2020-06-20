@@ -78,6 +78,10 @@ class NoHungerComponent (
 
     @EventHandler
     private fun onFoodLevelChange(event: FoodLevelChangeEvent) {
+        if (event.entity.uniqueId !== gameObject.uniqueId) {
+            return
+        }
+
         event.isCancelled = true
     }
 
