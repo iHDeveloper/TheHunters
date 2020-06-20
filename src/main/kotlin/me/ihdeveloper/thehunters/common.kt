@@ -135,6 +135,15 @@ class GameInstance (
         children = children
 ) {
     val logger = GameLogger(name)
+
+    override fun onInit() {
+        logger.info("Initializing...")
+    }
+
+    override fun onDestroy() {
+        logger.info("Destroying...")
+    }
+
 }
 
 class GameEntryPoint<T : GameInstance> (
