@@ -29,6 +29,7 @@ import me.ihdeveloper.thehunters.GameComponentOf
 import me.ihdeveloper.thehunters.GamePlayer
 import me.ihdeveloper.thehunters.plugin
 import org.bukkit.Bukkit
+import org.bukkit.GameMode
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageEvent
@@ -42,6 +43,7 @@ const val TYPE_NO_HUNGER: Short = 102
 const val TYPE_DISABLE_ITEM_COLLECT: Short = 103
 const val TYPE_DISABLE_ITEM_DROP: Short = 104
 const val TYPE_NO_DAMAGE: Short = 105
+const val TYPE_SPECTATE: Short = 106
 
 class ScoreboardComponent (
         override val gameObject: GamePlayer
@@ -161,6 +163,22 @@ class NoDamageComponent (
 
     override fun onDestroy(gameObject: GamePlayer) {
         EntityDamageEvent.getHandlerList().unregister(this)
+    }
+
+}
+
+class SpectateComponent (
+        override val gameObject: GamePlayer
+) : GameComponentOf<GamePlayer>() {
+
+    override val type = TYPE_SPECTATE
+
+    override fun onInit(player: GamePlayer) {
+        player.entity.gameMode = GameMode.SPECTATOR
+    }
+
+    override fun onDestroy(player: GamePlayer) {
+        player.entity.gameMode = GameMode.ADVENTURE
     }
 
 }
