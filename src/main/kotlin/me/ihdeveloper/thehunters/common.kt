@@ -35,9 +35,8 @@ interface GameComponent {
     fun destroy()
 }
 
-abstract class GameComponentOf<T : GameObject> (
-    val gameObject: T
-) : GameComponent {
+abstract class GameComponentOf<T : GameObject> : GameComponent {
+    abstract val gameObject: T
 
     abstract override val type: Short
 
