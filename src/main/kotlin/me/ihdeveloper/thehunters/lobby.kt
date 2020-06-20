@@ -73,7 +73,7 @@ class Lobby : GameObject(), Listener {
         message.append("${COLOR_GRAY}/")
         message.append("${COLOR_RED}${Game.max}")
         message.append("${COLOR_YELLOW}] ")
-        message.append("${COLOR_GRAY}${player.entity.name} ")
+        message.append("${COLOR_GRAY}${player.entity.name}")
         message.append("$COLOR_GOLD joined the game!")
         Bukkit.broadcastMessage(message.toString())
 
@@ -91,7 +91,7 @@ class Lobby : GameObject(), Listener {
         message.append("${COLOR_YELLOW}[")
         message.append("${COLOR_RED}-")
         message.append("${COLOR_YELLOW}] ")
-        message.append("${COLOR_GRAY}${player.entity.name} ")
+        message.append("${COLOR_GRAY}${player.entity.name}")
         message.append("$COLOR_GOLD left from the game.")
         Bukkit.broadcastMessage(message.toString())
     }
