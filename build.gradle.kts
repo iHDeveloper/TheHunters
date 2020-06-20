@@ -11,6 +11,8 @@ plugins {
 group = "me.ihdeveloper"
 version = "0.1"
 
+val server = Server()
+
 val buildTools = BuildTools(
 
         // Server Version
@@ -43,14 +45,14 @@ tasks {
      */
     getByName("clean").doLast {
         // Delete the server folder
-        buildTools.server.delete()
+        server.delete()
     }
 
     /**
      * Overwrite the build task to put the compiled jar into the build folder instead of build/libs
      */
     build {
-        dependsOn(":shadowJar")
+        dependsOn("shadowJar")
 
         // Copy the compiled plugin jar from build/libs to build/
         doLast {
@@ -68,7 +70,7 @@ tasks {
     register("setup") {
 
         // Build the plugin to be able to test it
-        dependsOn(":build-plugin")
+        dependsOn("build-plugin")
     }
 
     /**
@@ -100,7 +102,7 @@ tasks {
      * Run build tools to create tools for the workspace
      */
     register("run-build-tools") {
-        dependsOn(":download-build-tools")
+        dependsOn("download-build-tools")
 
         onlyIf {
             !buildTools.serverJar.exists()
@@ -124,9 +126,7 @@ tasks {
      * Build the server to test the plugin on it
      */
     register("build-server") {
-        dependsOn(":run-build-tools")
-
-        val server = buildTools.server
+        dependsOn("run-build-tools")
 
         onlyIf {
             !server.exists
@@ -189,16 +189,16 @@ tasks {
      */
     register("build-plugin") {
         dependsOn("build-server")
-        dependsOn(":shadowJar")
+        dependsOn("shadowJar")
 
         doLast {
 
             // Copy generated plugin jar into server plugins folder
             copy {
                 from(buildTools.libsDir)
-                into(buildTools.server.plugins)
+                into(server.plugins)
                 rename {
-                    buildTools.pluginJarName
+                    "${rootProject.name}.jar"
                 }
             }
         }
@@ -208,11 +208,9 @@ tasks {
      * Run the server with the plugin on it
      */
     register("run") {
-        dependsOn(":build-plugin")
+        dependsOn("build-plugin")
 
         doLast {
-            val server = buildTools.server
-
             printIntro()
             logger.lifecycle("> Starting the server...")
             logger.lifecycle("")
@@ -300,13 +298,6 @@ class BuildTools (
     val file = File(buildDir, "build-tools.jar")
     val libsDir = File("build/libs/")
 
-    val server = Server()
-
-    val pluginJarName: String
-        get() {
-            return "${rootProject.name}.jar"
-        }
-
     val serverJar = if (useSpigot) {
         File(buildDir, "spigot-${minecraftVersion}.jar")
     } else {
@@ -317,7 +308,7 @@ class BuildTools (
 /**
  * Help making the server and structuring it
  */
-open class Server {
+class Server {
     /**
      * Directory of the server
      */
