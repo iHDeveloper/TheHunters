@@ -27,10 +27,15 @@ package me.ihdeveloper.thehunters.component
 
 import me.ihdeveloper.thehunters.GameComponentOf
 import me.ihdeveloper.thehunters.GamePlayer
+import me.ihdeveloper.thehunters.plugin
 import org.bukkit.Bukkit
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.scoreboard.Scoreboard
 
 const val TYPE_SCOREBOARD: Short = 101
+const val TYPE_NO_HUNGER: Short = 102
 
 class ScoreboardComponent (
         override val gameObject: GamePlayer
@@ -50,6 +55,28 @@ class ScoreboardComponent (
         gameObject.entity.scoreboard = Bukkit.getScoreboardManager().mainScoreboard
 
         scoreboard = null
+    }
+
+}
+
+class NoHungerComponent (
+        override val gameObject: GamePlayer
+) : GameComponentOf<GamePlayer>(), Listener {
+
+    override val type = TYPE_NO_HUNGER
+
+    override fun onInit(player: GamePlayer) {
+        player.entity.foodLevel = 20
+        Bukkit.getPluginManager().registerEvents(this, plugin())
+    }
+
+    @EventHandler
+    private fun onFoodLevelChange(event: FoodLevelChangeEvent) {
+        event.isCancelled = true
+    }
+
+    override fun onDestroy(player: GamePlayer) {
+        FoodLevelChangeEvent.getHandlerList().unregister(this)
     }
 
 }
