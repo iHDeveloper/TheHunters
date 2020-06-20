@@ -84,8 +84,8 @@ class NoHungerComponent (
 
     override val type = TYPE_NO_HUNGER
 
-    override fun onInit(player: GamePlayer) {
-        player.entity.foodLevel = 20
+    override fun onInit(gameObject: GamePlayer) {
+        gameObject.entity.foodLevel = 20
         Bukkit.getPluginManager().registerEvents(this, plugin())
     }
 
@@ -98,7 +98,7 @@ class NoHungerComponent (
         event.isCancelled = true
     }
 
-    override fun onDestroy(player: GamePlayer) {
+    override fun onDestroy(gameObject: GamePlayer) {
         FoodLevelChangeEvent.getHandlerList().unregister(this)
     }
 
@@ -110,7 +110,7 @@ class DisableItemCollectComponent (
 
     override val type = TYPE_DISABLE_ITEM_COLLECT
 
-    override fun onInit(player: GamePlayer) {
+    override fun onInit(gameObject: GamePlayer) {
         Bukkit.getPluginManager().registerEvents(this, plugin())
     }
 
@@ -123,7 +123,7 @@ class DisableItemCollectComponent (
         event.isCancelled = true
     }
 
-    override fun onDestroy(player: GamePlayer) {
+    override fun onDestroy(gameObject: GamePlayer) {
         PlayerPickupItemEvent.getHandlerList().unregister(this)
     }
 
@@ -135,7 +135,7 @@ class DisableItemDropComponent (
 
     override val type = TYPE_DISABLE_ITEM_DROP
 
-    override fun onInit(player: GamePlayer) {
+    override fun onInit(gameObject: GamePlayer) {
         Bukkit.getPluginManager().registerEvents(this, plugin())
     }
 
@@ -148,7 +148,7 @@ class DisableItemDropComponent (
         event.isCancelled = true
     }
 
-    override fun onDestroy(player: GamePlayer) {
+    override fun onDestroy(gameObject: GamePlayer) {
         PlayerDropItemEvent.getHandlerList().unregister(this)
     }
 
@@ -160,7 +160,7 @@ class NoDamageComponent (
 
     override val type = TYPE_NO_DAMAGE
 
-    override fun onInit(player: GamePlayer) {
+    override fun onInit(gameObject: GamePlayer) {
         Bukkit.getPluginManager().registerEvents(this, plugin())
     }
 
@@ -184,12 +184,12 @@ class AdventureComponent (
 
     override val type = TYPE_ADVENTURE
 
-    override fun onInit(player: GamePlayer) {
-        player.entity.gameMode = GameMode.ADVENTURE
+    override fun onInit(gameObject: GamePlayer) {
+        gameObject.entity.gameMode = GameMode.ADVENTURE
     }
 
-    override fun onDestroy(player: GamePlayer) {
-        player.entity.gameMode = GameMode.SURVIVAL
+    override fun onDestroy(gameObject: GamePlayer) {
+        gameObject.entity.gameMode = GameMode.SURVIVAL
     }
 
 }
@@ -250,7 +250,7 @@ class TitleComponent (
 
     override val type = TYPE_TITLE
 
-    override fun onInit(player: GamePlayer) {}
+    override fun onInit(gameObject: GamePlayer) {}
 
     fun title(value: String) {
         val packet = PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TITLE, toChatComponent(value))
