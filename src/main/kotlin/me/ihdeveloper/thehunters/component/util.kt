@@ -26,10 +26,10 @@
 package me.ihdeveloper.thehunters.component
 
 import me.ihdeveloper.thehunters.GameComponent
-import me.ihdeveloper.thehunters.event.CountdownCancelEvent
-import me.ihdeveloper.thehunters.event.CountdownFinishEvent
-import me.ihdeveloper.thehunters.event.CountdownStartEvent
-import me.ihdeveloper.thehunters.event.CountdownTickEvent
+import me.ihdeveloper.thehunters.event.countdown.CountdownCancelEvent
+import me.ihdeveloper.thehunters.event.countdown.CountdownFinishEvent
+import me.ihdeveloper.thehunters.event.countdown.CountdownStartEvent
+import me.ihdeveloper.thehunters.event.countdown.CountdownTickEvent
 import me.ihdeveloper.thehunters.plugin
 import org.bukkit.Bukkit
 import org.bukkit.configuration.file.YamlConfiguration
@@ -52,11 +52,11 @@ class ConfigurationComponent (
         config.load(file)
     }
 
-    fun <T : Any> read(key: String): T {
+    fun <T> read(key: String): T {
         return config.get(key) as T
     }
 
-    fun <T : Any> write(key: String, value: T) {
+    fun <T> write(key: String, value: T) {
         config.set(key, value)
     }
 

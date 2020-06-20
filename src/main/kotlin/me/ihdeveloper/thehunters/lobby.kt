@@ -35,9 +35,9 @@ import me.ihdeveloper.thehunters.component.LobbyScoreboardComponent
 import me.ihdeveloper.thehunters.component.NoDamageComponent
 import me.ihdeveloper.thehunters.component.TYPE_TITLE
 import me.ihdeveloper.thehunters.component.TitleComponent
-import me.ihdeveloper.thehunters.event.GameJoinEvent
+import me.ihdeveloper.thehunters.event.player.GameJoinEvent
 import me.ihdeveloper.thehunters.event.GamePlayerEvent
-import me.ihdeveloper.thehunters.event.GameQuitEvent
+import me.ihdeveloper.thehunters.event.player.GameQuitEvent
 import me.ihdeveloper.thehunters.util.COLOR_BOLD
 import me.ihdeveloper.thehunters.util.COLOR_GOLD
 import me.ihdeveloper.thehunters.util.COLOR_GRAY

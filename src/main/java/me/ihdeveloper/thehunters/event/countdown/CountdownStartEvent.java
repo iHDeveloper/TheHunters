@@ -23,43 +23,14 @@
  *
  */
 
-package me.ihdeveloper.thehunters.event
+package me.ihdeveloper.thehunters.event.countdown;
 
-import org.bukkit.event.Event
-import org.bukkit.event.HandlerList
+import me.ihdeveloper.thehunters.event.CountdownEvent;
 
-open class CountdownEvent (
-        open val id: Byte
-) : Event() {
+public class CountdownStartEvent extends CountdownEvent {
 
-    companion object {
-        @JvmStatic private lateinit var handlerList: HandlerList
-
-        @JvmStatic fun getHandlerList() = handlerList
+    public CountdownStartEvent(byte id) {
+        super(id);
     }
-
-    init {
-        handlerList = HandlerList()
-    }
-
-    override fun getHandlers() = handlerList
 
 }
-
-class CountdownTickEvent (
-        override val id: Byte,
-        val tick: Int
-): CountdownEvent (id)
-
-class CountdownStartEvent (
-        override val id: Byte
-) : CountdownEvent (id)
-
-class CountdownFinishEvent (
-        override val id: Byte
-) : CountdownEvent (id)
-
-class CountdownCancelEvent (
-        override val id: Byte
-) : CountdownEvent (id)
-

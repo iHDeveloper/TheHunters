@@ -27,8 +27,8 @@ package me.ihdeveloper.thehunters
 
 import me.ihdeveloper.thehunters.component.ScoreboardComponent
 import me.ihdeveloper.thehunters.component.TitleComponent
-import me.ihdeveloper.thehunters.event.GameJoinEvent
-import me.ihdeveloper.thehunters.event.GameQuitEvent
+import me.ihdeveloper.thehunters.event.player.GameJoinEvent
+import me.ihdeveloper.thehunters.event.player.GameQuitEvent
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener

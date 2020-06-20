@@ -23,36 +23,36 @@
  *
  */
 
-package me.ihdeveloper.thehunters.event
+package me.ihdeveloper.thehunters.event;
 
-import me.ihdeveloper.thehunters.GamePlayer
-import org.bukkit.event.Event
-import org.bukkit.event.HandlerList
+import me.ihdeveloper.thehunters.GamePlayer;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
-open class GamePlayerEvent (
-        open val player: GamePlayer
-) : Event() {
+public class GamePlayerEvent extends Event {
 
-    companion object {
-        @JvmStatic
-        private lateinit var handlerList: HandlerList
+    private static HandlerList handlerList = new HandlerList();
 
-        @JvmStatic
-        fun getHandlerList() = handlerList
+    public static HandlerList getHandlerList() {
+        return handlerList;
     }
 
-    init {
-        handlerList = HandlerList()
+    private GamePlayer player;
+
+    public GamePlayerEvent(GamePlayer player) {
+        this.player = player;
     }
 
-    override fun getHandlers() = handlerList
+    public void setPlayer(GamePlayer player) {
+        this.player = player;
+    }
 
+    public GamePlayer getPlayer() {
+        return player;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return handlerList;
+    }
 }
-
-class GameJoinEvent (
-        override val player: GamePlayer
-) : GamePlayerEvent(player)
-
-class GameQuitEvent (
-        override val player: GamePlayer
-) : GamePlayerEvent(player)

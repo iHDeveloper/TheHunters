@@ -28,9 +28,9 @@ package me.ihdeveloper.thehunters.component
 import me.ihdeveloper.thehunters.Game
 import me.ihdeveloper.thehunters.GameComponentOf
 import me.ihdeveloper.thehunters.GamePlayer
-import me.ihdeveloper.thehunters.event.GameJoinEvent
+import me.ihdeveloper.thehunters.event.player.GameJoinEvent
 import me.ihdeveloper.thehunters.event.GamePlayerEvent
-import me.ihdeveloper.thehunters.event.GameQuitEvent
+import me.ihdeveloper.thehunters.event.player.GameQuitEvent
 import me.ihdeveloper.thehunters.plugin
 import me.ihdeveloper.thehunters.util.COLOR_BOLD
 import me.ihdeveloper.thehunters.util.COLOR_GRAY
