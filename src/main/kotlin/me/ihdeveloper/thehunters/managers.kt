@@ -61,6 +61,8 @@ class PlayersManager : GameObject(), Listener {
             player.destroy()
         }
 
+        PlayerQuitEvent.getHandlerList().unregister(this)
+
         players.clear()
     }
 
