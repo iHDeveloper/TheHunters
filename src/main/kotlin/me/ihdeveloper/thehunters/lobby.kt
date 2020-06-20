@@ -72,6 +72,8 @@ class Lobby : GameObject(), Listener {
         player.add(DisableBlockPlaceComponent(player))
         player.add(DisableBlockBreakComponent(player))
 
+        player.add(LobbyScoreboardComponent(player))
+
         val message = StringBuilder()
         message.append("${COLOR_YELLOW}[")
         message.append("${COLOR_GREEN}${Game.count}")
@@ -126,8 +128,8 @@ class LobbyScoreboardComponent (
         updatePlayersCount()
         sidebar!!.getScore("$COLOR_BOLD$COLOR_GRAY").score = 0
 
-        sidebar!!.getScore("${ChatColor.YELLOW}By").score = -1
-        sidebar!!.getScore("${ChatColor.RED}iHDeveloper").score = -2
+        sidebar!!.getScore("${COLOR_YELLOW}By").score = -1
+        sidebar!!.getScore("${COLOR_RED}iHDeveloper").score = -2
 
         Bukkit.getPluginManager().registerEvents(this, plugin())
     }
