@@ -26,6 +26,10 @@
 package me.ihdeveloper.thehunters.component
 
 import me.ihdeveloper.thehunters.GameComponent
+import me.ihdeveloper.thehunters.event.CountdownCancelEvent
+import me.ihdeveloper.thehunters.event.CountdownFinishEvent
+import me.ihdeveloper.thehunters.event.CountdownStartEvent
+import me.ihdeveloper.thehunters.event.CountdownTickEvent
 import me.ihdeveloper.thehunters.plugin
 import org.bukkit.Bukkit
 import org.bukkit.configuration.file.YamlConfiguration
@@ -81,7 +85,7 @@ class CountdownComponent (
             return
 
         task = Bukkit.getScheduler().runTaskTimer(plugin(), this, 0L, 1L)
-        // TODO broadcast CountdownStartEvent
+        Bukkit.getPluginManager().callEvent(CountdownStartEvent(id))
     }
 
     fun reset() {
@@ -95,17 +99,19 @@ class CountdownComponent (
         }
 
         if (broadcast) {
-            // TOOD broadcast CountdownCancelEvent
+            Bukkit.getPluginManager().callEvent(CountdownCancelEvent(id))
         }
     }
 
     override fun run() {
         ticksRemaining--
 
-        // TODO broadcast CountdownEvent
+        Bukkit.getPluginManager().callEvent(CountdownTickEvent(id, ticksRemaining))
 
         if (ticksRemaining <= 0) {
-            // TODO broadcast CountdownFinishEvent
+            Bukkit.getPluginManager().callEvent(CountdownFinishEvent(id))
+
+            stop(false)
         }
     }
 
