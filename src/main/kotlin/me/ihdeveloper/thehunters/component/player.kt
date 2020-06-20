@@ -99,6 +99,10 @@ class DisableItemCollectComponent (
 
     @EventHandler
     private fun onCollect(event: PlayerPickupItemEvent) {
+        if (event.player.uniqueId !== gameObject.uniqueId) {
+            return
+        }
+
         event.isCancelled = true
     }
 
