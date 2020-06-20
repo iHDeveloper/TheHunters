@@ -25,6 +25,11 @@
 
 package me.ihdeveloper.thehunters
 
+import me.ihdeveloper.thehunters.component.NoHungerComponent
+import me.ihdeveloper.thehunters.component.AdventureComponent
+import me.ihdeveloper.thehunters.component.DisableItemCollectComponent
+import me.ihdeveloper.thehunters.component.DisableItemDropComponent
+import me.ihdeveloper.thehunters.component.NoDamageComponent
 import me.ihdeveloper.thehunters.event.GameJoinEvent
 import me.ihdeveloper.thehunters.event.GamePlayerEvent
 import me.ihdeveloper.thehunters.event.GameQuitEvent
@@ -40,13 +45,19 @@ class Lobby : GameObject(), Listener {
 
     @EventHandler
     private fun onJoin(event: GameJoinEvent) {
+        val player = event.player
+        player.add(AdventureComponent(player))
+        player.add(NoHungerComponent(player))
+        player.add(DisableItemCollectComponent(player))
+        player.add(DisableItemDropComponent(player))
+        player.add(NoDamageComponent(player))
+
         // TODO Broadcast the join message
     }
 
     @EventHandler
     private fun onQuit(event: GameQuitEvent) {
         // TODO Broadcast the quit message
-
     }
 
     override fun onDestroy() {

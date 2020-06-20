@@ -167,18 +167,18 @@ class NoDamageComponent (
 
 }
 
-class SpectateComponent (
+class AdventureComponent (
         override val gameObject: GamePlayer
 ) : GameComponentOf<GamePlayer>() {
 
     override val type = TYPE_SPECTATE
 
     override fun onInit(player: GamePlayer) {
-        player.entity.gameMode = GameMode.SPECTATOR
+        player.entity.gameMode = GameMode.ADVENTURE
     }
 
     override fun onDestroy(player: GamePlayer) {
-        player.entity.gameMode = GameMode.ADVENTURE
+        player.entity.gameMode = GameMode.SURVIVAL
     }
 
 }
