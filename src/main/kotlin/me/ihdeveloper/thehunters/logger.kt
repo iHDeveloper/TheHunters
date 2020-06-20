@@ -36,8 +36,8 @@ class GameLogger (
 
     private fun print(prefix: String, message: String) {
         val builder = StringBuilder()
-        builder.append("[${name}]")
-        builder.append("[${prefix}]")
+        builder.append("[${name}] ")
+        builder.append("[${prefix}] ")
         builder.append(message)
 
         print(builder.toString())
