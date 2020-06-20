@@ -38,6 +38,7 @@ import java.util.UUID
 class PlayersManager : GameObject(), Listener {
 
     private val players = mutableMapOf<UUID, GamePlayer>()
+    var count = 0
 
     override fun onInit() {
         Bukkit.getPluginManager().registerEvents(this, plugin())
@@ -52,6 +53,8 @@ class PlayersManager : GameObject(), Listener {
 
         players[player.uniqueId] = player
 
+        count++
+
         Bukkit.getPluginManager().callEvent(GameJoinEvent(player))
 
         event.joinMessage = null
@@ -64,6 +67,8 @@ class PlayersManager : GameObject(), Listener {
         Bukkit.getPluginManager().callEvent(GameQuitEvent(players[uniqueId]!!))
 
         players.remove(uniqueId)
+
+        count--
 
         event.quitMessage = null
     }

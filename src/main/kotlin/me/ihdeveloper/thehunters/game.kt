@@ -25,13 +25,30 @@
 
 package me.ihdeveloper.thehunters
 
+import org.bukkit.Bukkit
+
+private val playersManager = PlayersManager()
+
 class Game : GameInstance (
         name = "The Hunters",
         components = listOf<GameComponent>(),
         children = listOf<GameObject>(
                 WorldsManager(),
-                PlayersManager(),
+                playersManager,
                 Lobby()
         )
 ) {
+
+        companion object {
+                lateinit var instance: Game
+
+                val count: Int get() = playersManager.count
+                val max: Int get() = Bukkit.getMaxPlayers()
+        }
+
+        init {
+                instance = this
+        }
+
+
 }

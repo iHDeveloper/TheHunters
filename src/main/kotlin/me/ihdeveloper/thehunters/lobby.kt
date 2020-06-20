@@ -71,9 +71,9 @@ class Lobby : GameObject(), Listener {
 
         val message = StringBuilder()
         message.append("${COLOR_YELLOW}[")
-        message.append("${COLOR_GREEN}0") // TODO number of players
+        message.append("${COLOR_GREEN}${Game.count}")
         message.append("${COLOR_GRAY}/")
-        message.append("${COLOR_RED}7") // TODO max number of players
+        message.append("${COLOR_RED}${Game.max}")
         message.append("${COLOR_YELLOW}] ")
         message.append("${COLOR_GRAY}${player.entity.name} ")
         message.append("$COLOR_GOLD joined the game!")
