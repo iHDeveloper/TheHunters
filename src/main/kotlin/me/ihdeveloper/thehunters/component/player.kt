@@ -25,6 +25,7 @@
 
 package me.ihdeveloper.thehunters.component
 
+import me.ihdeveloper.thehunters.GameComponent
 import me.ihdeveloper.thehunters.GameComponentOf
 import me.ihdeveloper.thehunters.GamePlayer
 import me.ihdeveloper.thehunters.plugin
@@ -32,6 +33,7 @@ import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.player.PlayerDropItemEvent
@@ -44,6 +46,7 @@ const val TYPE_DISABLE_ITEM_COLLECT: Short = 103
 const val TYPE_DISABLE_ITEM_DROP: Short = 104
 const val TYPE_NO_DAMAGE: Short = 105
 const val TYPE_SPECTATE: Short = 106
+const val TYPE_DISABLE_BLOCK_PLACE: Short = 107
 
 class ScoreboardComponent (
         override val gameObject: GamePlayer
@@ -179,6 +182,31 @@ class AdventureComponent (
 
     override fun onDestroy(player: GamePlayer) {
         player.entity.gameMode = GameMode.SURVIVAL
+    }
+
+}
+
+class DisableBlockPlaceComponent (
+        override val gameObject: GamePlayer
+) : GameComponentOf<GamePlayer>(), Listener {
+
+    override val type = TYPE_DISABLE_BLOCK_PLACE
+
+    override fun onInit(gameObject: GamePlayer) {
+        Bukkit.getPluginManager().registerEvents(this, plugin())
+    }
+
+    @EventHandler
+    private fun onPlace(event: BlockPlaceEvent) {
+        if (event.player.uniqueId !== gameObject.uniqueId) {
+            return
+        }
+
+        event.isCancelled = true
+    }
+
+    override fun onDestroy(gameObject: GamePlayer) {
+        BlockPlaceEvent.getHandlerList().unregister(this)
     }
 
 }
