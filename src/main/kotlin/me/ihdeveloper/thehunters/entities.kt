@@ -25,11 +25,17 @@
 
 package me.ihdeveloper.thehunters
 
-class Game : GameInstance (
-        name = "The Hunters",
-        components = listOf<GameComponent>(),
-        children = listOf<GameObject>(
-                PlayersManager()
-        )
+import org.bukkit.entity.Player
+import java.util.UUID
+
+class GamePlayer (
+        player: Player,
+        components: List<GameComponent> = listOf<GameComponent>(),
+        children: List<GameObject> = listOf<GameObject>()
+) : GameEntity<Player> (
+        entity = player,
+        components = components,
+        children = children
 ) {
+    val uniqueId: UUID = player.uniqueId
 }
