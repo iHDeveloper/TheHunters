@@ -125,10 +125,12 @@ open class GameObject (
 }
 
 class GameInstance (
+        name: String,
         val components: List<GameComponent>,
         val children: List<GameObject>
 ) : GameObject(
         components = components,
         children = children
 ) {
+    val logger = GameLogger(name)
 }
