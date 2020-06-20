@@ -27,6 +27,8 @@ package me.ihdeveloper.thehunters
 
 import me.ihdeveloper.thehunters.component.NoHungerComponent
 import me.ihdeveloper.thehunters.component.AdventureComponent
+import me.ihdeveloper.thehunters.component.DisableBlockBreakComponent
+import me.ihdeveloper.thehunters.component.DisableBlockPlaceComponent
 import me.ihdeveloper.thehunters.component.DisableItemCollectComponent
 import me.ihdeveloper.thehunters.component.DisableItemDropComponent
 import me.ihdeveloper.thehunters.component.NoDamageComponent
@@ -51,6 +53,8 @@ class Lobby : GameObject(), Listener {
         player.add(DisableItemCollectComponent(player))
         player.add(DisableItemDropComponent(player))
         player.add(NoDamageComponent(player))
+        player.add(DisableBlockPlaceComponent(player))
+        player.add(DisableBlockBreakComponent(player))
 
         // TODO Broadcast the join message
     }
