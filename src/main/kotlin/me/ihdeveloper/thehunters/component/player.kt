@@ -95,6 +95,7 @@ class DisableItemCollectComponent (
         Bukkit.getPluginManager().registerEvents(this, plugin())
     }
 
+    @EventHandler
     private fun onCollect(event: PlayerPickupItemEvent) {
         event.isCancelled = true
     }
