@@ -103,6 +103,9 @@ open class GameObject (
     }
 
     fun init() {
+        if (initialized)
+            return
+
         onInit()
 
         for (component in components.values)
@@ -115,6 +118,9 @@ open class GameObject (
     }
 
     fun destroy() {
+        if (!initialized)
+            return
+
         onDestroy()
 
         for (component in components.values)
