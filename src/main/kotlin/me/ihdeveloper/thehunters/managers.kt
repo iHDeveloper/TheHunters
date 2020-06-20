@@ -26,6 +26,8 @@
 package me.ihdeveloper.thehunters
 
 import me.ihdeveloper.thehunters.component.ScoreboardComponent
+import me.ihdeveloper.thehunters.event.GameJoinEvent
+import me.ihdeveloper.thehunters.event.GameQuitEvent
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -49,11 +51,21 @@ class PlayersManager : GameObject(), Listener {
         player.init()
 
         players[player.uniqueId] = player
+
+        Bukkit.getPluginManager().callEvent(GameJoinEvent(player))
+
+        event.joinMessage = null
     }
 
     @EventHandler
     private fun onQuit(event: PlayerQuitEvent) {
-        players.remove(event.player.uniqueId)
+        val uniqueId = event.player.uniqueId
+
+        Bukkit.getPluginManager().callEvent(GameQuitEvent(players[uniqueId]!!))
+
+        players.remove(uniqueId)
+
+        event.quitMessage = null
     }
 
     override fun onDestroy() {
