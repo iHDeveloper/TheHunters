@@ -25,13 +25,32 @@
 
 package me.ihdeveloper.thehunters
 
-class Game : GameInstance (
-        name = "The Hunters",
-        components = listOf<GameComponent>(),
-        children = listOf<GameObject>(
-                WorldsManager(),
-                PlayersManager(),
-                Lobby()
-        )
-) {
+import me.ihdeveloper.thehunters.event.GameJoinEvent
+import me.ihdeveloper.thehunters.event.GamePlayerEvent
+import me.ihdeveloper.thehunters.event.GameQuitEvent
+import org.bukkit.Bukkit
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+
+class Lobby : GameObject(), Listener {
+
+    override fun onInit() {
+        Bukkit.getPluginManager().registerEvents(this, plugin())
+    }
+
+    @EventHandler
+    private fun onJoin(event: GameJoinEvent) {
+        // TODO Broadcast the join message
+    }
+
+    @EventHandler
+    private fun onQuit(event: GameQuitEvent) {
+        // TODO Broadcast the quit message
+
+    }
+
+    override fun onDestroy() {
+        GamePlayerEvent.getHandlerList().unregister(this)
+    }
+
 }

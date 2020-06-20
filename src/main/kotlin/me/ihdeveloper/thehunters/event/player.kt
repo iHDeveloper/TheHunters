@@ -34,9 +34,11 @@ open class GamePlayerEvent (
 ) : Event() {
 
     companion object {
-        @JvmStatic private lateinit var handlerList: HandlerList
+        @JvmStatic
+        private lateinit var handlerList: HandlerList
 
-        @JvmStatic fun getHandlerList() = handlerList
+        @JvmStatic
+        fun getHandlerList() = handlerList
     }
 
     init {
