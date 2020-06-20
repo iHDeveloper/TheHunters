@@ -27,10 +27,13 @@ package me.ihdeveloper.thehunters.component
 
 import me.ihdeveloper.thehunters.GameComponent
 import me.ihdeveloper.thehunters.plugin
+import org.bukkit.Bukkit
 import org.bukkit.configuration.file.YamlConfiguration
+import org.bukkit.scheduler.BukkitTask
 import java.io.File
 
 const val TYPE_CONFIGURATION: Short = 1
+const val TYPE_COUNTDOWN: Short = 2
 
 class ConfigurationComponent (
         name: String
@@ -55,6 +58,59 @@ class ConfigurationComponent (
 
     override fun destroy() {
         config.save(file)
+    }
+
+}
+
+class CountdownComponent (
+        val id: Byte,
+        val defaultStart: Int
+) : GameComponent, Runnable {
+
+    override val type = TYPE_COUNTDOWN
+
+    private var ticksRemaining = defaultStart
+
+    private var task: BukkitTask? = null
+
+    override fun init() {
+    }
+
+    fun start() {
+        if (ticksRemaining <= 0)
+            return
+
+        task = Bukkit.getScheduler().runTaskTimer(plugin(), this, 0L, 1L)
+        // TODO broadcast CountdownStartEvent
+    }
+
+    fun reset() {
+        ticksRemaining = defaultStart
+    }
+
+    fun stop(broadcast: Boolean = true) {
+        if (task != null) {
+            task!!.cancel()
+            task = null
+        }
+
+        if (broadcast) {
+            // TOOD broadcast CountdownCancelEvent
+        }
+    }
+
+    override fun run() {
+        ticksRemaining--
+
+        // TODO broadcast CountdownEvent
+
+        if (ticksRemaining <= 0) {
+            // TODO broadcast CountdownFinishEvent
+        }
+    }
+
+    override fun destroy() {
+        stop(false)
     }
 
 }
