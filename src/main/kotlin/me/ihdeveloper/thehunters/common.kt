@@ -25,6 +25,7 @@
 
 package me.ihdeveloper.thehunters
 
+import org.bukkit.entity.Entity
 import org.bukkit.plugin.java.JavaPlugin
 
 interface GameComponent {
@@ -134,6 +135,29 @@ open class GameObject (
 
     open fun onInit() {}
     open fun onDestroy() {}
+}
+
+open class GameEntity<T : Entity> (
+        val entity: T,
+        components: List<GameComponent> = listOf<GameComponent>(),
+        children: List<GameObject> = listOf<GameObject>()
+) : GameObject(
+        components,
+        children
+) {
+
+    override fun onInit() {
+        onInit(entity)
+    }
+
+    override fun onDestroy() {
+        onDestroy(entity)
+
+        entity.remove()
+    }
+
+    open fun onInit(entity: T) {}
+    open fun onDestroy(entity: T) {}
 }
 
 open class GameInstance (
