@@ -26,6 +26,7 @@
 package me.ihdeveloper.thehunters
 
 import me.ihdeveloper.thehunters.component.ScoreboardComponent
+import me.ihdeveloper.thehunters.component.TitleComponent
 import me.ihdeveloper.thehunters.event.GameJoinEvent
 import me.ihdeveloper.thehunters.event.GameQuitEvent
 import org.bukkit.Bukkit
@@ -48,6 +49,7 @@ class PlayersManager : GameObject(), Listener {
     private fun onJoin(event: PlayerJoinEvent) {
         val player = GamePlayer(event.player)
         player.add(ScoreboardComponent(player))
+        player.add(TitleComponent(player))
 
         player.init()
 
