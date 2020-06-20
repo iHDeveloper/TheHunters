@@ -25,7 +25,6 @@
 
 package me.ihdeveloper.thehunters.component
 
-import me.ihdeveloper.thehunters.GameComponent
 import me.ihdeveloper.thehunters.GameComponentOf
 import me.ihdeveloper.thehunters.GamePlayer
 import me.ihdeveloper.thehunters.plugin
@@ -45,7 +44,7 @@ const val TYPE_NO_HUNGER: Short = 102
 const val TYPE_DISABLE_ITEM_COLLECT: Short = 103
 const val TYPE_DISABLE_ITEM_DROP: Short = 104
 const val TYPE_NO_DAMAGE: Short = 105
-const val TYPE_SPECTATE: Short = 106
+const val TYPE_ADVENTURE: Short = 106
 const val TYPE_DISABLE_BLOCK_PLACE: Short = 107
 
 class ScoreboardComponent (
@@ -174,7 +173,7 @@ class AdventureComponent (
         override val gameObject: GamePlayer
 ) : GameComponentOf<GamePlayer>() {
 
-    override val type = TYPE_SPECTATE
+    override val type = TYPE_ADVENTURE
 
     override fun onInit(player: GamePlayer) {
         player.entity.gameMode = GameMode.ADVENTURE
