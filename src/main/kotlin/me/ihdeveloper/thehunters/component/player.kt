@@ -120,6 +120,10 @@ class DisableItemDropComponent (
 
     @EventHandler
     private fun onDrop(event: PlayerDropItemEvent) {
+        if (event.player.uniqueId !== gameObject.uniqueId) {
+            return
+        }
+
         event.isCancelled = true
     }
 
