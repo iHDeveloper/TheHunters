@@ -23,45 +23,33 @@
  *
  */
 
-package me.ihdeveloper.thehunters
+package me.ihdeveloper.thehunters.component
 
-import me.ihdeveloper.thehunters.component.ScoreboardComponent
+import me.ihdeveloper.thehunters.GameComponentOf
+import me.ihdeveloper.thehunters.GamePlayer
 import org.bukkit.Bukkit
-import org.bukkit.event.EventHandler
-import org.bukkit.event.Listener
-import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.event.player.PlayerQuitEvent
-import java.util.UUID
+import org.bukkit.scoreboard.Scoreboard
 
-class PlayersManager : GameObject(), Listener {
+const val TYPE_SCOREBOARD: Short = 101
 
-    private val players = mutableMapOf<UUID, GamePlayer>()
+class ScoreboardComponent (
+        override val gameObject: GamePlayer
+) : GameComponentOf<GamePlayer>() {
 
-    override fun onInit() {
-        Bukkit.getPluginManager().registerEvents(this, plugin())
+    override val type = TYPE_SCOREBOARD
+
+    var scoreboard: Scoreboard? = null
+
+    override fun onInit(gameObject: GamePlayer) {
+        scoreboard = Bukkit.getScoreboardManager().newScoreboard
+
+        gameObject.entity.scoreboard = scoreboard
     }
 
-    @EventHandler
-    private fun onJoin(event: PlayerJoinEvent) {
-        val player = GamePlayer(event.player)
-        player.add(ScoreboardComponent(player))
+    override fun onDestroy(gameObject: GamePlayer) {
+        gameObject.entity.scoreboard = Bukkit.getScoreboardManager().mainScoreboard
 
-        player.init()
-
-        players[player.uniqueId] = player
-    }
-
-    @EventHandler
-    private fun onQuit(event: PlayerQuitEvent) {
-        players.remove(event.player.uniqueId)
-    }
-
-    override fun onDestroy() {
-        for (player in players.values) {
-            player.destroy()
-        }
-
-        players.clear()
+        scoreboard = null
     }
 
 }
