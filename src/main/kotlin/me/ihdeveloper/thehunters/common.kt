@@ -123,3 +123,12 @@ open class GameObject (
     open fun onInit() {}
     open fun onDestroy() {}
 }
+
+class GameInstance (
+        val components: List<GameComponent>,
+        val children: List<GameObject>
+) : GameObject(
+        components = components,
+        children = children
+) {
+}
