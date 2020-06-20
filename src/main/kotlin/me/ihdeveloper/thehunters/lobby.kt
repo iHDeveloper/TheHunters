@@ -36,8 +36,15 @@ import me.ihdeveloper.thehunters.event.GameJoinEvent
 import me.ihdeveloper.thehunters.event.GamePlayerEvent
 import me.ihdeveloper.thehunters.event.GameQuitEvent
 import org.bukkit.Bukkit
+import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+
+private val COLOR_GRAY = ChatColor.GRAY
+private val COLOR_GREEN = ChatColor.GREEN
+private val COLOR_YELLOW = ChatColor.YELLOW
+private val COLOR_GOLD = ChatColor.GOLD
+private val COLOR_RED = ChatColor.RED
 
 class Lobby : GameObject(), Listener {
 
@@ -56,12 +63,28 @@ class Lobby : GameObject(), Listener {
         player.add(DisableBlockPlaceComponent(player))
         player.add(DisableBlockBreakComponent(player))
 
-        // TODO Broadcast the join message
+        val message = StringBuilder()
+        message.append("${COLOR_YELLOW}[")
+        message.append("${COLOR_GREEN}0") // TODO number of players
+        message.append("${COLOR_GRAY}/")
+        message.append("${COLOR_RED}7") // TODO max number of players
+        message.append("${COLOR_YELLOW}] ")
+        message.append("${COLOR_GRAY}${player.entity.name} ")
+        message.append("$COLOR_GOLD joined the game!")
+        Bukkit.broadcastMessage(message.toString())
     }
 
     @EventHandler
     private fun onQuit(event: GameQuitEvent) {
-        // TODO Broadcast the quit message
+        val player = event.player
+
+        val message = StringBuilder()
+        message.append("${COLOR_YELLOW}[")
+        message.append("${COLOR_RED}-")
+        message.append("${COLOR_YELLOW}] ")
+        message.append("${COLOR_GRAY}${player.entity.name} ")
+        message.append("$COLOR_GOLD left from the game.")
+        Bukkit.broadcastMessage(message.toString())
     }
 
     override fun onDestroy() {
