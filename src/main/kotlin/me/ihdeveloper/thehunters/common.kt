@@ -48,8 +48,8 @@ abstract class GameComponentOf<T : GameObject> (
 }
 
 open class GameObject (
-        components: List<GameComponent>,
-        children: List<GameObject>
+        components: List<GameComponent> = listOf<GameComponent>(),
+        children: List<GameObject> = listOf<GameObject>()
 ) {
     var parent: GameObject? = null
 
