@@ -126,7 +126,7 @@ open class GameObject (
     open fun onDestroy() {}
 }
 
-class GameInstance (
+open class GameInstance (
         name: String,
         val components: List<GameComponent>,
         val children: List<GameObject>
@@ -146,7 +146,7 @@ class GameInstance (
 
 }
 
-class GameEntryPoint<T : GameInstance> (
+open class GameEntryPoint<T : GameInstance> (
         private val instance: T
 ) : JavaPlugin() {
 
