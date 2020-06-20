@@ -32,12 +32,14 @@ import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.FoodLevelChangeEvent
+import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerPickupItemEvent
 import org.bukkit.scoreboard.Scoreboard
 
 const val TYPE_SCOREBOARD: Short = 101
 const val TYPE_NO_HUNGER: Short = 102
 const val TYPE_DISABLE_ITEM_COLLECT: Short = 103
+const val TYPE_DISABLE_ITEM_DROP: Short = 104
 
 class ScoreboardComponent (
         override val gameObject: GamePlayer
@@ -99,6 +101,27 @@ class DisableItemCollectComponent (
 
     override fun onDestroy(player: GamePlayer) {
         PlayerPickupItemEvent.getHandlerList().unregister(this)
+    }
+
+}
+
+class DisableItemDropComponent (
+        override val gameObject: GamePlayer
+) : GameComponentOf<GamePlayer>(), Listener {
+
+    override val type = TYPE_DISABLE_ITEM_DROP
+
+    override fun onInit(player: GamePlayer) {
+        Bukkit.getPluginManager().registerEvents(this, plugin())
+    }
+
+    @EventHandler
+    private fun onDrop(event: PlayerDropItemEvent) {
+        event.isCancelled = true
+    }
+
+    override fun onDestroy(player: GamePlayer) {
+        PlayerDropItemEvent.getHandlerList().unregister(this)
     }
 
 }
