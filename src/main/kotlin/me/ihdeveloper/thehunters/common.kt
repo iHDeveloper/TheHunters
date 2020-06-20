@@ -51,6 +51,8 @@ open class GameObject (
         components: List<GameComponent>,
         children: List<GameObject>
 ) {
+    var parent: GameObject? = null
+
     private val components = mutableMapOf<Short, GameComponent>()
     private val children = mutableListOf<GameObject>()
 
@@ -85,12 +87,17 @@ open class GameObject (
 
     fun add(child: GameObject) {
         children.add(child)
+        child.parent = this
 
         if (initialized)
             child.init()
     }
 
     fun removeAllChildren() {
+        for (child in children) {
+            child.parent = null
+        }
+
         children.clear()
     }
 
@@ -118,6 +125,9 @@ open class GameObject (
             child.destroy()
 
         children.clear()
+
+        if (parent != null)
+            parent = null
 
         initialized = false
     }
