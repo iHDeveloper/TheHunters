@@ -66,6 +66,8 @@ class LobbyScoreboardComponent (
 
         if (sidebar == null) {
             sidebar = scoreboard!!.registerNewObjective("sidebar", "dummy")
+            sidebar!!.displaySlot = DisplaySlot.SIDEBAR
+            sidebar!!.displayName = "${COLOR_YELLOW}${COLOR_BOLD}THE HUNTERS"
         }
 
         updatePlayersCount()
