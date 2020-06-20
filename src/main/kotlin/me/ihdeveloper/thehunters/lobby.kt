@@ -43,12 +43,15 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.scoreboard.DisplaySlot
 import org.bukkit.scoreboard.Objective
+import org.bukkit.scoreboard.Score
+import org.bukkit.scoreboard.Scoreboard
 
 private val COLOR_GRAY = ChatColor.GRAY
 private val COLOR_GREEN = ChatColor.GREEN
 private val COLOR_YELLOW = ChatColor.YELLOW
 private val COLOR_GOLD = ChatColor.GOLD
 private val COLOR_RED = ChatColor.RED
+private val COLOR_BOLD = ChatColor.BOLD
 
 const val TYPE_LOBBY_SCOREBOARD: Short = 200
 
@@ -101,28 +104,61 @@ class Lobby : GameObject(), Listener {
 
 class LobbyScoreboardComponent (
         override val gameObject: GamePlayer
-) : GameComponentOf<GamePlayer>() {
+) : GameComponentOf<GamePlayer>(), Listener {
 
     override val type = TYPE_LOBBY_SCOREBOARD
 
+    private var scoreboard: Scoreboard? = null
     private var sidebar: Objective? = null
+
+    private var playersScore: Score? = null
 
     override fun onInit(player: GamePlayer) {
         val component = player.get<ScoreboardComponent>(TYPE_SCOREBOARD)
-        val scoreboard = component.scoreboard!!
+        scoreboard = component.scoreboard!!
 
-        sidebar = scoreboard.getObjective(DisplaySlot.SIDEBAR)
+        sidebar = scoreboard!!.getObjective(DisplaySlot.SIDEBAR)
 
         if (sidebar == null) {
-            sidebar = scoreboard.registerNewObjective("sidebar", "dummy")
+            sidebar = scoreboard!!.registerNewObjective("sidebar", "dummy")
         }
+
+        updatePlayersCount()
+        sidebar!!.getScore("$COLOR_BOLD$COLOR_GRAY").score = 0
 
         sidebar!!.getScore("${ChatColor.YELLOW}By").score = -1
         sidebar!!.getScore("${ChatColor.RED}iHDeveloper").score = -2
+
+        Bukkit.getPluginManager().registerEvents(this, plugin())
     }
 
+    private fun updatePlayersCount() {
+        if (playersScore != null) {
+            scoreboard!!.resetScores(playersScore!!.entry)
+        }
+        val builder = StringBuilder()
+        builder.append("${COLOR_YELLOW}Players: ")
+        builder.append("${COLOR_GREEN}${Game.count}")
+        builder.append("${COLOR_GRAY}/")
+        builder.append("${COLOR_RED}${Game.max}")
+        playersScore = sidebar!!.getScore(builder.toString())
+        playersScore!!.score = 1
+    }
+
+    @EventHandler
+    private fun onJoin(event: GameJoinEvent) = updatePlayersCount()
+
+    @EventHandler
+    private fun onQuit(event: GameQuitEvent) = updatePlayersCount()
+
     override fun onDestroy(player: GamePlayer) {
+        GamePlayerEvent.getHandlerList().unregister(this)
+
         player.get<ScoreboardComponent>(TYPE_SCOREBOARD).reset()
+
+        scoreboard = null
+        sidebar = null
+        playersScore = null
     }
 
 }
