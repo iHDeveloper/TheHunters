@@ -33,6 +33,7 @@ class Game : GameInstance (
         name = "The Hunters",
         components = listOf<GameComponent>(),
         children = listOf<GameObject>(
+                LoginManager(),
                 WorldsManager(),
                 playersManager,
                 Lobby()
