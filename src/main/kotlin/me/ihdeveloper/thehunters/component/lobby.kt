@@ -53,7 +53,72 @@ import org.bukkit.scoreboard.Objective
 import org.bukkit.scoreboard.Score
 import org.bukkit.scoreboard.Scoreboard
 
+const val TYPE_LOBBY_PLAYER: Short = 201
 const val TYPE_LOBBY_SCOREBOARD: Short = 200
+
+class LobbyComponent (
+        override val gameObject: GamePlayer
+) : GameComponentOf<GamePlayer>(), Listener {
+
+    override val type = TYPE_LOBBY_PLAYER
+
+    override fun onInit(gameObject: GamePlayer) {
+        val titleComponent = gameObject.get<TitleComponent>(TYPE_TITLE)
+        titleComponent.title("$COLOR_GRAY${COLOR_BOLD}The Hunters")
+        titleComponent.subtitle("${COLOR_YELLOW}Prove that you can't be hunted!")
+        titleComponent.time(20, 40, 20)
+
+        Bukkit.getPluginManager().registerEvents(this, plugin())
+    }
+
+    @EventHandler
+    private fun onCountdownTick(event: CountdownTickEvent) {
+        if (event.id != COUNTDOWN_LOBBY)
+            return
+
+        val seconds = event.ticks / 20
+
+        if (gameObject.entity.level == seconds || seconds > 60)
+            return
+
+        if (seconds == 60
+            || seconds == 45
+            || seconds == 30
+            || seconds == 15
+            || seconds == 10
+            || (seconds in 1..5) )
+            notifyPlayer(seconds)
+        gameObject.entity.level = seconds
+    }
+
+    @EventHandler
+    private fun onCountdownFinish(event: CountdownFinishEvent) {
+        if (event.id != COUNTDOWN_LOBBY)
+            return
+
+        gameObject.entity.level = 0
+    }
+
+    @EventHandler
+    private fun onCountdownCancel(event: CountdownCancelEvent) {
+        if (event.id != COUNTDOWN_LOBBY)
+            return
+
+        gameObject.entity.level = 0
+    }
+
+    private fun notifyPlayer(seconds: Int) {
+        val message = "${COLOR_RED}${seconds} ${COLOR_YELLOW}seconds to start"
+        gameObject.get<TitleComponent>(TYPE_TITLE).reset()
+        gameObject.get<TitleComponent>(TYPE_TITLE).subtitle(message)
+        gameObject.get<TitleComponent>(TYPE_TITLE).time(10, 20, 10)
+    }
+
+    override fun onDestroy(gameObject: GamePlayer) {
+        CountdownEvent.getHandlerList().unregister(this)
+    }
+
+}
 
 class LobbyScoreboardComponent (
         override val gameObject: GamePlayer

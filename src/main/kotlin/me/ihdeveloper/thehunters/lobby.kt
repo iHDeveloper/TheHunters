@@ -32,6 +32,7 @@ import me.ihdeveloper.thehunters.component.DisableBlockBreakComponent
 import me.ihdeveloper.thehunters.component.DisableBlockPlaceComponent
 import me.ihdeveloper.thehunters.component.DisableItemCollectComponent
 import me.ihdeveloper.thehunters.component.DisableItemDropComponent
+import me.ihdeveloper.thehunters.component.LobbyComponent
 import me.ihdeveloper.thehunters.component.LobbyScoreboardComponent
 import me.ihdeveloper.thehunters.component.NoDamageComponent
 import me.ihdeveloper.thehunters.component.NoInteractComponent
@@ -53,7 +54,7 @@ import org.bukkit.event.Listener
 
 class Lobby : GameObject(), Listener {
 
-    private val countdown = CountdownComponent(COUNTDOWN_LOBBY, 20 * 60)
+    private val countdown = CountdownComponent(COUNTDOWN_LOBBY, 20 * 70)
 
     init {
         add(countdown)
@@ -75,6 +76,7 @@ class Lobby : GameObject(), Listener {
         player.add(DisableBlockBreakComponent(player))
         player.add(NoInteractComponent(player))
 
+        player.add(LobbyComponent(player))
         player.add(LobbyScoreboardComponent(player))
 
         val message = StringBuilder()
@@ -86,11 +88,6 @@ class Lobby : GameObject(), Listener {
         message.append("${COLOR_GRAY}${player.entity.name}")
         message.append("$COLOR_GOLD joined the game!")
         Bukkit.broadcastMessage(message.toString())
-
-        val titleComponent = player.get<TitleComponent>(TYPE_TITLE)
-        titleComponent.title("$COLOR_GRAY${COLOR_BOLD}The Hunters")
-        titleComponent.subtitle("${COLOR_YELLOW}Prove that you can't be hunted!")
-        titleComponent.time(20, 40, 20)
 
         // TODO Countdown start if the server is full
         countdown.start()
