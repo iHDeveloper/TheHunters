@@ -86,7 +86,7 @@ class CountdownComponent (
         if (started || ticksRemaining <= 0)
             return
 
-        started = false
+        started = true
 
         stop(false)
 
