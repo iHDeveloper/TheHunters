@@ -27,6 +27,7 @@ package me.ihdeveloper.thehunters
 
 import me.ihdeveloper.thehunters.component.NoHungerComponent
 import me.ihdeveloper.thehunters.component.AdventureComponent
+import me.ihdeveloper.thehunters.component.CountdownComponent
 import me.ihdeveloper.thehunters.component.DisableBlockBreakComponent
 import me.ihdeveloper.thehunters.component.DisableBlockPlaceComponent
 import me.ihdeveloper.thehunters.component.DisableItemCollectComponent
@@ -45,11 +46,18 @@ import me.ihdeveloper.thehunters.util.COLOR_GRAY
 import me.ihdeveloper.thehunters.util.COLOR_GREEN
 import me.ihdeveloper.thehunters.util.COLOR_RED
 import me.ihdeveloper.thehunters.util.COLOR_YELLOW
+import me.ihdeveloper.thehunters.util.COUNTDOWN_LOBBY
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
 class Lobby : GameObject(), Listener {
+
+    private val countdown = CountdownComponent(COUNTDOWN_LOBBY, 20 * 60)
+
+    init {
+        add(countdown)
+    }
 
     override fun onInit() {
         Bukkit.getPluginManager().registerEvents(this, plugin())
@@ -83,6 +91,9 @@ class Lobby : GameObject(), Listener {
         titleComponent.title("$COLOR_GRAY${COLOR_BOLD}The Hunters")
         titleComponent.subtitle("${COLOR_YELLOW}Prove that you can't be hunted!")
         titleComponent.time(20, 40, 20)
+
+        // TODO Countdown start if the server is full
+        countdown.start()
     }
 
     @EventHandler
@@ -96,6 +107,9 @@ class Lobby : GameObject(), Listener {
         message.append("${COLOR_GRAY}${player.entity.name}")
         message.append("$COLOR_GOLD left from the game.")
         Bukkit.broadcastMessage(message.toString())
+
+        countdown.stop()
+        countdown.reset()
     }
 
     override fun onDestroy() {

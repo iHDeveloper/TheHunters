@@ -23,12 +23,6 @@
  *
  */
 
-package me.ihdeveloper.thehunters.event.countdown;
+package me.ihdeveloper.thehunters.util
 
-public class CountdownStartEvent extends CountdownTickEvent {
-
-    public CountdownStartEvent(byte id, int tick) {
-        super(id, tick);
-    }
-
-}
+const val COUNTDOWN_LOBBY: Byte = 1

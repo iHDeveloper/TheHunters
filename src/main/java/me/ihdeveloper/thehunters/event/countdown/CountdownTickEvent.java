@@ -29,19 +29,19 @@ import me.ihdeveloper.thehunters.event.CountdownEvent;
 
 public class CountdownTickEvent extends CountdownEvent {
 
-    private int tick;
+    private int ticks;
 
     public CountdownTickEvent(byte id, int tick) {
         super(id);
-        this.tick = tick;
+        this.ticks = tick;
     }
 
-    public void setTick(int tick) {
-        this.tick = tick;
+    public void setTicks(int ticks) {
+        this.ticks = ticks;
     }
 
-    public int getTick() {
-        return tick;
+    public int getTicks() {
+        return ticks;
     }
 
 }

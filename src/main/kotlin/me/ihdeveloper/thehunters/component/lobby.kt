@@ -28,17 +28,25 @@ package me.ihdeveloper.thehunters.component
 import me.ihdeveloper.thehunters.Game
 import me.ihdeveloper.thehunters.GameComponentOf
 import me.ihdeveloper.thehunters.GamePlayer
+import me.ihdeveloper.thehunters.event.CountdownEvent
 import me.ihdeveloper.thehunters.event.player.GameJoinEvent
 import me.ihdeveloper.thehunters.event.GamePlayerEvent
+import me.ihdeveloper.thehunters.event.countdown.CountdownCancelEvent
+import me.ihdeveloper.thehunters.event.countdown.CountdownFinishEvent
+import me.ihdeveloper.thehunters.event.countdown.CountdownStartEvent
+import me.ihdeveloper.thehunters.event.countdown.CountdownTickEvent
 import me.ihdeveloper.thehunters.event.player.GameQuitEvent
 import me.ihdeveloper.thehunters.plugin
 import me.ihdeveloper.thehunters.util.COLOR_BOLD
 import me.ihdeveloper.thehunters.util.COLOR_GRAY
 import me.ihdeveloper.thehunters.util.COLOR_GREEN
 import me.ihdeveloper.thehunters.util.COLOR_RED
+import me.ihdeveloper.thehunters.util.COLOR_WHITE
 import me.ihdeveloper.thehunters.util.COLOR_YELLOW
+import me.ihdeveloper.thehunters.util.COUNTDOWN_LOBBY
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.scoreboard.DisplaySlot
 import org.bukkit.scoreboard.Objective
@@ -56,6 +64,10 @@ class LobbyScoreboardComponent (
     private var scoreboard: Scoreboard? = null
     private var sidebar: Objective? = null
 
+    private var showTimeLeft = false
+    private var timeLeftTicks = 20 * 60
+
+    private var timeLeftScore: Score? = null
     private var playersScore: Score? = null
 
     override fun onInit(gameObject: GamePlayer) {
@@ -70,6 +82,10 @@ class LobbyScoreboardComponent (
             sidebar!!.displayName = "${COLOR_YELLOW}${COLOR_BOLD}THE HUNTERS"
         }
 
+        sidebar!!.getScore("$COLOR_BOLD$COLOR_WHITE").score = 4
+        updateTimeLeft()
+        sidebar!!.getScore("$COLOR_BOLD$COLOR_RED").score = 2
+
         updatePlayersCount()
         sidebar!!.getScore("$COLOR_BOLD$COLOR_GRAY").score = 0
 
@@ -77,6 +93,33 @@ class LobbyScoreboardComponent (
         sidebar!!.getScore("${COLOR_RED}iHDeveloper").score = -2
 
         Bukkit.getPluginManager().registerEvents(this, plugin())
+    }
+
+    private fun updateTimeLeft() {
+        if (timeLeftScore != null) {
+            scoreboard!!.resetScores(timeLeftScore!!.entry)
+        }
+
+        if (!showTimeLeft)
+            return
+
+        var secs = timeLeftTicks / 20
+        var mins = secs / 60
+        secs %= 60
+        mins %= 60
+
+        val builder = StringBuilder()
+        builder.append("${COLOR_YELLOW}Time Left: ")
+        builder.append("$COLOR_WHITE")
+        if (mins <= 9) builder.append("0")
+        builder.append(mins)
+        builder.append("${COLOR_YELLOW}:")
+        builder.append("$COLOR_WHITE")
+        if (secs <= 9) builder.append("0")
+        builder.append(secs)
+
+        timeLeftScore = sidebar!!.getScore(builder.toString())
+        timeLeftScore!!.score = 3
     }
 
     private fun updatePlayersCount() {
@@ -98,6 +141,48 @@ class LobbyScoreboardComponent (
     @EventHandler
     private fun onQuit(event: GameQuitEvent) = updatePlayersCount()
 
+    @EventHandler
+    private fun onCountdownStart(event: CountdownStartEvent) {
+        if (event.id !== COUNTDOWN_LOBBY) {
+            return
+        }
+
+        showTimeLeft = true
+        timeLeftTicks = event.ticks
+    }
+
+    @EventHandler
+    private fun onCountdownTick(event: CountdownTickEvent) {
+        if (event.id !== COUNTDOWN_LOBBY) {
+            return
+        }
+
+        timeLeftTicks = event.ticks
+    }
+
+    @EventHandler
+    private fun onCountdownFinish(event: CountdownFinishEvent) {
+        if (event.id !== COUNTDOWN_LOBBY) {
+            return
+        }
+
+        showTimeLeft = false
+    }
+
+    @EventHandler
+    private fun onCountdownCancel(event: CountdownCancelEvent) {
+        if (event.id !== COUNTDOWN_LOBBY) {
+            return
+        }
+
+        showTimeLeft = false
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    private fun onUpdate(event: CountdownEvent) {
+        updateTimeLeft()
+    }
+
     override fun onDestroy(gameObject: GamePlayer) {
         GamePlayerEvent.getHandlerList().unregister(this)
 
@@ -106,6 +191,7 @@ class LobbyScoreboardComponent (
         scoreboard = null
         sidebar = null
         playersScore = null
+        timeLeftScore = null
     }
 
 }
