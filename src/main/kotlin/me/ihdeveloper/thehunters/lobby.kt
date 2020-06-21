@@ -38,8 +38,13 @@ import me.ihdeveloper.thehunters.component.NoDamageComponent
 import me.ihdeveloper.thehunters.component.NoInteractComponent
 import me.ihdeveloper.thehunters.component.TYPE_TITLE
 import me.ihdeveloper.thehunters.component.TitleComponent
+import me.ihdeveloper.thehunters.event.CountdownEvent
 import me.ihdeveloper.thehunters.event.player.GameJoinEvent
 import me.ihdeveloper.thehunters.event.GamePlayerEvent
+import me.ihdeveloper.thehunters.event.countdown.CountdownCancelEvent
+import me.ihdeveloper.thehunters.event.countdown.CountdownFinishEvent
+import me.ihdeveloper.thehunters.event.countdown.CountdownStartEvent
+import me.ihdeveloper.thehunters.event.countdown.CountdownTickEvent
 import me.ihdeveloper.thehunters.event.player.GameQuitEvent
 import me.ihdeveloper.thehunters.util.COLOR_BOLD
 import me.ihdeveloper.thehunters.util.COLOR_GOLD
@@ -55,6 +60,8 @@ import org.bukkit.event.Listener
 class Lobby : GameObject(), Listener {
 
     private val countdown = CountdownComponent(COUNTDOWN_LOBBY, 20 * 70)
+
+    private var lastSeconds = 70
 
     init {
         add(countdown)
@@ -109,8 +116,53 @@ class Lobby : GameObject(), Listener {
         countdown.reset()
     }
 
+    @EventHandler
+    private fun onStart(event: CountdownStartEvent) {
+        if (event.id != COUNTDOWN_LOBBY)
+            return
+
+        val message = "${COLOR_YELLOW}Game is starting..."
+        Bukkit.broadcastMessage(message)
+    }
+
+    @EventHandler
+    private fun onTick(event: CountdownTickEvent) {
+        if (event.id != COUNTDOWN_LOBBY)
+            return
+
+        val seconds = event.ticks / 20
+        if (lastSeconds == seconds)
+            return
+        lastSeconds = seconds
+
+        if (seconds == 60
+            || seconds == 45
+            || seconds == 30
+            || seconds == 15
+            || seconds == 10
+            || (seconds in 1..5) ) {
+            val builder = StringBuilder()
+            builder.append("${COLOR_YELLOW}Game starting in ")
+            builder.append("$COLOR_RED")
+            builder.append(seconds)
+            builder.append(" ${COLOR_YELLOW}seconds")
+
+            Bukkit.broadcastMessage(builder.toString())
+        }
+    }
+
+    @EventHandler
+    private fun onCancel(event: CountdownCancelEvent) {
+        if (event.id != COUNTDOWN_LOBBY)
+            return
+
+        val message = "${COLOR_YELLOW}Countdown cancelled!"
+        Bukkit.broadcastMessage(message)
+    }
+
     override fun onDestroy() {
         GamePlayerEvent.getHandlerList().unregister(this)
+        CountdownEvent.getHandlerList().unregister(this)
     }
 
 }
