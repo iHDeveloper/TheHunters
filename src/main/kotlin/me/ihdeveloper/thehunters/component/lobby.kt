@@ -130,9 +130,11 @@ class LobbyScoreboardComponent (
     private var sidebar: Objective? = null
 
     private var showTimeLeft = false
-    private var timeLeftTicks = 20 * 60
-
+    private var timeLeftSeconds = 60
+    private var timeLeftLastSeconds = 61
     private var timeLeftScore: Score? = null
+
+    private var lastPlayersCount: Int = 0
     private var playersScore: Score? = null
 
     override fun onInit(gameObject: GamePlayer) {
@@ -161,14 +163,22 @@ class LobbyScoreboardComponent (
     }
 
     private fun updateTimeLeft() {
-        if (timeLeftScore != null) {
-            scoreboard!!.resetScores(timeLeftScore!!.entry)
-        }
-
         if (!showTimeLeft)
             return
 
-        var secs = timeLeftTicks / 20
+        if (timeLeftSeconds > 60)
+            return
+
+        if (timeLeftLastSeconds == timeLeftSeconds)
+            return
+        timeLeftLastSeconds = timeLeftSeconds
+
+        if (timeLeftScore != null) {
+            scoreboard!!.resetScores(timeLeftScore!!.entry)
+            timeLeftScore = null
+        }
+
+        var secs = timeLeftSeconds
         var mins = secs / 60
         secs %= 60
         mins %= 60
@@ -188,9 +198,15 @@ class LobbyScoreboardComponent (
     }
 
     private fun updatePlayersCount() {
+        if (lastPlayersCount == Game.count)
+            return
+        lastPlayersCount = Game.count
+
         if (playersScore != null) {
             scoreboard!!.resetScores(playersScore!!.entry)
+            playersScore = null
         }
+
         val builder = StringBuilder()
         builder.append("${COLOR_YELLOW}Players: ")
         builder.append("$COLOR_GREEN${Game.count}")
@@ -208,26 +224,25 @@ class LobbyScoreboardComponent (
 
     @EventHandler
     private fun onCountdownStart(event: CountdownStartEvent) {
-        if (event.id !== COUNTDOWN_LOBBY) {
+        if (event.id != COUNTDOWN_LOBBY) {
             return
         }
 
         showTimeLeft = true
-        timeLeftTicks = event.ticks
     }
 
     @EventHandler
     private fun onCountdownTick(event: CountdownTickEvent) {
-        if (event.id !== COUNTDOWN_LOBBY) {
+        if (event.id != COUNTDOWN_LOBBY) {
             return
         }
 
-        timeLeftTicks = event.ticks
+        timeLeftSeconds = event.ticks / 20
     }
 
     @EventHandler
     private fun onCountdownFinish(event: CountdownFinishEvent) {
-        if (event.id !== COUNTDOWN_LOBBY) {
+        if (event.id != COUNTDOWN_LOBBY) {
             return
         }
 
@@ -236,7 +251,7 @@ class LobbyScoreboardComponent (
 
     @EventHandler
     private fun onCountdownCancel(event: CountdownCancelEvent) {
-        if (event.id !== COUNTDOWN_LOBBY) {
+        if (event.id != COUNTDOWN_LOBBY) {
             return
         }
 
@@ -250,6 +265,7 @@ class LobbyScoreboardComponent (
 
     override fun onDestroy(gameObject: GamePlayer) {
         GamePlayerEvent.getHandlerList().unregister(this)
+        CountdownEvent.getHandlerList().unregister(this)
 
         gameObject.get<ScoreboardComponent>(TYPE_SCOREBOARD).reset()
 
