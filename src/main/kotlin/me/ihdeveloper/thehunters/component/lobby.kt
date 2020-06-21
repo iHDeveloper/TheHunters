@@ -64,7 +64,7 @@ class LobbyComponent (
 
     override fun onInit(gameObject: GamePlayer) {
         val titleComponent = gameObject.get<TitleComponent>(TYPE_TITLE)
-        titleComponent.title("$COLOR_GRAY${COLOR_BOLD}The Hunters")
+        titleComponent.title("$COLOR_YELLOW${COLOR_BOLD}The Hunters")
         titleComponent.subtitle("${COLOR_RED}Prove that you can't be hunted!")
         titleComponent.time(20, 40, 20)
 
