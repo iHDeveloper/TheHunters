@@ -73,7 +73,7 @@ class CountdownComponent (
 
     override val type = TYPE_COUNTDOWN
 
-    var done = false
+    var started = false
 
     private var ticksRemaining = defaultStart
 
@@ -83,11 +83,10 @@ class CountdownComponent (
     }
 
     fun start() {
-        if (done)
+        if (started || ticksRemaining <= 0)
             return
 
-        if (ticksRemaining <= 0)
-            return
+        started = false
 
         stop(false)
 
@@ -97,17 +96,15 @@ class CountdownComponent (
 
     fun reset() {
         ticksRemaining = defaultStart
-        done = false
     }
 
     fun stop(broadcast: Boolean = true) {
-        if (done)
-            return
-
         if (task != null) {
             task!!.cancel()
             task = null
         }
+
+        started = false
 
         if (broadcast) {
             Bukkit.getPluginManager().callEvent(CountdownCancelEvent(id))
@@ -121,8 +118,6 @@ class CountdownComponent (
 
         if (ticksRemaining <= 0) {
             Bukkit.getPluginManager().callEvent(CountdownFinishEvent(id))
-
-            done = true
 
             stop(false)
         }

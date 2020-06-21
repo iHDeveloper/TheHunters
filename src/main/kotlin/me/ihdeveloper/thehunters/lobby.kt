@@ -96,8 +96,9 @@ class Lobby : GameObject(), Listener {
         message.append("$COLOR_GOLD joined the game!")
         Bukkit.broadcastMessage(message.toString())
 
-        // TODO Countdown start if the server is full
-        countdown.start()
+        if (Game.count == Game.max) {
+            countdown.start()
+        }
     }
 
     @EventHandler
@@ -112,8 +113,10 @@ class Lobby : GameObject(), Listener {
         message.append("$COLOR_GOLD left from the game.")
         Bukkit.broadcastMessage(message.toString())
 
-        countdown.stop()
-        countdown.reset()
+        if (countdown.started) {
+            countdown.stop()
+            countdown.reset()
+        }
     }
 
     @EventHandler
