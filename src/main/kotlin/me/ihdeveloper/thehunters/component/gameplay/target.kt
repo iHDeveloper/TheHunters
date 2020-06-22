@@ -55,10 +55,11 @@ class TargetComponent (
             reset()
             title(role)
             subtitle(goal)
-            time(5, 20, 5)
+            time(5, 2 * 20, 5)
         }
 
         gameObject.entity.run {
+            sendMessage("")
             sendMessage("${COLOR_YELLOW}You're $role")
             sendMessage(goal)
             sendMessage("")
