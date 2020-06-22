@@ -42,22 +42,35 @@ class TargetComponent (
     override val type = TYPE_GAMEPLAY_TARGET
 
     override fun onInit(gameObject: GamePlayer) {
-        val health = 20.0 * 3
-        gameObject.entity.maxHealth = health
-        gameObject.entity.health = health
+        gameObject.entity.run {
+            val h = 20.0 * 3
+            maxHealth = h
+            health = h
+        }
+
+        val role = "$COLOR_RED${COLOR_BOLD}Target"
+        val goal = "${COLOR_YELLOW}Finish the game before you get killed!"
 
         gameObject.get<TitleComponent>(TYPE_TITLE).run {
             reset()
-            title("$COLOR_RED${COLOR_BOLD}Target")
-            subtitle("${COLOR_YELLOW}Finish the game before you get killed!")
+            title(role)
+            subtitle(goal)
             time(5, 20, 5)
+        }
+
+        gameObject.entity.run {
+            sendMessage("${COLOR_YELLOW}You're $role")
+            sendMessage(goal)
+            sendMessage("")
         }
     }
 
     override fun onDestroy(gameObject: GamePlayer) {
-        val health = 20.0
-        gameObject.entity.health = health
-        gameObject.entity.maxHealth = health
+        gameObject.entity.run {
+            val h = 20.0
+            health = h
+            maxHealth = h
+        }
     }
 
 }
