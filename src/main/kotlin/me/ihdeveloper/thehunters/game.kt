@@ -30,7 +30,7 @@ import org.bukkit.Bukkit
 private val playersManager = PlayersManager()
 
 class Game : GameInstance (
-        name = "The Hunters",
+        name = "TheHunters",
         components = listOf<GameComponent>(),
         children = listOf<GameObject>(
                 LoginManager(),
