@@ -31,7 +31,7 @@ import me.ihdeveloper.thehunters.component.TYPE_COUNTDOWN
 import me.ihdeveloper.thehunters.component.TitleComponent
 import me.ihdeveloper.thehunters.component.VanishComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterComponent
-import me.ihdeveloper.thehunters.component.gameplay.HunterScoreboard
+import me.ihdeveloper.thehunters.component.gameplay.HunterScoreboardComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterSignalComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetDimensionComponent
@@ -102,7 +102,7 @@ class Gameplay : GameObject() {
 
             hunters++
             player.add(HunterComponent(player))
-            player.add(HunterScoreboard(player))
+            player.add(HunterScoreboardComponent(player))
             player.add(HunterSignalComponent(player))
         }
 

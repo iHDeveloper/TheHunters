@@ -84,7 +84,7 @@ class HunterComponent (
 
 }
 
-class HunterScoreboard (
+class HunterScoreboardComponent (
         override val gameObject: GamePlayer
 ) : GameplayScoreboardComponent(), Listener {
 
