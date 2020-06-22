@@ -25,7 +25,9 @@
 
 package me.ihdeveloper.thehunters.component
 
+import me.ihdeveloper.thehunters.Game
 import me.ihdeveloper.thehunters.GameComponent
+import me.ihdeveloper.thehunters.GamePlayer
 import me.ihdeveloper.thehunters.event.countdown.CountdownCancelEvent
 import me.ihdeveloper.thehunters.event.countdown.CountdownFinishEvent
 import me.ihdeveloper.thehunters.event.countdown.CountdownStartEvent
@@ -37,6 +39,9 @@ import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.configuration.file.YamlConfiguration
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.player.AsyncPlayerChatEvent
 import org.bukkit.scheduler.BukkitTask
 import java.io.File
 
@@ -156,4 +161,38 @@ abstract class CommandComponent (
             label: String?,
             args: Array<out String>?
     ): Boolean
+}
+
+abstract class ChatComponent : GameComponent, Listener {
+
+    abstract override val type: Short
+
+    override fun init() {
+        Bukkit.getPluginManager().registerEvents(this, plugin())
+    }
+
+    @EventHandler
+    private fun onChat(event: AsyncPlayerChatEvent) {
+        val sender = Game.players[event.player.uniqueId] ?: error("Failed to find the player game object from the game")
+
+        val message = build(sender, event.message)
+
+        // Bukkit.broadcastMessage() is expensive since it broadcast with permission
+        // And checking the permission can be expensive operation in chat events
+        for (player in Game.players.values) {
+            player.entity.sendMessage(message)
+        }
+        Bukkit.getConsoleSender().sendMessage(message)
+
+        // We don't want to format every message in the game
+        // Since String.format is expensive string operation
+        // We prefer not to use it.
+        event.isCancelled = true
+    }
+
+    override fun destroy() {
+        AsyncPlayerChatEvent.getHandlerList().unregister(this)
+    }
+
+    abstract fun build(sender: GamePlayer, message: String): String
 }
