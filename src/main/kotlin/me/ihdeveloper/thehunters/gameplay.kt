@@ -25,6 +25,8 @@
 
 package me.ihdeveloper.thehunters
 
+import me.ihdeveloper.thehunters.component.ScoreboardComponent
+import me.ihdeveloper.thehunters.component.TitleComponent
 import java.util.UUID
 import kotlin.random.Random
 
@@ -39,6 +41,9 @@ class Gameplay : GameObject() {
         var found = false
 
         for (player in Game.players.values) {
+            player.add(ScoreboardComponent(player))
+            player.add(TitleComponent(player))
+
             if (!found && random.nextBoolean()) {
                 found = true
                 target = player.entity.uniqueId
