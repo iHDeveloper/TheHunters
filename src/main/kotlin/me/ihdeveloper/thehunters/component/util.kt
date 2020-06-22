@@ -40,6 +40,7 @@ import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.event.EventHandler
+import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.player.AsyncPlayerChatEvent
 import org.bukkit.scheduler.BukkitTask
@@ -171,8 +172,8 @@ abstract class ChatComponent : GameComponent, Listener {
         Bukkit.getPluginManager().registerEvents(this, plugin())
     }
 
-    @EventHandler
-    private fun onChat(event: AsyncPlayerChatEvent) {
+    @EventHandler(priority = EventPriority.LOWEST)
+    fun onChat(event: AsyncPlayerChatEvent) {
         val sender = Game.players[event.player.uniqueId] ?: error("Failed to find the player game object from the game")
 
         val message = build(sender, event.message)
