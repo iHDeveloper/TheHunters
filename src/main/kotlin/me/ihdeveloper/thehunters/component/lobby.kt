@@ -71,6 +71,8 @@ class LobbyComponent (
         titleComponent.subtitle("${COLOR_RED}Prove that you can't be hunted!")
         titleComponent.time(20, 40, 20)
 
+        gameObject.entity.level = 0
+
         Bukkit.getPluginManager().registerEvents(this, plugin())
     }
 
