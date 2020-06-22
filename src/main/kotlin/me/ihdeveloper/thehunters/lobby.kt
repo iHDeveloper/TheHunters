@@ -176,6 +176,10 @@ class Lobby : GameObject(
     override fun onDestroy() {
         GamePlayerEvent.getHandlerList().unregister(this)
         CountdownEvent.getHandlerList().unregister(this)
+
+        for (player in Game.players.values) {
+            player.reset()
+        }
     }
 
     fun start() {

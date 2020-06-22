@@ -102,6 +102,16 @@ open class GameObject (
         children.clear()
     }
 
+    fun reset() {
+        for (component in components.values) {
+            component.destroy()
+        }
+
+        removeAllChildren()
+
+        components.clear()
+    }
+
     fun init() {
         if (initialized)
             return
