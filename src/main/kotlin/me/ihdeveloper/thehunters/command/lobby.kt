@@ -33,7 +33,7 @@ import org.bukkit.command.CommandSender
 const val TYPE_COMMAND_LOBBY_FORCE_START: Short = 1001
 
 class LobbyForceStartCommand (
-        val lobby: Lobby
+        private val lobby: Lobby
 ) : CommandComponent("forcestart") {
 
     override val type: Short = TYPE_COMMAND_LOBBY_FORCE_START
