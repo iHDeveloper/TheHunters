@@ -205,6 +205,12 @@ abstract class GameplayScoreboardComponent : GameComponentOf<GamePlayer>(), List
         gameEventName = null
         gameEventTimer = null
 
+        hunters!!.unregister()
+        hunters = null
+
+        targets!!.unregister()
+        targets = null
+
         sidebar!!.unregister()
         sidebar = null
 
