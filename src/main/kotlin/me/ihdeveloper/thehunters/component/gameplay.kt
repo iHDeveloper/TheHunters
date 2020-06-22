@@ -27,6 +27,9 @@ package me.ihdeveloper.thehunters.component
 
 import me.ihdeveloper.thehunters.GameComponentOf
 import me.ihdeveloper.thehunters.GamePlayer
+import me.ihdeveloper.thehunters.util.COLOR_BOLD
+import me.ihdeveloper.thehunters.util.COLOR_RED
+import me.ihdeveloper.thehunters.util.COLOR_YELLOW
 
 const val TYPE_GAMEPLAY_TARGET: Short = 301
 
@@ -40,6 +43,13 @@ class TargetComponent (
         val health = 20.0 * 3
         gameObject.entity.maxHealth = health
         gameObject.entity.health = health
+
+        gameObject.get<TitleComponent>(TYPE_TITLE).run {
+            reset()
+            title("${COLOR_RED}${COLOR_BOLD}Target")
+            subtitle("${COLOR_YELLOW}Finish the game before you get killed!")
+            time(5, 20, 5)
+        }
     }
 
     override fun onDestroy(gameObject: GamePlayer) {
