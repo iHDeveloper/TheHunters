@@ -167,7 +167,7 @@ class TargetGetReadyComponent (
         }
 
         gameObject.entity.run {
-            val message = "${COLOR_YELLOW}You have $COLOR_RED$seconds$COLOR_YELLOW to get ready!"
+            val message = "${COLOR_YELLOW}You have $COLOR_RED$seconds$COLOR_YELLOW seconds to get ready!"
             sendMessage(message)
         }
     }
