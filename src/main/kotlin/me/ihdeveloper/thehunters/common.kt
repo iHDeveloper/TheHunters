@@ -77,6 +77,8 @@ open class GameObject (
             component.init()
     }
 
+    fun has(type: Short) = components.containsKey(type)
+
     fun remove(type: Short) {
         components[type]!!.destroy()
         components.remove(type)
