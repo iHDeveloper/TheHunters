@@ -134,7 +134,6 @@ class LobbyScoreboardComponent (
     private var timeLeftLastSeconds = 61
     private var timeLeftScore: Score? = null
 
-    private var lastPlayersCount: Int = 0
     private var playersScore: Score? = null
 
     override fun onInit(gameObject: GamePlayer) {
@@ -198,10 +197,6 @@ class LobbyScoreboardComponent (
     }
 
     private fun updatePlayersCount() {
-        if (lastPlayersCount == Game.count)
-            return
-        lastPlayersCount = Game.count
-
         if (playersScore != null) {
             scoreboard!!.resetScores(playersScore!!.entry)
             playersScore = null
