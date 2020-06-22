@@ -2,3 +2,11 @@ name: TheHunters
 version: 0.1
 author: iHDeveloper
 main: me.ihdeveloper.thehunters.Main
+
+commands:
+  forcestart:
+    usage: "forcestart"
+    aliases: [ "fs" ]
+    description: "Force start the game countdown"
+    permission: "thehunters.forcestart"
+    permission-message: "You don't have the permission to force start the game countdown"

@@ -25,6 +25,7 @@
 
 package me.ihdeveloper.thehunters
 
+import me.ihdeveloper.thehunters.command.LobbyForceStartCommand
 import me.ihdeveloper.thehunters.component.NoHungerComponent
 import me.ihdeveloper.thehunters.component.AdventureComponent
 import me.ihdeveloper.thehunters.component.ClearInventoryComponent
@@ -59,6 +60,10 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
 class Lobby : GameObject(), Listener {
+
+    init {
+        add(LobbyForceStartCommand(this))
+    }
 
     private val countdown = CountdownComponent(COUNTDOWN_LOBBY, 20 * 70)
 
@@ -99,7 +104,7 @@ class Lobby : GameObject(), Listener {
         Bukkit.broadcastMessage(message.toString())
 
         if (Game.count == Game.max) {
-            countdown.start()
+            start()
         }
     }
 
@@ -168,6 +173,10 @@ class Lobby : GameObject(), Listener {
     override fun onDestroy() {
         GamePlayerEvent.getHandlerList().unregister(this)
         CountdownEvent.getHandlerList().unregister(this)
+    }
+
+    fun start() {
+        countdown.start()
     }
 
 }
