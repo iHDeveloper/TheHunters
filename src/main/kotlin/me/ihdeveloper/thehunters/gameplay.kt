@@ -25,10 +25,32 @@
 
 package me.ihdeveloper.thehunters
 
+import java.util.UUID
+import kotlin.random.Random
+
 class Gameplay : GameObject() {
+
+    private var target: UUID? = null
 
     override fun onInit() {
         Game.lock()
+
+        val random = Random(Game.count)
+        var found = false
+
+        for (player in Game.players.values) {
+            if (!found && random.nextBoolean()) {
+                found = true
+                target = player.entity.uniqueId
+
+                // TODO Add Target Component
+
+                continue
+            }
+
+            // TODO Add Hunter Component
+        }
+
     }
 
     override fun onDestroy() {
