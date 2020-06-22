@@ -23,47 +23,41 @@
  *
  */
 
-package me.ihdeveloper.thehunters
+package me.ihdeveloper.thehunters.component.gameplay
 
-import me.ihdeveloper.thehunters.component.ScoreboardComponent
+import me.ihdeveloper.thehunters.GameComponentOf
+import me.ihdeveloper.thehunters.GamePlayer
+import me.ihdeveloper.thehunters.component.TYPE_TITLE
 import me.ihdeveloper.thehunters.component.TitleComponent
-import me.ihdeveloper.thehunters.component.gameplay.HunterComponent
-import me.ihdeveloper.thehunters.component.gameplay.TargetComponent
-import me.ihdeveloper.thehunters.event.target.TargetJoinEvent
-import org.bukkit.Bukkit
-import java.util.UUID
-import kotlin.random.Random
+import me.ihdeveloper.thehunters.util.COLOR_BOLD
+import me.ihdeveloper.thehunters.util.COLOR_RED
+import me.ihdeveloper.thehunters.util.COLOR_YELLOW
 
-class Gameplay : GameObject() {
+const val TYPE_GAMEPLAY_TARGET: Short = 310
 
-    private var target: UUID? = null
+class TargetComponent (
+        override val gameObject: GamePlayer
+) : GameComponentOf<GamePlayer>() {
 
-    override fun onInit() {
-        Game.lock()
+    override val type = TYPE_GAMEPLAY_TARGET
 
-        val random = Random(Game.count + 1)
-        var found = false
+    override fun onInit(gameObject: GamePlayer) {
+        val health = 20.0 * 3
+        gameObject.entity.maxHealth = health
+        gameObject.entity.health = health
 
-        for (player in Game.players.values) {
-            player.add(ScoreboardComponent(player))
-            player.add(TitleComponent(player))
-
-            if (!found && random.nextBoolean()) {
-                found = true
-                target = player.entity.uniqueId
-
-                player.add(TargetComponent(player))
-
-                continue
-            }
-
-            player.add(HunterComponent(player))
+        gameObject.get<TitleComponent>(TYPE_TITLE).run {
+            reset()
+            title("$COLOR_RED${COLOR_BOLD}Target")
+            subtitle("${COLOR_YELLOW}Finish the game before you get killed!")
+            time(5, 20, 5)
         }
-
-        Bukkit.getPluginManager().callEvent(TargetJoinEvent(Game.players[target!!]))
     }
 
-    override fun onDestroy() {
+    override fun onDestroy(gameObject: GamePlayer) {
+        val health = 20.0
+        gameObject.entity.health = health
+        gameObject.entity.maxHealth = health
     }
 
 }

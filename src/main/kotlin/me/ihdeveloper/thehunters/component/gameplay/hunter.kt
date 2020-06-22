@@ -23,39 +23,48 @@
  *
  */
 
-package me.ihdeveloper.thehunters.component
+package me.ihdeveloper.thehunters.component.gameplay
 
 import me.ihdeveloper.thehunters.GameComponentOf
 import me.ihdeveloper.thehunters.GamePlayer
+import me.ihdeveloper.thehunters.component.TYPE_TITLE
+import me.ihdeveloper.thehunters.component.TitleComponent
+import me.ihdeveloper.thehunters.util.COLOR_BLUE
 import me.ihdeveloper.thehunters.util.COLOR_BOLD
-import me.ihdeveloper.thehunters.util.COLOR_RED
 import me.ihdeveloper.thehunters.util.COLOR_YELLOW
 
-const val TYPE_GAMEPLAY_TARGET: Short = 301
+const val TYPE_GAMEPLAY_HUNTER: Short = 350
 
-class TargetComponent (
+class HunterComponent (
         override val gameObject: GamePlayer
 ) : GameComponentOf<GamePlayer>() {
 
-    override val type = TYPE_GAMEPLAY_TARGET
+    override val type = TYPE_GAMEPLAY_HUNTER
 
     override fun onInit(gameObject: GamePlayer) {
-        val health = 20.0 * 3
-        gameObject.entity.maxHealth = health
-        gameObject.entity.health = health
+        gameObject.entity.run {
+            val h = 20.0
+            health = h
+            maxHealth = h
+        }
+
+        val role = "$COLOR_BLUE${COLOR_BOLD}Hunter"
+        val goal = "${COLOR_YELLOW}Kill the target before it kills the ender dragon!"
 
         gameObject.get<TitleComponent>(TYPE_TITLE).run {
             reset()
-            title("${COLOR_RED}${COLOR_BOLD}Target")
-            subtitle("${COLOR_YELLOW}Finish the game before you get killed!")
+            title(role)
+            subtitle(goal)
             time(5, 20, 5)
+        }
+
+        gameObject.entity.run {
+            sendMessage("${COLOR_YELLOW}You're $role")
+            sendMessage(goal)
         }
     }
 
     override fun onDestroy(gameObject: GamePlayer) {
-        val health = 20.0
-        gameObject.entity.health = health
-        gameObject.entity.maxHealth = health
     }
 
 }
