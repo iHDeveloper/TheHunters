@@ -26,7 +26,6 @@
 package me.ihdeveloper.thehunters.component.gameplay
 
 import me.ihdeveloper.thehunters.Game
-import me.ihdeveloper.thehunters.GameComponent
 import me.ihdeveloper.thehunters.GameComponentOf
 import me.ihdeveloper.thehunters.GamePlayer
 import me.ihdeveloper.thehunters.component.TYPE_TITLE
@@ -48,9 +47,11 @@ import me.ihdeveloper.thehunters.util.COUNTDOWN_GAMEPLAY_GET_READY
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.player.PlayerChangedWorldEvent
 
 const val TYPE_GAMEPLAY_TARGET: Short = 310
 const val TYPE_GAMEPLAY_TARGET_GET_READY: Short = 311
+const val TYPE_GAMEPLAY_TARGET_DIMENSION: Short = 312
 
 class TargetComponent (
         override val gameObject: GamePlayer
@@ -195,6 +196,33 @@ class TargetGetReadyComponent (
 
     override fun onDestroy(gameObject: GamePlayer) {
         CountdownEvent.getHandlerList().unregister(this)
+    }
+
+}
+
+class TargetDimensionComponent (
+        override val gameObject: GamePlayer
+) : GameComponentOf<GamePlayer>(), Listener {
+
+    override val type = TYPE_GAMEPLAY_TARGET_DIMENSION
+
+    override fun onInit(gameObject: GamePlayer) {
+        Bukkit.getPluginManager().registerEvents(this, plugin())
+    }
+
+    @EventHandler
+    private fun onWorldChange(event: PlayerChangedWorldEvent) {
+        val event = TargetDimensionEvent(gameObject)
+        event.run {
+            val message = "${COLOR_YELLOW}You're in ${dimension.displayName}${COLOR_YELLOW}."
+            gameObject.entity.sendMessage(message)
+        }
+
+        Bukkit.getPluginManager().callEvent(event)
+    }
+
+    override fun onDestroy(gameObject: GamePlayer) {
+        PlayerChangedWorldEvent.getHandlerList().unregister(this)
     }
 
 }

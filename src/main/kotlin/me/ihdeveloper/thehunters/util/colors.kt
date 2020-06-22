@@ -35,3 +35,4 @@ val COLOR_RED = ChatColor.RED
 val COLOR_BOLD = ChatColor.BOLD
 val COLOR_WHITE = ChatColor.WHITE
 val COLOR_BLUE = ChatColor.BLUE
+val COLOR_PURPLE = ChatColor.LIGHT_PURPLE

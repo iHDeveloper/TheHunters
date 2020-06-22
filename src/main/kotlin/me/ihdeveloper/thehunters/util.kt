@@ -25,13 +25,19 @@
 
 package me.ihdeveloper.thehunters
 
+import me.ihdeveloper.thehunters.util.COLOR_GRAY
+import me.ihdeveloper.thehunters.util.COLOR_GREEN
+import me.ihdeveloper.thehunters.util.COLOR_PURPLE
+import me.ihdeveloper.thehunters.util.COLOR_RED
+
 enum class Dimension (
+        val displayName: String,
         private val checker: (String) -> Boolean
 ) {
-    UNKNOWN({ false }),
-    WORLD({ it === "world" }),
-    NETHER({ it === "world_nether" }),
-    THE_END({ it === "world_the_end" });
+    UNKNOWN("${COLOR_GRAY}Unknown", { false }),
+    WORLD("${COLOR_GREEN}World", { it === "world" }),
+    NETHER("${COLOR_RED}Nether", { it === "world_nether" }),
+    THE_END("${COLOR_PURPLE}The End", { it === "world_the_end" });
 
     fun check(name: String) = checker(name)
 }
