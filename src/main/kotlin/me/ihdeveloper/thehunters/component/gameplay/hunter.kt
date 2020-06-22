@@ -28,11 +28,17 @@ package me.ihdeveloper.thehunters.component.gameplay
 import me.ihdeveloper.thehunters.GameComponentOf
 import me.ihdeveloper.thehunters.GamePlayer
 import me.ihdeveloper.thehunters.component.TYPE_TITLE
+import me.ihdeveloper.thehunters.component.TYPE_VANISH
 import me.ihdeveloper.thehunters.component.TitleComponent
+import me.ihdeveloper.thehunters.component.VanishComponent
 import me.ihdeveloper.thehunters.event.target.TargetJoinEvent
+import me.ihdeveloper.thehunters.event.target.TargetLostEvent
+import me.ihdeveloper.thehunters.event.target.TargetRecoverEvent
 import me.ihdeveloper.thehunters.plugin
 import me.ihdeveloper.thehunters.util.COLOR_BLUE
 import me.ihdeveloper.thehunters.util.COLOR_BOLD
+import me.ihdeveloper.thehunters.util.COLOR_GOLD
+import me.ihdeveloper.thehunters.util.COLOR_RED
 import me.ihdeveloper.thehunters.util.COLOR_YELLOW
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
@@ -40,6 +46,7 @@ import org.bukkit.event.Listener
 
 const val TYPE_GAMEPLAY_HUNTER: Short = 350
 const val TYPE_GAMEPLAY_HUNTER_SCOREBOARD: Short = 351
+const val TYPE_GAMEPLAY_HUNTER_SIGNAL: Short = 352
 
 class HunterComponent (
         override val gameObject: GamePlayer
@@ -102,6 +109,55 @@ class HunterScoreboard (
         TargetJoinEvent.getHandlerList().unregister(this)
 
         super.onDestroy(gameObject)
+    }
+
+}
+
+class HunterSignalComponent (
+        override val gameObject: GamePlayer
+) : GameComponentOf<GamePlayer>(), Listener {
+
+    override val type = TYPE_GAMEPLAY_HUNTER_SIGNAL
+
+    override fun onInit(gameObject: GamePlayer) {
+        Bukkit.getPluginManager().registerEvents(this, plugin())
+    }
+
+    @EventHandler
+    fun lost(event: TargetLostEvent) {
+        val msg = "${COLOR_YELLOW}We lost the signal of the target."
+
+        gameObject.get<TitleComponent>(TYPE_TITLE).run {
+            reset()
+            title("$COLOR_RED${COLOR_BOLD}Target Lost!")
+            subtitle(msg)
+            time(5, 15, 5)
+        }
+
+        gameObject.entity.sendMessage(msg)
+
+        gameObject.get<VanishComponent>(TYPE_VANISH).run {
+            hide(event.target)
+        }
+    }
+
+    @EventHandler
+    fun recover(event: TargetRecoverEvent) {
+        val msg = "${COLOR_YELLOW}We recovered the signal of the target!"
+
+        gameObject.get<TitleComponent>(TYPE_TITLE).run {
+            reset()
+            title("$COLOR_GOLD${COLOR_BOLD}Target Found!")
+            subtitle(msg)
+            time(5, 15, 5)
+        }
+
+        gameObject.get<VanishComponent>(TYPE_VANISH).show(event.target)
+    }
+
+    override fun onDestroy(gameObject: GamePlayer) {
+        TargetLostEvent.getHandlerList().unregister(this)
+        TargetRecoverEvent.getHandlerList().unregister(this)
     }
 
 }
