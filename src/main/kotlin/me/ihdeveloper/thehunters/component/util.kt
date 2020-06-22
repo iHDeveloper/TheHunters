@@ -92,9 +92,9 @@ class CountdownComponent (
         if (started || ticksRemaining <= 0)
             return
 
-        started = true
-
         stop(false)
+
+        started = true
 
         task = Bukkit.getScheduler().runTaskTimer(plugin(), this, 0L, 1L)
         Bukkit.getPluginManager().callEvent(CountdownStartEvent(id, ticksRemaining))
