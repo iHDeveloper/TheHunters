@@ -48,6 +48,8 @@ import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.inventory.InventoryDragEvent
+import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scoreboard.Score
@@ -203,11 +205,11 @@ class HunterSignalComponent (
 
 class HunterCompass (
         override val gameObject: GamePlayer
-) : GameComponentOf<GamePlayer>() {
+) : GameComponentOf<GamePlayer>(), Listener {
 
     companion object {
-        val empty = ItemStack(Material.STAINED_GLASS_PANE, 1)
-        val compass = ItemStack(Material.COMPASS, 1)
+        private val empty = ItemStack(Material.STAINED_GLASS_PANE, 1)
+        private val compass = ItemStack(Material.COMPASS, 1)
 
         private fun init() {
             empty.run {
@@ -246,6 +248,19 @@ class HunterCompass (
 
     override fun onInit(gameObject: GamePlayer) {
         lost()
+
+        Bukkit.getPluginManager().registerEvents(this, plugin())
+    }
+
+    @EventHandler
+    fun onDrop(event: PlayerDropItemEvent) {
+        if (event.player.uniqueId !== gameObject.uniqueId)
+            return
+
+        if (event.player.inventory.heldItemSlot !== COMPASS_SLOT)
+            return
+
+        event.isCancelled = true
     }
 
     private fun lost() {
@@ -265,6 +280,8 @@ class HunterCompass (
     }
 
     override fun onDestroy(gameObject: GamePlayer) {
+        PlayerDropItemEvent.getHandlerList().unregister(this)
+
         gameObject.entity.run {
             compassTarget = location
             inventory.setItem(COMPASS_SLOT, ItemStack(Material.AIR))
