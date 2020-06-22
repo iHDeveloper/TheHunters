@@ -66,12 +66,17 @@ class LobbyComponent (
     override val type = TYPE_LOBBY_PLAYER
 
     override fun onInit(gameObject: GamePlayer) {
-        val titleComponent = gameObject.get<TitleComponent>(TYPE_TITLE)
-        titleComponent.title("$COLOR_YELLOW${COLOR_BOLD}The Hunters")
-        titleComponent.subtitle("${COLOR_RED}Prove that you can't be hunted!")
-        titleComponent.time(20, 40, 20)
+        gameObject.get<TitleComponent>(TYPE_TITLE).run {
+            title("$COLOR_YELLOW${COLOR_BOLD}The Hunters")
+            subtitle("${COLOR_RED}Prove that you can't be hunted!")
+            time(20, 40, 20)
+        }
 
-        gameObject.entity.level = 0
+        gameObject.entity.run {
+            level = 0
+            health = 20.0
+            maxHealth = 20.0
+        }
 
         Bukkit.getPluginManager().registerEvents(this, plugin())
     }
@@ -114,9 +119,11 @@ class LobbyComponent (
 
     private fun notifyPlayer(seconds: Int) {
         val message = "${COLOR_RED}${seconds} ${COLOR_YELLOW}seconds to start"
-        gameObject.get<TitleComponent>(TYPE_TITLE).reset()
-        gameObject.get<TitleComponent>(TYPE_TITLE).subtitle(message)
-        gameObject.get<TitleComponent>(TYPE_TITLE).time(10, 20, 10)
+        gameObject.get<TitleComponent>(TYPE_TITLE).run {
+            reset()
+            subtitle(message)
+            time(10, 20, 10)
+        }
     }
 
     override fun onDestroy(gameObject: GamePlayer) {
@@ -155,7 +162,7 @@ class LobbyScoreboardComponent (
         }
 
         team = scoreboard!!.registerNewTeam("players")
-        team!!.prefix = "${COLOR_GRAY}"
+        team!!.prefix = "$COLOR_GRAY"
         team!!.setAllowFriendlyFire(true)
         team!!.nameTagVisibility = NameTagVisibility.ALWAYS
         team!!.setCanSeeFriendlyInvisibles(true)
@@ -218,11 +225,13 @@ class LobbyScoreboardComponent (
             playersScore = null
         }
 
-        val builder = StringBuilder()
-        builder.append("${COLOR_YELLOW}Players: ")
-        builder.append("$COLOR_GREEN${Game.count}")
-        builder.append("$COLOR_GRAY/")
-        builder.append("$COLOR_RED${Game.max}")
+        val builder = StringBuilder().run {
+            append("${COLOR_YELLOW}Players: ")
+            append("$COLOR_GREEN${Game.count}")
+            append("$COLOR_GRAY/")
+            append("$COLOR_RED${Game.max}")
+        }
+
         playersScore = sidebar!!.getScore(builder.toString())
         playersScore!!.score = 1
     }
@@ -305,14 +314,14 @@ class LobbyChatComponent : ChatComponent() {
     override val type = TYPE_LOBBY_CHAT
 
     override fun build(sender: GamePlayer, message: String): String {
-        val builder = StringBuilder()
-
-        builder.append("$COLOR_GRAY")
-        builder.append(sender.entity.name)
-        builder.append("$COLOR_WHITE")
-        builder.append(':')
-        builder.append(' ')
-        builder.append(message)
+        val builder = StringBuilder().run {
+            append("$COLOR_GRAY")
+            append(sender.entity.name)
+            append(sender.entity.name)
+            append(':')
+            append(' ')
+            append(message)
+        }
 
         return builder.toString()
     }
