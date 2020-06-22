@@ -42,7 +42,6 @@ import java.io.File
 
 const val TYPE_CONFIGURATION: Short = 1
 const val TYPE_COUNTDOWN: Short = 2
-const val TYPE_COMMAND: Short = 3
 
 class ConfigurationComponent (
         name: String
@@ -141,7 +140,7 @@ abstract class CommandComponent (
         val name: String
 ) : GameComponent, CommandExecutor {
 
-    override val type = TYPE_COMMAND
+    abstract override val type: Short
 
     override fun init() {
         plugin().getCommand(name).executor = this

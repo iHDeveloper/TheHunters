@@ -30,9 +30,13 @@ import me.ihdeveloper.thehunters.component.CommandComponent
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 
+const val TYPE_COMMAND_LOBBY_FORCE_START: Short = 1001
+
 class LobbyForceStartCommand (
         val lobby: Lobby
 ) : CommandComponent("forcestart") {
+
+    override val type: Short = TYPE_COMMAND_LOBBY_FORCE_START
 
     override fun onCommand(sender: CommandSender?, command: Command?, label: String?, args: Array<out String>?): Boolean {
         lobby.start()
