@@ -40,7 +40,7 @@ class GameLogger (
         builder.append("[${prefix}] ")
         builder.append(message)
 
-        print(builder.toString())
+        println(builder.toString())
     }
 
 }
