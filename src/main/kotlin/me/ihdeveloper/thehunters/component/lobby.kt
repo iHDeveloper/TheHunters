@@ -55,8 +55,9 @@ import org.bukkit.scoreboard.Score
 import org.bukkit.scoreboard.Scoreboard
 import org.bukkit.scoreboard.Team
 
-const val TYPE_LOBBY_PLAYER: Short = 201
 const val TYPE_LOBBY_SCOREBOARD: Short = 200
+const val TYPE_LOBBY_PLAYER: Short = 201
+const val TYPE_LOBBY_CHAT: Short = 202
 
 class LobbyComponent (
         override val gameObject: GamePlayer
@@ -293,6 +294,24 @@ class LobbyScoreboardComponent (
         timeLeftScore = null
 
         scoreboard = null
+    }
+
+}
+
+class LobbyChatComponent : ChatComponent() {
+
+    override val type = TYPE_LOBBY_CHAT
+
+    override fun build(sender: GamePlayer, message: String): String {
+        val builder = StringBuilder()
+
+        builder.append("$COLOR_GRAY")
+        builder.append(sender.entity.name)
+        builder.append("$COLOR_WHITE")
+        builder.append(':')
+        builder.append(message)
+
+        return builder.toString()
     }
 
 }

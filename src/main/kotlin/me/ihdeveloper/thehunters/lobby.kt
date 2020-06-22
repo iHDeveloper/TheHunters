@@ -34,6 +34,7 @@ import me.ihdeveloper.thehunters.component.DisableBlockBreakComponent
 import me.ihdeveloper.thehunters.component.DisableBlockPlaceComponent
 import me.ihdeveloper.thehunters.component.DisableItemCollectComponent
 import me.ihdeveloper.thehunters.component.DisableItemDropComponent
+import me.ihdeveloper.thehunters.component.LobbyChatComponent
 import me.ihdeveloper.thehunters.component.LobbyComponent
 import me.ihdeveloper.thehunters.component.LobbyScoreboardComponent
 import me.ihdeveloper.thehunters.component.NoDamageComponent
@@ -59,7 +60,9 @@ import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
-class Lobby : GameObject(), Listener {
+class Lobby : GameObject(
+        components = listOf(LobbyChatComponent())
+), Listener {
 
     init {
         add(LobbyForceStartCommand(this))
