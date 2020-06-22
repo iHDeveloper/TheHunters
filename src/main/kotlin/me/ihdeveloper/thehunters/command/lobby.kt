@@ -27,8 +27,10 @@ package me.ihdeveloper.thehunters.command
 
 import me.ihdeveloper.thehunters.Lobby
 import me.ihdeveloper.thehunters.component.CommandComponent
+import me.ihdeveloper.thehunters.util.COLOR_RED
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
+import java.lang.NumberFormatException
 
 const val TYPE_COMMAND_LOBBY_FORCE_START: Short = 1001
 
@@ -39,6 +41,18 @@ class LobbyForceStartCommand (
     override val type: Short = TYPE_COMMAND_LOBBY_FORCE_START
 
     override fun onCommand(sender: CommandSender?, command: Command?, label: String?, args: Array<out String>?): Boolean {
+        if (args!!.size == 1) {
+            try {
+                val countdown = Integer.valueOf(args[0])
+
+                lobby.start(countdown)
+            } catch (e: NumberFormatException) {
+                val message = "${COLOR_RED}The countdown is not valid number"
+                sender!!.sendMessage(message)
+            }
+            return true
+        }
+
         lobby.start()
         return true
     }

@@ -78,7 +78,7 @@ class ConfigurationComponent (
 
 class CountdownComponent (
         val id: Byte,
-        val defaultStart: Int,
+        var defaultStart: Int,
         val onFinish: () -> Unit = { }
 ) : GameComponent, Runnable {
 

@@ -39,13 +39,10 @@ import me.ihdeveloper.thehunters.component.LobbyComponent
 import me.ihdeveloper.thehunters.component.LobbyScoreboardComponent
 import me.ihdeveloper.thehunters.component.NoDamageComponent
 import me.ihdeveloper.thehunters.component.NoInteractComponent
-import me.ihdeveloper.thehunters.component.TYPE_TITLE
-import me.ihdeveloper.thehunters.component.TitleComponent
 import me.ihdeveloper.thehunters.event.CountdownEvent
 import me.ihdeveloper.thehunters.event.player.GameJoinEvent
 import me.ihdeveloper.thehunters.event.GamePlayerEvent
 import me.ihdeveloper.thehunters.event.countdown.CountdownCancelEvent
-import me.ihdeveloper.thehunters.event.countdown.CountdownFinishEvent
 import me.ihdeveloper.thehunters.event.countdown.CountdownStartEvent
 import me.ihdeveloper.thehunters.event.countdown.CountdownTickEvent
 import me.ihdeveloper.thehunters.event.player.GameQuitEvent
@@ -188,7 +185,12 @@ class Lobby : GameObject(
         }
     }
 
-    fun start() {
+    fun start(defaultStart: Int? = null) {
+        if (defaultStart != null) {
+            countdown.defaultStart = defaultStart
+            countdown.reset()
+        }
+
         countdown.start()
     }
 

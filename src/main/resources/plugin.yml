@@ -5,7 +5,7 @@ main: me.ihdeveloper.thehunters.Main
 
 commands:
   forcestart:
-    usage: "forcestart"
+    usage: "forcestart [countdown]"
     aliases: [ "fs" ]
     description: "Force start the game countdown"
     permission: "thehunters.forcestart"
