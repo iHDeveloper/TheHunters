@@ -29,13 +29,14 @@ import org.bukkit.Bukkit
 import java.util.UUID
 
 private val playersManager = PlayersManager()
+private val loginManager = LoginManager()
 private val lobby = Lobby()
 private val gameplay = Gameplay()
 
 private const val name = "TheHunters"
 private val components = listOf<GameComponent>()
-private val children = listOf<GameObject>(
-        LoginManager(),
+private val children = listOf(
+        loginManager,
         WorldsManager(),
         playersManager,
         lobby
@@ -47,11 +48,6 @@ class Game : GameInstance (name, components, children) {
                instance = this
         }
 
-        fun start() {
-                lobby.destroy()
-                add(gameplay)
-        }
-
         companion object {
                 lateinit var instance: Game
 
@@ -59,7 +55,14 @@ class Game : GameInstance (name, components, children) {
                 val count: Int get() = playersManager.count
                 val max: Int get() = Bukkit.getMaxPlayers()
 
-                fun start() = instance.start()
+                fun start() {
+                        lobby.destroy()
+                        instance.add(gameplay)
+                }
+
+                fun lock() {
+                        loginManager.lock = true
+                }
         }
 
 }

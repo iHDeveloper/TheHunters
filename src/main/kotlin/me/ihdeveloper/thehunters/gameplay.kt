@@ -28,6 +28,7 @@ package me.ihdeveloper.thehunters
 class Gameplay : GameObject() {
 
     override fun onInit() {
+        Game.lock()
     }
 
     override fun onDestroy() {

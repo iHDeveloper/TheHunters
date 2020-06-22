@@ -106,12 +106,16 @@ class WorldsManager : GameObject() {
 
 class LoginManager : GameObject(), Listener {
 
+    var lock = false
+
     private val motd = listOf<String>(
             "${COLOR_GOLD}⇾ $COLOR_GRAY${COLOR_BOLD}The Hunters",
             "${COLOR_GOLD}⇾ ${COLOR_RED}${COLOR_BOLD}Prove that you can't be hunted"
     )
 
     private val full = "${COLOR_YELLOW}The game is full!"
+
+    private val locked = "${COLOR_YELLOW}The game has already started!"
 
     override fun onInit() {
         Bukkit.getPluginManager().registerEvents(this, plugin())
@@ -124,6 +128,11 @@ class LoginManager : GameObject(), Listener {
 
     @EventHandler
     private fun onLogin(event: PlayerLoginEvent) {
+        if (lock) {
+            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, locked)
+            return
+        }
+
         if (Game.count >= Game.max) {
             event.disallow(PlayerLoginEvent.Result.KICK_OTHER, full)
             return
