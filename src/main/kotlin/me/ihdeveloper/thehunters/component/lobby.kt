@@ -286,10 +286,13 @@ class LobbyScoreboardComponent (
         team!!.unregister()
         team = null
 
-        scoreboard = null
+        sidebar!!.unregister()
         sidebar = null
+
         playersScore = null
         timeLeftScore = null
+
+        scoreboard = null
     }
 
 }
