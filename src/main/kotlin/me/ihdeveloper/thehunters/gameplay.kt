@@ -54,6 +54,7 @@ class Gameplay : GameObject() {
             onFinish = {
                 remove(TYPE_COUNTDOWN)
                 add(countdown)
+                countdown.start()
             }
     )
 
@@ -86,10 +87,11 @@ class Gameplay : GameObject() {
 
         Bukkit.getPluginManager().callEvent(TargetJoinEvent(Game.players[target!!]))
 
-        countdown.start()
+        intro.start()
     }
 
     override fun onDestroy() {
+        intro.stop()
         countdown.stop()
     }
 
