@@ -40,16 +40,24 @@ import me.ihdeveloper.thehunters.plugin
 import me.ihdeveloper.thehunters.util.COLOR_BLUE
 import me.ihdeveloper.thehunters.util.COLOR_BOLD
 import me.ihdeveloper.thehunters.util.COLOR_GOLD
+import me.ihdeveloper.thehunters.util.COLOR_GRAY
 import me.ihdeveloper.thehunters.util.COLOR_RED
 import me.ihdeveloper.thehunters.util.COLOR_YELLOW
 import org.bukkit.Bukkit
+import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.inventory.ItemFlag
+import org.bukkit.inventory.ItemStack
 import org.bukkit.scoreboard.Score
 
 const val TYPE_GAMEPLAY_HUNTER: Short = 350
 const val TYPE_GAMEPLAY_HUNTER_SCOREBOARD: Short = 351
 const val TYPE_GAMEPLAY_HUNTER_SIGNAL: Short = 352
+const val TYPE_GAMEPLAY_HUNTER_COMPASS: Short = 353
+
+private const val COMPASS_SLOT = 9
 
 class HunterComponent (
         override val gameObject: GamePlayer
@@ -189,6 +197,78 @@ class HunterSignalComponent (
     override fun onDestroy(gameObject: GamePlayer) {
         TargetLostEvent.getHandlerList().unregister(this)
         TargetRecoverEvent.getHandlerList().unregister(this)
+    }
+
+}
+
+class HunterCompass (
+        override val gameObject: GamePlayer
+) : GameComponentOf<GamePlayer>() {
+
+    companion object {
+        val empty = ItemStack(Material.STAINED_GLASS_PANE, 1)
+        val compass = ItemStack(Material.COMPASS, 1)
+
+        private fun init() {
+            empty.run {
+                val meta = itemMeta
+                meta.run {
+                    displayName = "$COLOR_RED${COLOR_BOLD}No Signal!"
+                    lore = listOf(
+                            "",
+                            "${COLOR_GRAY}The tracking device is not receiving",
+                            "${COLOR_GRAY}any signal from the target."
+                    )
+                    itemFlags.add(ItemFlag.HIDE_UNBREAKABLE)
+                    spigot().isUnbreakable = true
+                }
+                itemMeta = meta
+            }
+
+            compass.run {
+                val meta = itemMeta
+                meta.run {
+                    displayName = "$COLOR_YELLOW${COLOR_BOLD}Tracking Device"
+                    lore = listOf(
+                            "",
+                            "${COLOR_GRAY}The tracking device is receiving signals",
+                            "${COLOR_GRAY}on the whereabouts of the target."
+                    )
+                    itemFlags.add(ItemFlag.HIDE_UNBREAKABLE)
+                    spigot().isUnbreakable = true
+                }
+                itemMeta = meta
+            }
+        }
+    }
+
+    override val type = TYPE_GAMEPLAY_HUNTER_COMPASS
+
+    override fun onInit(gameObject: GamePlayer) {
+        lost()
+    }
+
+    private fun lost() {
+        gameObject.entity.inventory.run {
+            setItem(COMPASS_SLOT, empty)
+        }
+    }
+
+    private fun found(location: Location) {
+        gameObject.entity.run {
+            compassTarget = location
+
+            inventory.run {
+                setItem(COMPASS_SLOT, compass)
+            }
+        }
+    }
+
+    override fun onDestroy(gameObject: GamePlayer) {
+        gameObject.entity.run {
+            compassTarget = location
+            inventory.setItem(COMPASS_SLOT, ItemStack(Material.AIR))
+        }
     }
 
 }
