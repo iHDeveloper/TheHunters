@@ -30,7 +30,9 @@ import me.ihdeveloper.thehunters.GameComponent
 import me.ihdeveloper.thehunters.GameComponentOf
 import me.ihdeveloper.thehunters.GamePlayer
 import me.ihdeveloper.thehunters.component.TYPE_TITLE
+import me.ihdeveloper.thehunters.component.TYPE_VANISH
 import me.ihdeveloper.thehunters.component.TitleComponent
+import me.ihdeveloper.thehunters.component.VanishComponent
 import me.ihdeveloper.thehunters.event.CountdownEvent
 import me.ihdeveloper.thehunters.event.countdown.CountdownFinishEvent
 import me.ihdeveloper.thehunters.event.countdown.CountdownStartEvent
@@ -108,6 +110,12 @@ class TargetGetReadyComponent (
         if (event.id != COUNTDOWN_GAMEPLAY_GET_READY)
             return
 
+        gameObject.get<VanishComponent>(TYPE_VANISH).run {
+            for (player in Game.players.values) {
+                hide(player)
+            }
+        }
+
         val seconds = event.ticks / 20
 
         gameObject.get<TitleComponent>(TYPE_TITLE).run {
@@ -140,6 +148,12 @@ class TargetGetReadyComponent (
     private fun onFinish(event: CountdownFinishEvent) {
         if (event.id != COUNTDOWN_GAMEPLAY_GET_READY)
             return
+
+        gameObject.get<VanishComponent>(TYPE_VANISH).run {
+            for (player in Game.players.values) {
+                show(player)
+            }
+        }
 
         gameObject.get<TitleComponent>(TYPE_TITLE).run {
             reset()

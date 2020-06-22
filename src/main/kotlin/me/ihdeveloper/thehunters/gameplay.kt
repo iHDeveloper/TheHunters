@@ -29,6 +29,7 @@ import me.ihdeveloper.thehunters.component.CountdownComponent
 import me.ihdeveloper.thehunters.component.ScoreboardComponent
 import me.ihdeveloper.thehunters.component.TYPE_COUNTDOWN
 import me.ihdeveloper.thehunters.component.TitleComponent
+import me.ihdeveloper.thehunters.component.VanishComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetGetReadyComponent
@@ -71,6 +72,7 @@ class Gameplay : GameObject() {
         for (player in Game.players.values) {
             player.add(ScoreboardComponent(player))
             player.add(TitleComponent(player))
+            player.add(VanishComponent(player))
 
             if (!found && random.nextBoolean()) {
                 found = true
