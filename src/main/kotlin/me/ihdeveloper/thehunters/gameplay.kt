@@ -34,6 +34,7 @@ import me.ihdeveloper.thehunters.component.gameplay.HunterComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetDimensionComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetGetReadyComponent
+import me.ihdeveloper.thehunters.component.gameplay.TargetScoreboardComponent
 import me.ihdeveloper.thehunters.event.target.TargetJoinEvent
 import me.ihdeveloper.thehunters.util.COUNTDOWN_GAMEPLAY_GET_READY
 import me.ihdeveloper.thehunters.util.COUNTDOWN_GAMEPLAY_INTRO
@@ -82,6 +83,7 @@ class Gameplay : GameObject() {
                 player.add(TargetComponent(player))
                 player.add(TargetGetReadyComponent(player))
                 player.add(TargetDimensionComponent(player))
+                player.add(TargetScoreboardComponent(player))
 
                 continue
             }
