@@ -25,6 +25,7 @@
 
 package me.ihdeveloper.thehunters.component.gameplay
 
+import me.ihdeveloper.thehunters.Game
 import me.ihdeveloper.thehunters.GameComponent
 import me.ihdeveloper.thehunters.GameComponentOf
 import me.ihdeveloper.thehunters.GamePlayer
@@ -120,7 +121,7 @@ class TargetGetReadyComponent (
             val builder = StringBuilder().run {
                 append("$COLOR_RED${COLOR_BOLD}GET READY!")
                 append(' ')
-                append("${COLOR_YELLOW}You have $COLOR_RED$seconds$COLOR_YELLOW to get ready!")
+                append("${COLOR_YELLOW}You have $COLOR_RED$seconds$COLOR_YELLOW seconds to get ready!")
             }
             sendMessage(" ")
             sendMessage(builder.toString())
