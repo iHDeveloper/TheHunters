@@ -27,22 +27,21 @@ package me.ihdeveloper.thehunters.event.target;
 
 import me.ihdeveloper.thehunters.GamePlayer;
 import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
 
-public class TargetJoinEvent extends TargetEvent {
+public abstract class TargetEvent extends Event {
 
-    private static HandlerList handlerList = new HandlerList();
+    private GamePlayer target;
 
-    public static HandlerList getHandlerList() {
-        return handlerList;
+    public TargetEvent(GamePlayer target) {
+        this.target = target;
     }
 
-    public TargetJoinEvent(GamePlayer target) {
-        super(target);
+    public void setTarget(GamePlayer target) {
+        this.target = target;
     }
 
-    @Override
-    public HandlerList getHandlers() {
-        return handlerList;
+    public GamePlayer getTarget() {
+        return target;
     }
+
 }

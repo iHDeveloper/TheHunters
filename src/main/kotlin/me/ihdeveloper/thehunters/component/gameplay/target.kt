@@ -29,9 +29,11 @@ import me.ihdeveloper.thehunters.GameComponentOf
 import me.ihdeveloper.thehunters.GamePlayer
 import me.ihdeveloper.thehunters.component.TYPE_TITLE
 import me.ihdeveloper.thehunters.component.TitleComponent
+import me.ihdeveloper.thehunters.event.target.TargetDimensionEvent
 import me.ihdeveloper.thehunters.util.COLOR_BOLD
 import me.ihdeveloper.thehunters.util.COLOR_RED
 import me.ihdeveloper.thehunters.util.COLOR_YELLOW
+import org.bukkit.Bukkit
 
 const val TYPE_GAMEPLAY_TARGET: Short = 310
 
@@ -64,6 +66,8 @@ class TargetComponent (
             sendMessage(goal)
             sendMessage("")
         }
+
+        Bukkit.getPluginManager().callEvent(TargetDimensionEvent(gameObject))
     }
 
     override fun onDestroy(gameObject: GamePlayer) {

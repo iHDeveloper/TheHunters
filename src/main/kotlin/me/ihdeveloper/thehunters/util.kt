@@ -23,26 +23,15 @@
  *
  */
 
-package me.ihdeveloper.thehunters.event.target;
+package me.ihdeveloper.thehunters
 
-import me.ihdeveloper.thehunters.GamePlayer;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
+enum class Dimension (
+        private val checker: (String) -> Boolean
+) {
+    UNKNOWN({ false }),
+    WORLD({ it === "world" }),
+    NETHER({ it === "world_nether" }),
+    THE_END({ it === "world_the_end" });
 
-public class TargetJoinEvent extends TargetEvent {
-
-    private static HandlerList handlerList = new HandlerList();
-
-    public static HandlerList getHandlerList() {
-        return handlerList;
-    }
-
-    public TargetJoinEvent(GamePlayer target) {
-        super(target);
-    }
-
-    @Override
-    public HandlerList getHandlers() {
-        return handlerList;
-    }
+    fun check(name: String) = checker(name)
 }

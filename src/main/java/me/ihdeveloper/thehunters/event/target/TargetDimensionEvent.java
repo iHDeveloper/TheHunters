@@ -25,11 +25,11 @@
 
 package me.ihdeveloper.thehunters.event.target;
 
+import me.ihdeveloper.thehunters.Dimension;
 import me.ihdeveloper.thehunters.GamePlayer;
-import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class TargetJoinEvent extends TargetEvent {
+public class TargetDimensionEvent extends TargetEvent {
 
     private static HandlerList handlerList = new HandlerList();
 
@@ -37,12 +37,35 @@ public class TargetJoinEvent extends TargetEvent {
         return handlerList;
     }
 
-    public TargetJoinEvent(GamePlayer target) {
-        super(target);
+    private Dimension dimension;
+
+    public TargetDimensionEvent(GamePlayer player) {
+        super(player);
+
+        String world = player.getEntity().getWorld().getName();
+
+        if (Dimension.THE_END.check(world)) {
+            dimension = Dimension.THE_END;
+        } else if (Dimension.NETHER.check(world)) {
+            dimension = Dimension.NETHER;
+        } else if (Dimension.WORLD.check(world)) {
+            dimension = Dimension.WORLD;
+        } else {
+            dimension = Dimension.UNKNOWN;
+        }
+    }
+
+    public void setDimension(Dimension dimension) {
+        this.dimension = dimension;
+    }
+
+    public Dimension getDimension() {
+        return dimension;
     }
 
     @Override
     public HandlerList getHandlers() {
         return handlerList;
     }
+
 }
