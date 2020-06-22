@@ -29,11 +29,17 @@ import me.ihdeveloper.thehunters.GameComponentOf
 import me.ihdeveloper.thehunters.GamePlayer
 import me.ihdeveloper.thehunters.component.TYPE_TITLE
 import me.ihdeveloper.thehunters.component.TitleComponent
+import me.ihdeveloper.thehunters.event.target.TargetJoinEvent
+import me.ihdeveloper.thehunters.plugin
 import me.ihdeveloper.thehunters.util.COLOR_BLUE
 import me.ihdeveloper.thehunters.util.COLOR_BOLD
 import me.ihdeveloper.thehunters.util.COLOR_YELLOW
+import org.bukkit.Bukkit
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
 
 const val TYPE_GAMEPLAY_HUNTER: Short = 350
+const val TYPE_GAMEPLAY_HUNTER_SCOREBOARD: Short = 351
 
 class HunterComponent (
         override val gameObject: GamePlayer
@@ -67,6 +73,35 @@ class HunterComponent (
     }
 
     override fun onDestroy(gameObject: GamePlayer) {
+    }
+
+}
+
+class HunterScoreboard (
+        override val gameObject: GamePlayer
+) : GameplayScoreboardComponent(), Listener {
+
+    override val target = false
+
+    override val type = TYPE_GAMEPLAY_HUNTER_SCOREBOARD
+
+    override fun onInit(gameObject: GamePlayer) {
+        super.onInit(gameObject)
+
+        hunters!!.addEntry(gameObject.entity.name)
+
+        Bukkit.getPluginManager().registerEvents(this, plugin())
+    }
+
+    @EventHandler
+    fun onTargetJoin(event: TargetJoinEvent) {
+        targets!!.addEntry(event.target.entity.name)
+    }
+
+    override fun onDestroy(gameObject: GamePlayer) {
+        TargetJoinEvent.getHandlerList().unregister(this)
+
+        super.onDestroy(gameObject)
     }
 
 }
