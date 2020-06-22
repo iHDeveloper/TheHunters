@@ -31,6 +31,7 @@ import me.ihdeveloper.thehunters.event.countdown.CountdownFinishEvent
 import me.ihdeveloper.thehunters.event.countdown.CountdownStartEvent
 import me.ihdeveloper.thehunters.event.countdown.CountdownTickEvent
 import me.ihdeveloper.thehunters.plugin
+import me.ihdeveloper.thehunters.util.NotFoundCommand
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -147,8 +148,13 @@ abstract class CommandComponent (
     }
 
     override fun destroy() {
-        plugin().getCommand(name).executor = null
+        plugin().getCommand(name).executor = NotFoundCommand()
     }
 
-    abstract override fun onCommand(p0: CommandSender?, p1: Command?, p2: String?, p3: Array<out String>?): Boolean
+    abstract override fun onCommand(
+            sender: CommandSender?,
+            command: Command?,
+            label: String?,
+            args: Array<out String>?
+    ): Boolean
 }
