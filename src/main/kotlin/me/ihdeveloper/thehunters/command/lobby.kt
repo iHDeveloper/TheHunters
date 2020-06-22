@@ -45,7 +45,7 @@ class LobbyForceStartCommand (
             try {
                 val countdown = Integer.valueOf(args[0])
 
-                lobby.start(countdown)
+                lobby.start(countdown * 20)
             } catch (e: NumberFormatException) {
                 val message = "${COLOR_RED}The countdown is not valid number"
                 sender!!.sendMessage(message)
