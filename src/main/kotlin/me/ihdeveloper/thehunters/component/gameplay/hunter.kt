@@ -25,12 +25,14 @@
 
 package me.ihdeveloper.thehunters.component.gameplay
 
+import me.ihdeveloper.thehunters.Dimension
 import me.ihdeveloper.thehunters.GameComponentOf
 import me.ihdeveloper.thehunters.GamePlayer
 import me.ihdeveloper.thehunters.component.TYPE_TITLE
 import me.ihdeveloper.thehunters.component.TYPE_VANISH
 import me.ihdeveloper.thehunters.component.TitleComponent
 import me.ihdeveloper.thehunters.component.VanishComponent
+import me.ihdeveloper.thehunters.event.target.TargetDimensionEvent
 import me.ihdeveloper.thehunters.event.target.TargetJoinEvent
 import me.ihdeveloper.thehunters.event.target.TargetLostEvent
 import me.ihdeveloper.thehunters.event.target.TargetRecoverEvent
@@ -43,6 +45,7 @@ import me.ihdeveloper.thehunters.util.COLOR_YELLOW
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.scoreboard.Score
 
 const val TYPE_GAMEPLAY_HUNTER: Short = 350
 const val TYPE_GAMEPLAY_HUNTER_SCOREBOARD: Short = 351
@@ -92,10 +95,15 @@ class HunterScoreboardComponent (
 
     override val type = TYPE_GAMEPLAY_HUNTER_SCOREBOARD
 
+    private var dimensionScore: Score? = null
+    private var lastDimension: Dimension = Dimension.UNKNOWN
+
     override fun onInit(gameObject: GamePlayer) {
         super.onInit(gameObject)
 
         hunters!!.addEntry(gameObject.entity.name)
+
+        updateTargetDimension(Dimension.UNKNOWN, true)
 
         Bukkit.getPluginManager().registerEvents(this, plugin())
     }
@@ -105,8 +113,31 @@ class HunterScoreboardComponent (
         targets!!.addEntry(event.target.entity.name)
     }
 
+    @EventHandler
+    fun onTargetDimension(event: TargetDimensionEvent) = updateTargetDimension(event.dimension)
+
+    @EventHandler
+    fun onTargetLost(event: TargetLostEvent) = updateTargetDimension(Dimension.UNKNOWN)
+
+    private fun updateTargetDimension(dimension: Dimension, force: Boolean = false) {
+        if (lastDimension == dimension && !force)
+            return
+        lastDimension = dimension
+
+        if (dimensionScore != null) {
+            scoreboard!!.resetScores(dimensionScore!!.entry)
+        }
+
+        dimensionScore = sidebar!!.getScore("${COLOR_YELLOW}Target Dimension: ${dimension.displayName}")
+        dimensionScore!!.score = 3
+    }
+
     override fun onDestroy(gameObject: GamePlayer) {
         TargetJoinEvent.getHandlerList().unregister(this)
+        TargetDimensionEvent.getHandlerList().unregister(this)
+        TargetLostEvent.getHandlerList().unregister(this)
+
+        dimensionScore = null
 
         super.onDestroy(gameObject)
     }
