@@ -44,7 +44,14 @@ import kotlin.random.Random
 
 class Gameplay : GameObject() {
 
+    companion object {
+        lateinit var instance: Gameplay
+
+        val hunters: Int get() = instance.hunters
+    }
+
     private var target: UUID? = null
+    private var hunters: Int = 0
 
     private val countdown = CountdownComponent(
             id = COUNTDOWN_GAMEPLAY_GET_READY,
@@ -63,6 +70,8 @@ class Gameplay : GameObject() {
 
     init {
         add(intro)
+
+        instance = this
     }
 
     override fun onInit() {
@@ -88,6 +97,7 @@ class Gameplay : GameObject() {
                 continue
             }
 
+            hunters++
             player.add(HunterComponent(player))
         }
 

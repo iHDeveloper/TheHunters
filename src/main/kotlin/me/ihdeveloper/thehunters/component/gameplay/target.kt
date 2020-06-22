@@ -28,6 +28,7 @@ package me.ihdeveloper.thehunters.component.gameplay
 import me.ihdeveloper.thehunters.Game
 import me.ihdeveloper.thehunters.GameComponentOf
 import me.ihdeveloper.thehunters.GamePlayer
+import me.ihdeveloper.thehunters.Gameplay
 import me.ihdeveloper.thehunters.component.TYPE_TITLE
 import me.ihdeveloper.thehunters.component.TYPE_VANISH
 import me.ihdeveloper.thehunters.component.TitleComponent
@@ -40,18 +41,23 @@ import me.ihdeveloper.thehunters.event.target.TargetDimensionEvent
 import me.ihdeveloper.thehunters.event.target.TargetLostEvent
 import me.ihdeveloper.thehunters.event.target.TargetRecoverEvent
 import me.ihdeveloper.thehunters.plugin
+import me.ihdeveloper.thehunters.util.COLOR_BLUE
 import me.ihdeveloper.thehunters.util.COLOR_BOLD
+import me.ihdeveloper.thehunters.util.COLOR_GOLD
 import me.ihdeveloper.thehunters.util.COLOR_RED
+import me.ihdeveloper.thehunters.util.COLOR_WHITE
 import me.ihdeveloper.thehunters.util.COLOR_YELLOW
 import me.ihdeveloper.thehunters.util.COUNTDOWN_GAMEPLAY_GET_READY
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerChangedWorldEvent
+import org.bukkit.scoreboard.Score
 
 const val TYPE_GAMEPLAY_TARGET: Short = 310
 const val TYPE_GAMEPLAY_TARGET_GET_READY: Short = 311
 const val TYPE_GAMEPLAY_TARGET_DIMENSION: Short = 312
+const val TYPE_GAMEPLAY_TARGET_SCOREBOARD: Short = 313
 
 class TargetComponent (
         override val gameObject: GamePlayer
@@ -223,6 +229,51 @@ class TargetDimensionComponent (
 
     override fun onDestroy(gameObject: GamePlayer) {
         PlayerChangedWorldEvent.getHandlerList().unregister(this)
+    }
+
+}
+
+class TargetScoreboardComponent (
+        override val gameObject: GamePlayer
+) : GameplayScoreboardComponent() {
+
+    override val target = true
+
+    override val type = TYPE_GAMEPLAY_TARGET_SCOREBOARD
+
+    private var huntersScore: Score? = null
+
+    private var lastHuntersCount: Int = -1
+
+    override fun onInit(gameObject: GamePlayer) {
+        super.onInit(gameObject)
+
+        updateHuntersCount()
+
+        sidebar!!.getScore("$COLOR_BOLD$COLOR_YELLOW").score = 2
+    }
+
+    private fun updateHuntersCount() {
+        val count = Gameplay.hunters
+        if (lastHuntersCount == count)
+            return
+        lastHuntersCount = count
+
+        if (huntersScore != null) {
+            scoreboard!!.resetScores(huntersScore!!.entry)
+        }
+
+        huntersScore = sidebar!!.getScore("${COLOR_YELLOW}Hunters Left:$COLOR_WHITE $count")
+        huntersScore!!.score = 3
+    }
+
+    // TODO Handle Hunter Join
+    // TODO Handle Hunter Quit
+
+    override fun onDestroy(gameObject: GamePlayer) {
+        huntersScore = null
+
+        super.onDestroy(gameObject)
     }
 
 }
