@@ -26,6 +26,7 @@
 package me.ihdeveloper.thehunters
 
 import me.ihdeveloper.thehunters.component.ScoreboardComponent
+import me.ihdeveloper.thehunters.component.TargetComponent
 import me.ihdeveloper.thehunters.component.TitleComponent
 import me.ihdeveloper.thehunters.event.target.TargetJoinEvent
 import org.bukkit.Bukkit
@@ -39,7 +40,7 @@ class Gameplay : GameObject() {
     override fun onInit() {
         Game.lock()
 
-        val random = Random(Game.count)
+        val random = Random(Game.count + 1)
         var found = false
 
         for (player in Game.players.values) {
@@ -50,7 +51,7 @@ class Gameplay : GameObject() {
                 found = true
                 target = player.entity.uniqueId
 
-                // TODO Add Target Component
+                player.add(TargetComponent(player))
 
                 continue
             }
