@@ -37,6 +37,7 @@ import me.ihdeveloper.thehunters.event.CountdownEvent
 import me.ihdeveloper.thehunters.event.countdown.CountdownFinishEvent
 import me.ihdeveloper.thehunters.event.countdown.CountdownStartEvent
 import me.ihdeveloper.thehunters.event.countdown.CountdownTickEvent
+import me.ihdeveloper.thehunters.event.hunter.HunterJoinEvent
 import me.ihdeveloper.thehunters.event.target.TargetDimensionEvent
 import me.ihdeveloper.thehunters.event.target.TargetLostEvent
 import me.ihdeveloper.thehunters.event.target.TargetRecoverEvent
@@ -235,7 +236,7 @@ class TargetDimensionComponent (
 
 class TargetScoreboardComponent (
         override val gameObject: GamePlayer
-) : GameplayScoreboardComponent() {
+) : GameplayScoreboardComponent(), Listener {
 
     override val target = true
 
@@ -248,9 +249,13 @@ class TargetScoreboardComponent (
     override fun onInit(gameObject: GamePlayer) {
         super.onInit(gameObject)
 
+        targets!!.addEntry(gameObject.entity.name)
+
         updateHuntersCount()
 
         sidebar!!.getScore("$COLOR_BOLD$COLOR_YELLOW").score = 2
+
+        Bukkit.getPluginManager().registerEvents(this, plugin())
     }
 
     private fun updateHuntersCount() {
@@ -267,10 +272,16 @@ class TargetScoreboardComponent (
         huntersScore!!.score = 3
     }
 
-    // TODO Handle Hunter Join
+    @EventHandler
+    private fun onHunterJoin(event: HunterJoinEvent) {
+        hunters!!.addEntry(event.hunter.entity.name)
+    }
+
     // TODO Handle Hunter Quit
 
     override fun onDestroy(gameObject: GamePlayer) {
+        HunterJoinEvent.getHandlerList().unregister(this)
+
         huntersScore = null
 
         super.onDestroy(gameObject)
