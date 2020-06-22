@@ -43,6 +43,9 @@ class TargetComponent (
     }
 
     override fun onDestroy(gameObject: GamePlayer) {
+        val health = 20.0
+        gameObject.entity.health = health
+        gameObject.entity.maxHealth = health
     }
 
 }
