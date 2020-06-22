@@ -25,6 +25,7 @@
 
 package me.ihdeveloper.thehunters.component
 
+import me.ihdeveloper.thehunters.Game
 import me.ihdeveloper.thehunters.GameComponentOf
 import me.ihdeveloper.thehunters.GamePlayer
 import me.ihdeveloper.thehunters.plugin
@@ -44,6 +45,7 @@ import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerPickupItemEvent
 import org.bukkit.scoreboard.Scoreboard
+import java.util.*
 
 const val TYPE_SCOREBOARD: Short = 101
 const val TYPE_NO_HUNGER: Short = 102
@@ -56,6 +58,7 @@ const val TYPE_DISABLE_BLOCK_BREAK: Short = 108
 const val TYPE_TITLE: Short = 109
 const val TYPE_NO_INTERACT: Short = 110
 const val TYPE_CLEAR_INVENTORY: Short = 111
+const val TYPE_VANISH: Short = 112
 
 class ScoreboardComponent (
         override val gameObject: GamePlayer
@@ -333,6 +336,46 @@ class ClearInventoryComponent (
     }
 
     override fun onDestroy(gameObject: GamePlayer) {
+    }
+
+}
+
+class VanishComponent (
+        override val gameObject: GamePlayer
+) : GameComponentOf<GamePlayer>() {
+
+    override val type = TYPE_VANISH
+
+    // Any player on this map is hidden from gameObject ( aka our player )
+    private val states = mutableMapOf<UUID, Boolean>()
+
+    override fun onInit(gameObject: GamePlayer) {}
+
+    fun show(player: GamePlayer) {
+        if (states[player.uniqueId] == null)
+            return
+
+        states.remove(player.uniqueId)
+        gameObject.entity.showPlayer(player.entity)
+    }
+
+    fun hide(player: GamePlayer) {
+        val state = states[player.uniqueId]
+
+        if (state != null)
+            return
+
+        states[player.uniqueId] = true
+        gameObject.entity.hidePlayer(player.entity)
+    }
+
+    override fun onDestroy(gameObject: GamePlayer) {
+
+        for (uniqueId in states.keys) {
+            val player = Game.players[uniqueId] ?: continue
+
+            gameObject.entity.showPlayer(player.entity)
+        }
     }
 
 }
