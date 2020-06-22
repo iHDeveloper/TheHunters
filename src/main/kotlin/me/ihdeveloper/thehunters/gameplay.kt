@@ -35,6 +35,7 @@ import me.ihdeveloper.thehunters.component.gameplay.TargetComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetDimensionComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetGetReadyComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetScoreboardComponent
+import me.ihdeveloper.thehunters.event.hunter.HunterJoinEvent
 import me.ihdeveloper.thehunters.event.target.TargetJoinEvent
 import me.ihdeveloper.thehunters.util.COUNTDOWN_GAMEPLAY_GET_READY
 import me.ihdeveloper.thehunters.util.COUNTDOWN_GAMEPLAY_INTRO
@@ -102,6 +103,13 @@ class Gameplay : GameObject() {
         }
 
         Bukkit.getPluginManager().callEvent(TargetJoinEvent(Game.players[target!!]))
+
+        for (player in Game.players.values) {
+            if (player.uniqueId === target)
+                continue
+
+            Bukkit.getPluginManager().callEvent(HunterJoinEvent(player))
+        }
 
         intro.start()
     }
