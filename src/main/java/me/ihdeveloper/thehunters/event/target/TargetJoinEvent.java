@@ -23,45 +23,36 @@
  *
  */
 
-package me.ihdeveloper.thehunters
+package me.ihdeveloper.thehunters.event.target;
 
-import me.ihdeveloper.thehunters.component.ScoreboardComponent
-import me.ihdeveloper.thehunters.component.TitleComponent
-import me.ihdeveloper.thehunters.event.target.TargetJoinEvent
-import org.bukkit.Bukkit
-import java.util.UUID
-import kotlin.random.Random
+import me.ihdeveloper.thehunters.GamePlayer;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
-class Gameplay : GameObject() {
+public class TargetJoinEvent extends Event {
 
-    private var target: UUID? = null
+    private static HandlerList handlerList = new HandlerList();
 
-    override fun onInit() {
-        Game.lock()
-
-        val random = Random(Game.count)
-        var found = false
-
-        for (player in Game.players.values) {
-            player.add(ScoreboardComponent(player))
-            player.add(TitleComponent(player))
-
-            if (!found && random.nextBoolean()) {
-                found = true
-                target = player.entity.uniqueId
-
-                // TODO Add Target Component
-
-                continue
-            }
-
-            // TODO Add Hunter Component
-        }
-
-        Bukkit.getPluginManager().callEvent(TargetJoinEvent(Game.players[target!!]))
+    public static HandlerList getHandlerList() {
+        return handlerList;
     }
 
-    override fun onDestroy() {
+    private GamePlayer target;
+
+    public TargetJoinEvent(GamePlayer target) {
+        this.target = target;
     }
 
+    public void setTarget(GamePlayer target) {
+        this.target = target;
+    }
+
+    public GamePlayer getTarget() {
+        return target;
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return handlerList;
+    }
 }
