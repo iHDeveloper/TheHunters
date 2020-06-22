@@ -37,6 +37,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
+import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.player.PlayerDropItemEvent
@@ -170,6 +171,15 @@ class NoDamageComponent (
     @EventHandler
     private fun onDamage(event: EntityDamageEvent) {
         if (event.entity.uniqueId !== gameObject.uniqueId)
+            return
+
+        event.isCancelled = true
+    }
+
+    @EventHandler
+    private fun onDamageByEntity(event: EntityDamageByEntityEvent) {
+        if (event.entity.uniqueId !== gameObject.uniqueId
+                && event.damager.uniqueId !== gameObject.uniqueId)
             return
 
         event.isCancelled = true
