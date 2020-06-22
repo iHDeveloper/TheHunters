@@ -25,11 +25,13 @@
 
 package me.ihdeveloper.thehunters
 
+import me.ihdeveloper.thehunters.component.CountdownComponent
 import me.ihdeveloper.thehunters.component.ScoreboardComponent
 import me.ihdeveloper.thehunters.component.TitleComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetComponent
 import me.ihdeveloper.thehunters.event.target.TargetJoinEvent
+import me.ihdeveloper.thehunters.util.COUNTDOWN_GAMEPLAY_GET_READY
 import org.bukkit.Bukkit
 import java.util.UUID
 import kotlin.random.Random
@@ -37,6 +39,15 @@ import kotlin.random.Random
 class Gameplay : GameObject() {
 
     private var target: UUID? = null
+
+    private val countdown = CountdownComponent(
+            id = COUNTDOWN_GAMEPLAY_GET_READY,
+            defaultStart = 20 * 60
+    )
+
+    init {
+        add(countdown)
+    }
 
     override fun onInit() {
         Game.lock()
@@ -61,9 +72,12 @@ class Gameplay : GameObject() {
         }
 
         Bukkit.getPluginManager().callEvent(TargetJoinEvent(Game.players[target!!]))
+
+        countdown.start()
     }
 
     override fun onDestroy() {
+        countdown.stop()
     }
 
 }
