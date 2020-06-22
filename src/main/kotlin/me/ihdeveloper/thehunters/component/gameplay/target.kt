@@ -39,6 +39,7 @@ import me.ihdeveloper.thehunters.event.countdown.CountdownStartEvent
 import me.ihdeveloper.thehunters.event.countdown.CountdownTickEvent
 import me.ihdeveloper.thehunters.event.target.TargetDimensionEvent
 import me.ihdeveloper.thehunters.event.target.TargetLostEvent
+import me.ihdeveloper.thehunters.event.target.TargetRecoverEvent
 import me.ihdeveloper.thehunters.plugin
 import me.ihdeveloper.thehunters.util.COLOR_BOLD
 import me.ihdeveloper.thehunters.util.COLOR_RED
@@ -151,6 +152,8 @@ class TargetGetReadyComponent (
     private fun onFinish(event: CountdownFinishEvent) {
         if (event.id != COUNTDOWN_GAMEPLAY_GET_READY)
             return
+
+        Bukkit.getPluginManager().callEvent(TargetRecoverEvent(gameObject))
 
         gameObject.get<VanishComponent>(TYPE_VANISH).run {
             for (player in Game.players.values) {
