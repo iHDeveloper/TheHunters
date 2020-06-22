@@ -45,7 +45,7 @@ import java.util.UUID
 
 class PlayersManager : GameObject(), Listener {
 
-    private val players = mutableMapOf<UUID, GamePlayer>()
+    val players = mutableMapOf<UUID, GamePlayer>()
     var count = 0
 
     override fun onInit() {

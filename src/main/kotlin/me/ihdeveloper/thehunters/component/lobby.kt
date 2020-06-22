@@ -49,9 +49,11 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.scoreboard.DisplaySlot
+import org.bukkit.scoreboard.NameTagVisibility
 import org.bukkit.scoreboard.Objective
 import org.bukkit.scoreboard.Score
 import org.bukkit.scoreboard.Scoreboard
+import org.bukkit.scoreboard.Team
 
 const val TYPE_LOBBY_PLAYER: Short = 201
 const val TYPE_LOBBY_SCOREBOARD: Short = 200
@@ -134,6 +136,7 @@ class LobbyScoreboardComponent (
     private var timeLeftLastSeconds = 61
     private var timeLeftScore: Score? = null
 
+    private var team: Team? = null
     private var playersScore: Score? = null
 
     override fun onInit(gameObject: GamePlayer) {
@@ -146,6 +149,16 @@ class LobbyScoreboardComponent (
             sidebar = scoreboard!!.registerNewObjective("sidebar", "dummy")
             sidebar!!.displaySlot = DisplaySlot.SIDEBAR
             sidebar!!.displayName = "${COLOR_YELLOW}${COLOR_BOLD}THE HUNTERS"
+        }
+
+        team = scoreboard!!.registerNewTeam("players")
+        team!!.prefix = "${COLOR_GRAY}"
+        team!!.setAllowFriendlyFire(true)
+        team!!.nameTagVisibility = NameTagVisibility.ALWAYS
+        team!!.setCanSeeFriendlyInvisibles(true)
+
+        for (player in Game.players.values) {
+            team!!.addEntry(player.entity.name)
         }
 
         sidebar!!.getScore("$COLOR_BOLD$COLOR_WHITE").score = 4
@@ -212,10 +225,16 @@ class LobbyScoreboardComponent (
     }
 
     @EventHandler
-    private fun onJoin(event: GameJoinEvent) = updatePlayersCount()
+    private fun onJoin(event: GameJoinEvent) {
+        team!!.addEntry(event.player.entity.name)
+        updatePlayersCount()
+    }
 
     @EventHandler
-    private fun onQuit(event: GameQuitEvent) = updatePlayersCount()
+    private fun onQuit(event: GameQuitEvent) {
+        team!!.removeEntry(event.player.entity.name)
+        updatePlayersCount()
+    }
 
     @EventHandler
     private fun onCountdownStart(event: CountdownStartEvent) {
@@ -263,6 +282,9 @@ class LobbyScoreboardComponent (
         CountdownEvent.getHandlerList().unregister(this)
 
         gameObject.get<ScoreboardComponent>(TYPE_SCOREBOARD).reset()
+
+        team!!.unregister()
+        team = null
 
         scoreboard = null
         sidebar = null

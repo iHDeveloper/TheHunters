@@ -26,6 +26,7 @@
 package me.ihdeveloper.thehunters
 
 import org.bukkit.Bukkit
+import java.util.*
 
 private val playersManager = PlayersManager()
 
@@ -43,6 +44,7 @@ class Game : GameInstance (
         companion object {
                 lateinit var instance: Game
 
+                val players: Map<UUID, GamePlayer> get() = playersManager.players
                 val count: Int get() = playersManager.count
                 val max: Int get() = Bukkit.getMaxPlayers()
         }
