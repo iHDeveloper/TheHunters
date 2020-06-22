@@ -317,7 +317,6 @@ class LobbyChatComponent : ChatComponent() {
         val builder = StringBuilder().run {
             append("$COLOR_GRAY")
             append(sender.entity.name)
-            append(sender.entity.name)
             append(':')
             append(' ')
             append(message)
