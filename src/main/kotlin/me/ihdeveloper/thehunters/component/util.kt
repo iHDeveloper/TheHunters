@@ -32,12 +32,16 @@ import me.ihdeveloper.thehunters.event.countdown.CountdownStartEvent
 import me.ihdeveloper.thehunters.event.countdown.CountdownTickEvent
 import me.ihdeveloper.thehunters.plugin
 import org.bukkit.Bukkit
+import org.bukkit.command.Command
+import org.bukkit.command.CommandExecutor
+import org.bukkit.command.CommandSender
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.scheduler.BukkitTask
 import java.io.File
 
 const val TYPE_CONFIGURATION: Short = 1
 const val TYPE_COUNTDOWN: Short = 2
+const val TYPE_COMMAND: Short = 3
 
 class ConfigurationComponent (
         name: String
@@ -130,4 +134,21 @@ class CountdownComponent (
         stop(false)
     }
 
+}
+
+abstract class CommandComponent (
+        val name: String
+) : GameComponent, CommandExecutor {
+
+    override val type = TYPE_COMMAND
+
+    override fun init() {
+        plugin().getCommand(name).executor = this
+    }
+
+    override fun destroy() {
+        plugin().getCommand(name).executor = null
+    }
+
+    abstract override fun onCommand(p0: CommandSender?, p1: Command?, p2: String?, p3: Array<out String>?): Boolean
 }
