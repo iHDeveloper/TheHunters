@@ -352,6 +352,9 @@ class VanishComponent (
     override fun onInit(gameObject: GamePlayer) {}
 
     fun show(player: GamePlayer) {
+        if (player.uniqueId === gameObject.uniqueId)
+            return
+
         if (states[player.uniqueId] == null)
             return
 
@@ -360,6 +363,9 @@ class VanishComponent (
     }
 
     fun hide(player: GamePlayer) {
+        if (player.uniqueId === gameObject.uniqueId)
+            return
+
         val state = states[player.uniqueId]
 
         if (state != null)
