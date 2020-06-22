@@ -311,6 +311,7 @@ class LobbyChatComponent : ChatComponent() {
         builder.append(sender.entity.name)
         builder.append("$COLOR_WHITE")
         builder.append(':')
+        builder.append(' ')
         builder.append(message)
 
         return builder.toString()
