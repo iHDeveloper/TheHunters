@@ -179,7 +179,7 @@ class LobbyScoreboardComponent (
         sidebar!!.getScore("$COLOR_BOLD$COLOR_GRAY").score = 0
 
         sidebar!!.getScore("${COLOR_YELLOW}By").score = -1
-        sidebar!!.getScore("${COLOR_RED}iHDeveloper").score = -2
+        sidebar!!.getScore("${COLOR_YELLOW}- ${COLOR_RED}iHDeveloper").score = -2
 
         Bukkit.getPluginManager().registerEvents(this, plugin())
     }
