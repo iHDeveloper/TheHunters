@@ -27,6 +27,7 @@ package me.ihdeveloper.thehunters
 
 import me.ihdeveloper.thehunters.component.NoHungerComponent
 import me.ihdeveloper.thehunters.component.AdventureComponent
+import me.ihdeveloper.thehunters.component.ClearInventoryComponent
 import me.ihdeveloper.thehunters.component.CountdownComponent
 import me.ihdeveloper.thehunters.component.DisableBlockBreakComponent
 import me.ihdeveloper.thehunters.component.DisableBlockPlaceComponent
@@ -82,6 +83,7 @@ class Lobby : GameObject(), Listener {
         player.add(DisableBlockPlaceComponent(player))
         player.add(DisableBlockBreakComponent(player))
         player.add(NoInteractComponent(player))
+        player.add(ClearInventoryComponent(player))
 
         player.add(LobbyComponent(player))
         player.add(LobbyScoreboardComponent(player))

@@ -54,6 +54,7 @@ const val TYPE_DISABLE_BLOCK_PLACE: Short = 107
 const val TYPE_DISABLE_BLOCK_BREAK: Short = 108
 const val TYPE_TITLE: Short = 109
 const val TYPE_NO_INTERACT: Short = 110
+const val TYPE_CLEAR_INVENTORY: Short = 111
 
 class ScoreboardComponent (
         override val gameObject: GamePlayer
@@ -307,6 +308,21 @@ class NoInteractComponent (
 
     override fun onDestroy(gameObject: GamePlayer) {
         PlayerInteractEvent.getHandlerList().unregister(this)
+    }
+
+}
+
+class ClearInventoryComponent (
+        override val gameObject: GamePlayer
+) : GameComponentOf<GamePlayer>() {
+
+    override val type = TYPE_CLEAR_INVENTORY
+
+    override fun onInit(gameObject: GamePlayer) {
+        gameObject.entity.inventory.clear()
+    }
+
+    override fun onDestroy(gameObject: GamePlayer) {
     }
 
 }
