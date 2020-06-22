@@ -25,41 +25,12 @@
 
 package me.ihdeveloper.thehunters
 
-import org.bukkit.Bukkit
-import java.util.UUID
+class Gameplay : GameObject() {
 
-private val playersManager = PlayersManager()
-private val lobby = Lobby()
-private val gameplay = Gameplay()
+    override fun onInit() {
+    }
 
-private const val name = "TheHunters"
-private val components = listOf<GameComponent>()
-private val children = listOf<GameObject>(
-        LoginManager(),
-        WorldsManager(),
-        playersManager,
-        lobby
-)
-
-class Game : GameInstance (name, components, children) {
-
-        init {
-               instance = this
-        }
-
-        fun start() {
-                lobby.destroy()
-                add(gameplay)
-        }
-
-        companion object {
-                lateinit var instance: Game
-
-                val players: Map<UUID, GamePlayer> get() = playersManager.players
-                val count: Int get() = playersManager.count
-                val max: Int get() = Bukkit.getMaxPlayers()
-
-                fun start() = instance.start()
-        }
+    override fun onDestroy() {
+    }
 
 }

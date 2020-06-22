@@ -68,7 +68,13 @@ class Lobby : GameObject(
         add(LobbyForceStartCommand(this))
     }
 
-    private val countdown = CountdownComponent(COUNTDOWN_LOBBY, 20 * 70)
+    private val countdown = CountdownComponent(
+            id = COUNTDOWN_LOBBY,
+            defaultStart = 20 * 30,
+            onFinish = {
+                Game.start()
+            }
+    )
 
     private var lastSeconds = 70
 
