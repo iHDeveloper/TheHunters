@@ -46,9 +46,11 @@ import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.scoreboard.DisplaySlot
+import org.bukkit.scoreboard.NameTagVisibility
 import org.bukkit.scoreboard.Objective
 import org.bukkit.scoreboard.Score
 import org.bukkit.scoreboard.Scoreboard
+import org.bukkit.scoreboard.Team
 import java.lang.StringBuilder
 
 abstract class GameplayScoreboardComponent : GameComponentOf<GamePlayer>(), Listener {
@@ -63,6 +65,9 @@ abstract class GameplayScoreboardComponent : GameComponentOf<GamePlayer>(), List
 
     protected var sidebar: Objective? = null
 
+    protected var hunters: Team? = null
+    protected var targets: Team? = null
+
     private var gameEventHeader: Score? = null
 
     private var gameEventName: Score? = null
@@ -72,6 +77,27 @@ abstract class GameplayScoreboardComponent : GameComponentOf<GamePlayer>(), List
 
     override fun onInit(gameObject: GamePlayer) {
         scoreboard = gameObject.get<ScoreboardComponent>(TYPE_SCOREBOARD).scoreboard
+
+        targets = scoreboard!!.getTeam("targets")
+        if (targets == null) {
+            targets = scoreboard!!.registerNewTeam("targets")
+            targets!!.prefix = "${COLOR_RED}[Target] "
+            targets!!.nameTagVisibility = NameTagVisibility.ALWAYS
+            targets!!.setAllowFriendlyFire(false)
+            targets!!.setCanSeeFriendlyInvisibles(false)
+
+            if (!target) targets!!.suffix = " $COLOR_YELLOW${COLOR_BOLD}KILL!!"
+        }
+
+        hunters = scoreboard!!.getTeam("hunters")
+        if (hunters == null) {
+            hunters = scoreboard!!.registerNewTeam("hunters")
+            hunters!!.prefix = "${COLOR_BLUE}[Hunter] "
+            hunters!!.nameTagVisibility = NameTagVisibility.HIDE_FOR_OTHER_TEAMS
+            hunters!!.setCanSeeFriendlyInvisibles(false)
+
+            if (target) hunters!!.suffix = " $COLOR_YELLOW${COLOR_BOLD}KILL!!"
+        }
 
         sidebar = scoreboard!!.getObjective(DisplaySlot.SIDEBAR)
         if (sidebar == null) {
