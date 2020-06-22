@@ -68,7 +68,8 @@ class ConfigurationComponent (
 
 class CountdownComponent (
         val id: Byte,
-        val defaultStart: Int
+        val defaultStart: Int,
+        val onFinish: () -> Unit = { }
 ) : GameComponent, Runnable {
 
     override val type = TYPE_COUNTDOWN
@@ -118,6 +119,8 @@ class CountdownComponent (
 
         if (ticksRemaining <= 0) {
             Bukkit.getPluginManager().callEvent(CountdownFinishEvent(id))
+
+            onFinish()
 
             stop(false)
         }
