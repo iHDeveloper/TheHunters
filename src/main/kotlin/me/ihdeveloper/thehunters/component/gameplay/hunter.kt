@@ -48,9 +48,8 @@ import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.inventory.InventoryDragEvent
+import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.player.PlayerDropItemEvent
-import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scoreboard.Score
 
@@ -59,7 +58,7 @@ const val TYPE_GAMEPLAY_HUNTER_SCOREBOARD: Short = 351
 const val TYPE_GAMEPLAY_HUNTER_SIGNAL: Short = 352
 const val TYPE_GAMEPLAY_HUNTER_COMPASS: Short = 353
 
-private const val COMPASS_SLOT = 9
+private const val COMPASS_SLOT = 8
 
 class HunterComponent (
         override val gameObject: GamePlayer
@@ -203,7 +202,7 @@ class HunterSignalComponent (
 
 }
 
-class HunterCompass (
+class HunterCompassComponent (
         override val gameObject: GamePlayer
 ) : GameComponentOf<GamePlayer>(), Listener {
 
@@ -211,7 +210,12 @@ class HunterCompass (
         private val empty = ItemStack(Material.STAINED_GLASS_PANE, 1)
         private val compass = ItemStack(Material.COMPASS, 1)
 
-        private fun init() {
+        private var initialized = false
+
+        private fun initialize() {
+            if (initialized)
+                return
+
             empty.run {
                 val meta = itemMeta
                 meta.run {
@@ -221,8 +225,6 @@ class HunterCompass (
                             "${COLOR_GRAY}The tracking device is not receiving",
                             "${COLOR_GRAY}any signal from the target."
                     )
-                    itemFlags.add(ItemFlag.HIDE_UNBREAKABLE)
-                    spigot().isUnbreakable = true
                 }
                 itemMeta = meta
             }
@@ -236,12 +238,16 @@ class HunterCompass (
                             "${COLOR_GRAY}The tracking device is receiving signals",
                             "${COLOR_GRAY}on the whereabouts of the target."
                     )
-                    itemFlags.add(ItemFlag.HIDE_UNBREAKABLE)
-                    spigot().isUnbreakable = true
                 }
                 itemMeta = meta
             }
+
+            initialized = true
         }
+    }
+
+    init {
+        initialize()
     }
 
     override val type = TYPE_GAMEPLAY_HUNTER_COMPASS
@@ -253,11 +259,28 @@ class HunterCompass (
     }
 
     @EventHandler
+    fun onTargetLost(event: TargetLostEvent) = lost()
+
+    @EventHandler
+    fun onTargetRecover(event: TargetRecoverEvent) = found(event.target.entity.location)
+
+    @EventHandler
+    fun onInventoryClick(event: InventoryClickEvent) {
+        if (event.whoClicked.uniqueId !== gameObject.uniqueId)
+            return
+
+        if (event.slot != COMPASS_SLOT)
+            return
+
+        event.isCancelled = true
+    }
+
+    @EventHandler
     fun onDrop(event: PlayerDropItemEvent) {
         if (event.player.uniqueId !== gameObject.uniqueId)
             return
 
-        if (event.player.inventory.heldItemSlot !== COMPASS_SLOT)
+        if (event.player.inventory.heldItemSlot != COMPASS_SLOT)
             return
 
         event.isCancelled = true
@@ -280,6 +303,8 @@ class HunterCompass (
     }
 
     override fun onDestroy(gameObject: GamePlayer) {
+        TargetLostEvent.getHandlerList().unregister(this)
+        TargetRecoverEvent.getHandlerList().unregister(this)
         PlayerDropItemEvent.getHandlerList().unregister(this)
 
         gameObject.entity.run {
