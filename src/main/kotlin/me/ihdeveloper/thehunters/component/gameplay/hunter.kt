@@ -114,6 +114,8 @@ class HunterScoreboardComponent (
 
         updateTargetDimension(Dimension.UNKNOWN, true)
 
+        sidebar!!.getScore("$COLOR_BOLD$COLOR_YELLOW").score = 2
+
         Bukkit.getPluginManager().registerEvents(this, plugin())
     }
 
