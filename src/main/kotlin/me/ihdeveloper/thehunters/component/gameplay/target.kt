@@ -274,6 +274,7 @@ class TargetScoreboardComponent (
 
     @EventHandler
     private fun onHunterJoin(event: HunterJoinEvent) {
+        updateHuntersCount()
         hunters!!.addEntry(event.hunter.entity.name)
     }
 
