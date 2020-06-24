@@ -31,6 +31,7 @@ import me.ihdeveloper.thehunters.GamePlayer
 import me.ihdeveloper.thehunters.plugin
 import net.minecraft.server.v1_8_R3.IChatBaseComponent
 import net.minecraft.server.v1_8_R3.PacketPlayOutTitle
+import org.bukkit.Achievement
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer
@@ -404,6 +405,9 @@ class AchievementComponent (
     }
 
     fun reset() {
+        Achievement.values().forEach {
+            gameObject.entity.removeAchievement(it)
+        }
     }
 
     override fun onDestroy(gameObject: GamePlayer) {
