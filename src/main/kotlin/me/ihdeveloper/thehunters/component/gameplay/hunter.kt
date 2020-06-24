@@ -252,6 +252,9 @@ class HunterSignalComponent (
         TargetLostEvent.getHandlerList().unregister(this)
         TargetSignalEvent.getHandlerList().unregister(this)
         TargetRecoverEvent.getHandlerList().unregister(this)
+
+        gameObject.entity.compassTarget = gameObject.entity.location
+        gameObject.entity.inventory.setItem(COMPASS_SLOT, ItemStack(Material.AIR))
     }
 
 }
