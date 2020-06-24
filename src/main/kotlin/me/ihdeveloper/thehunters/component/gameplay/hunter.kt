@@ -181,6 +181,8 @@ class HunterSignalComponent (
         gameObject.get<VanishComponent>(TYPE_VANISH).run {
             hide(event.target)
         }
+
+        gameObject.get<HunterCompassComponent>(TYPE_GAMEPLAY_HUNTER_COMPASS).lost()
     }
 
     @EventHandler
@@ -195,6 +197,9 @@ class HunterSignalComponent (
         }
 
         gameObject.get<VanishComponent>(TYPE_VANISH).show(event.target)
+
+        val location = event.target.entity.location
+        gameObject.get<HunterCompassComponent>(TYPE_GAMEPLAY_HUNTER_COMPASS).found(location)
     }
 
     override fun onDestroy(gameObject: GamePlayer) {
@@ -261,12 +266,6 @@ class HunterCompassComponent (
     }
 
     @EventHandler
-    fun onTargetLost(event: TargetLostEvent) = lost()
-
-    @EventHandler
-    fun onTargetRecover(event: TargetRecoverEvent) = found(event.target.entity.location)
-
-    @EventHandler
     fun onInventoryClick(event: InventoryClickEvent) {
         if (event.whoClicked.uniqueId !== gameObject.uniqueId)
             return
@@ -288,13 +287,13 @@ class HunterCompassComponent (
         event.isCancelled = true
     }
 
-    private fun lost() {
+    fun lost() {
         gameObject.entity.inventory.run {
             setItem(COMPASS_SLOT, empty)
         }
     }
 
-    private fun found(location: Location) {
+    fun found(location: Location) {
         gameObject.entity.run {
             compassTarget = location
 
@@ -305,8 +304,6 @@ class HunterCompassComponent (
     }
 
     override fun onDestroy(gameObject: GamePlayer) {
-        TargetLostEvent.getHandlerList().unregister(this)
-        TargetRecoverEvent.getHandlerList().unregister(this)
         PlayerDropItemEvent.getHandlerList().unregister(this)
 
         gameObject.entity.run {
