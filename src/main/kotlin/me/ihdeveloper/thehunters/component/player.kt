@@ -59,6 +59,7 @@ const val TYPE_TITLE: Short = 109
 const val TYPE_NO_INTERACT: Short = 110
 const val TYPE_CLEAR_INVENTORY: Short = 111
 const val TYPE_VANISH: Short = 112
+const val TYPE_ACHIEVEMENT: Short = 113
 
 class ScoreboardComponent (
         override val gameObject: GamePlayer
@@ -382,6 +383,30 @@ class VanishComponent (
 
             gameObject.entity.showPlayer(player.entity)
         }
+    }
+
+}
+
+class AchievementComponent (
+        override val gameObject: GamePlayer
+
+) : GameComponentOf<GamePlayer>() {
+
+    override val type = TYPE_ACHIEVEMENT
+
+    override fun onInit(gameObject: GamePlayer) {
+    }
+
+    fun accept() {
+    }
+
+    fun block() {
+    }
+
+    fun reset() {
+    }
+
+    override fun onDestroy(gameObject: GamePlayer) {
     }
 
 }
