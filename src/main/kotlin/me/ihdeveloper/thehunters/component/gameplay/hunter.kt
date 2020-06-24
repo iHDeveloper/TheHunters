@@ -261,7 +261,7 @@ class HunterCompassComponent (
 ) : GameComponentOf<GamePlayer>(), Listener {
 
     companion object {
-        private val empty = ItemStack(Material.STAINED_GLASS_PANE, 1)
+        private val empty = ItemStack(Material.STAINED_GLASS_PANE, 1, 14)
         private val compass = ItemStack(Material.COMPASS, 1)
 
         private var initialized = false
