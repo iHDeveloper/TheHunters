@@ -211,6 +211,13 @@ class HunterSignalComponent (
             return
         }
 
+        gameObject.get<TitleComponent>(TYPE_TITLE).run {
+            reset()
+            title("$COLOR_RED${COLOR_BOLD}Target Lost!")
+            subtitle("${COLOR_YELLOW}The target is in ${target.displayName}")
+            time(5, 15, 5)
+        }
+
         gameObject.get<HunterCompassComponent>(TYPE_GAMEPLAY_HUNTER_COMPASS).lost()
     }
 
