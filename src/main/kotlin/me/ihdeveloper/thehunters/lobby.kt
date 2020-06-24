@@ -26,6 +26,7 @@
 package me.ihdeveloper.thehunters
 
 import me.ihdeveloper.thehunters.command.LobbyForceStartCommand
+import me.ihdeveloper.thehunters.component.AchievementComponent
 import me.ihdeveloper.thehunters.component.NoHungerComponent
 import me.ihdeveloper.thehunters.component.AdventureComponent
 import me.ihdeveloper.thehunters.component.ClearInventoryComponent
@@ -95,6 +96,10 @@ class Lobby : GameObject(
         player.add(DisableBlockBreakComponent(player))
         player.add(NoInteractComponent(player))
         player.add(ClearInventoryComponent(player))
+        player.add(AchievementComponent(player).apply {
+            this.reset()
+            this.block()
+        })
 
         player.add(LobbyComponent(player))
         player.add(LobbyScoreboardComponent(player))
