@@ -149,7 +149,7 @@ class TargetGetReadyComponent (
             sendMessage(" ")
             sendMessage(builder.toString())
 
-            val speedEffect = PotionEffect(PotionEffectType.SPEED, 30 * 20, 2, false)
+            val speedEffect = PotionEffect(PotionEffectType.SPEED, 60 * 20, 2, false)
             addPotionEffect(speedEffect)
         }
     }
