@@ -444,6 +444,11 @@ open class AchievementComponent (
         return builder.toString()
     }
 
+    protected fun name(achievement: Achievement): String {
+        // TODO Provide the title of the achievment provided in the language files of the game
+        return achievement.name
+    }
+
     override fun onDestroy(gameObject: GamePlayer) {
         PlayerAchievementAwardedEvent.getHandlerList().unregister(this)
     }

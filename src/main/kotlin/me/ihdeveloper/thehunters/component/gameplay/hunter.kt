@@ -383,7 +383,7 @@ class HunterAchievementComponent (
             append(gameObject.entity.name)
             append("$COLOR_YELLOW ")
             append("just got achievement [")
-            append("$COLOR_GOLD ${achievement.name}")
+            append("$COLOR_GOLD ${name(achievement)}")
             append("$COLOR_YELLOW ].")
         }
         return builder.toString()
