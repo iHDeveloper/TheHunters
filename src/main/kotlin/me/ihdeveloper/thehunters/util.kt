@@ -35,9 +35,9 @@ enum class Dimension (
         private val checker: (String) -> Boolean
 ) {
     UNKNOWN("${COLOR_GRAY}Unknown", { false }),
-    WORLD("${COLOR_GREEN}World", { it === "world" }),
-    NETHER("${COLOR_RED}Nether", { it === "world_nether" }),
-    THE_END("${COLOR_PURPLE}The End", { it === "world_the_end" });
+    WORLD("${COLOR_GREEN}World", { it == "world" }),
+    NETHER("${COLOR_RED}Nether", { it == "world_nether" }),
+    THE_END("${COLOR_PURPLE}The End", { it == "world_the_end" });
 
     companion object {
 
