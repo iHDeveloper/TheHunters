@@ -52,6 +52,8 @@ import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerChangedWorldEvent
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitTask
 import org.bukkit.scoreboard.Score
 
@@ -146,6 +148,9 @@ class TargetGetReadyComponent (
             }
             sendMessage(" ")
             sendMessage(builder.toString())
+
+            val speedEffect = PotionEffect(PotionEffectType.SPEED, 30 * 20, 2, false)
+            addPotionEffect(speedEffect)
         }
     }
 
