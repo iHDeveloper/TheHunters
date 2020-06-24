@@ -312,6 +312,7 @@ class TargetSignalComponent (
         Bukkit.getPluginManager().callEvent(event)
     }
 
+    @EventHandler
     fun onRecover(event: TargetRecoverEvent) {
         task = Bukkit.getScheduler().runTaskTimer(plugin(), this, 0L, 30 * 20L)
 
