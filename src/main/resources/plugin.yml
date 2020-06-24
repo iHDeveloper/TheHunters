@@ -10,3 +10,9 @@ commands:
     description: "Force start the game countdown"
     permission: "thehunters.forcestart"
     permission-message: "You don't have the permission to force start the game countdown"
+  setlobbyspawn:
+    usage: "setlobbyspawn"
+    aliases: []
+    description: "Sets location for the players to spawn when the game didn't start yet"
+    permission: "thehunters.spawn.lobby"
+    permission-message: "You don't have the permission to do this command!"

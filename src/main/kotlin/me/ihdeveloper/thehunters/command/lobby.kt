@@ -25,14 +25,19 @@
 
 package me.ihdeveloper.thehunters.command
 
+import me.ihdeveloper.thehunters.GamePlayer
 import me.ihdeveloper.thehunters.Lobby
 import me.ihdeveloper.thehunters.component.CommandComponent
+import me.ihdeveloper.thehunters.component.ConfigurationComponent
+import me.ihdeveloper.thehunters.component.PlayerCommandComponent
 import me.ihdeveloper.thehunters.util.COLOR_RED
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 import java.lang.NumberFormatException
 
 const val TYPE_COMMAND_LOBBY_FORCE_START: Short = 1001
+const val TYPE_COMMAND_LOBBY_SET_SPAWN: Short = 1002
 
 class LobbyForceStartCommand (
         private val lobby: Lobby
@@ -54,6 +59,21 @@ class LobbyForceStartCommand (
         }
 
         lobby.start()
+        return true
+    }
+
+}
+
+class LobbySetSpawnCommand (
+        private val config: ConfigurationComponent
+) : PlayerCommandComponent("setlobbyspawn") {
+
+    override val type = TYPE_COMMAND_LOBBY_SET_SPAWN
+
+    override fun onPlayerExecute(sender: GamePlayer, command: Command?, label: String?, args: Array<out String>?): Boolean {
+        sender.entity.run {
+            config.write("location", location)
+        }
         return true
     }
 

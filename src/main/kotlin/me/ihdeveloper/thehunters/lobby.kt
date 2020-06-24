@@ -26,6 +26,7 @@
 package me.ihdeveloper.thehunters
 
 import me.ihdeveloper.thehunters.command.LobbyForceStartCommand
+import me.ihdeveloper.thehunters.command.LobbySetSpawnCommand
 import me.ihdeveloper.thehunters.component.AchievementComponent
 import me.ihdeveloper.thehunters.component.NoHungerComponent
 import me.ihdeveloper.thehunters.component.AdventureComponent
@@ -69,6 +70,7 @@ class Lobby : GameObject(
     init {
         add(config)
         add(LobbyForceStartCommand(this))
+        add(LobbySetSpawnCommand(config))
     }
 
     private val countdown = CountdownComponent(

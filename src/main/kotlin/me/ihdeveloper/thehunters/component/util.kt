@@ -33,12 +33,14 @@ import me.ihdeveloper.thehunters.event.countdown.CountdownFinishEvent
 import me.ihdeveloper.thehunters.event.countdown.CountdownStartEvent
 import me.ihdeveloper.thehunters.event.countdown.CountdownTickEvent
 import me.ihdeveloper.thehunters.plugin
+import me.ihdeveloper.thehunters.util.COLOR_RED
 import me.ihdeveloper.thehunters.util.NotFoundCommand
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.configuration.file.YamlConfiguration
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
@@ -143,7 +145,7 @@ class CountdownComponent (
 }
 
 abstract class CommandComponent (
-        val name: String
+        open val name: String
 ) : GameComponent, CommandExecutor {
 
     abstract override val type: Short
@@ -196,4 +198,24 @@ abstract class ChatComponent : GameComponent, Listener {
     }
 
     abstract fun build(sender: GamePlayer, message: String): String
+}
+
+abstract class PlayerCommandComponent (
+        name: String
+) : CommandComponent(name) {
+
+    abstract override val type: Short
+
+    override fun onCommand(sender: CommandSender?, command: Command?, label: String?, args: Array<out String>?): Boolean {
+        if (sender !is Player) {
+            sender!!.run {
+                sendMessage("${COLOR_RED}The player only can execute this command!")
+            }
+            return true
+        }
+        val player = Game.players[sender.uniqueId]
+        return onPlayerExecute(player!!, command, label, args)
+    }
+
+    abstract fun onPlayerExecute(sender: GamePlayer, command: Command?, label: String?, args: Array<out String>?): Boolean
 }
