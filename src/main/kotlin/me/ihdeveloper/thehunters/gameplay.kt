@@ -30,6 +30,7 @@ import me.ihdeveloper.thehunters.component.ScoreboardComponent
 import me.ihdeveloper.thehunters.component.TYPE_COUNTDOWN
 import me.ihdeveloper.thehunters.component.TitleComponent
 import me.ihdeveloper.thehunters.component.VanishComponent
+import me.ihdeveloper.thehunters.component.gameplay.HunterAchievementComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterCompassComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterScoreboardComponent
@@ -106,7 +107,7 @@ class Gameplay : GameObject(), Listener {
                 player.add(TargetDimensionComponent(player))
                 player.add(TargetScoreboardComponent(player))
                 player.add(TargetSignalComponent(player))
-                player.add(TargetAchievementComponent(player).apply { reset() })
+                player.add(TargetAchievementComponent(player))
 
                 continue
             }
@@ -116,6 +117,7 @@ class Gameplay : GameObject(), Listener {
             player.add(HunterScoreboardComponent(player))
             player.add(HunterSignalComponent(player))
             player.add(HunterCompassComponent(player))
+            player.add(HunterAchievementComponent(player))
         }
 
         Bukkit.getPluginManager().callEvent(TargetJoinEvent(Game.players[target!!]))
