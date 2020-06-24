@@ -341,7 +341,7 @@ class TargetSignalComponent (
 }
 
 class TargetAchievementComponent (
-        override val gameObject: GamePlayer
+        gameObject: GamePlayer
 ): AchievementComponent(gameObject) {
 
     override fun message(achievement: Achievement): String {
