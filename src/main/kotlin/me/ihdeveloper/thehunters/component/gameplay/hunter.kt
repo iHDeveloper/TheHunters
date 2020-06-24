@@ -37,6 +37,7 @@ import me.ihdeveloper.thehunters.event.target.TargetJoinEvent
 import me.ihdeveloper.thehunters.event.target.TargetLostEvent
 import me.ihdeveloper.thehunters.event.target.TargetQuitEvent
 import me.ihdeveloper.thehunters.event.target.TargetRecoverEvent
+import me.ihdeveloper.thehunters.event.target.TargetSignalEvent
 import me.ihdeveloper.thehunters.plugin
 import me.ihdeveloper.thehunters.util.COLOR_BLUE
 import me.ihdeveloper.thehunters.util.COLOR_BOLD
@@ -208,6 +209,22 @@ class HunterSignalComponent (
     }
 
     @EventHandler
+    fun signal(event: TargetSignalEvent) {
+        val targetDimension = Dimension.get(event.target.entity.world.name)
+        val ourDimension = Dimension.get(gameObject.entity.world.name)
+
+        if (targetDimension != ourDimension) {
+            gameObject.get<HunterCompassComponent>(TYPE_GAMEPLAY_HUNTER_COMPASS).lost()
+            return
+        }
+
+        val message = "${COLOR_YELLOW}You received a signal from the target!"
+        gameObject.entity.sendMessage(message)
+
+        gameObject.get<HunterCompassComponent>(TYPE_GAMEPLAY_HUNTER_COMPASS).found(event.location)
+    }
+
+    @EventHandler
     fun recover(event: TargetRecoverEvent) {
         val msg = "${COLOR_YELLOW}We recovered the signal of the target!"
 
@@ -227,6 +244,7 @@ class HunterSignalComponent (
     override fun onDestroy(gameObject: GamePlayer) {
         TargetDimensionEvent.getHandlerList().unregister(this)
         TargetLostEvent.getHandlerList().unregister(this)
+        TargetSignalEvent.getHandlerList().unregister(this)
         TargetRecoverEvent.getHandlerList().unregister(this)
     }
 
