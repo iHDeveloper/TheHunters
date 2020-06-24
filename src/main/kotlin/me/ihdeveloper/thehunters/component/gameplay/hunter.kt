@@ -28,6 +28,7 @@ package me.ihdeveloper.thehunters.component.gameplay
 import me.ihdeveloper.thehunters.Dimension
 import me.ihdeveloper.thehunters.GameComponentOf
 import me.ihdeveloper.thehunters.GamePlayer
+import me.ihdeveloper.thehunters.component.AchievementComponent
 import me.ihdeveloper.thehunters.component.TYPE_TITLE
 import me.ihdeveloper.thehunters.component.TYPE_VANISH
 import me.ihdeveloper.thehunters.component.TitleComponent
@@ -45,6 +46,7 @@ import me.ihdeveloper.thehunters.util.COLOR_GOLD
 import me.ihdeveloper.thehunters.util.COLOR_GRAY
 import me.ihdeveloper.thehunters.util.COLOR_RED
 import me.ihdeveloper.thehunters.util.COLOR_YELLOW
+import org.bukkit.Achievement
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
@@ -367,6 +369,24 @@ class HunterCompassComponent (
             compassTarget = location
             inventory.setItem(COMPASS_SLOT, ItemStack(Material.AIR))
         }
+    }
+
+}
+
+class HunterAchievementComponent (
+        gameObject: GamePlayer
+) : AchievementComponent(gameObject) {
+
+    override fun message(achievement: Achievement): String {
+        val builder = StringBuilder().run {
+            append("${COLOR_BLUE}[Hunter] ")
+            append(gameObject.entity.name)
+            append("$COLOR_YELLOW ")
+            append("just got achievement [")
+            append("$COLOR_GOLD ${achievement.name}")
+            append("$COLOR_YELLOW ].")
+        }
+        return builder.toString()
     }
 
 }
