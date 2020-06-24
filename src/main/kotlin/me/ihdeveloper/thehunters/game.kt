@@ -25,6 +25,7 @@
 
 package me.ihdeveloper.thehunters
 
+import net.minecraft.server.v1_8_R3.DedicatedServer
 import org.bukkit.Bukkit
 import java.util.UUID
 
@@ -45,6 +46,9 @@ private val children = listOf(
 class Game : GameInstance (name, components, children) {
 
         init {
+               // Disable announcing any achievements since we are going to override them
+               DedicatedServer.getServer().propertyManager.setProperty("announce-player-achievements", false)
+
                instance = this
         }
 

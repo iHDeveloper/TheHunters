@@ -29,6 +29,9 @@ import me.ihdeveloper.thehunters.Game
 import me.ihdeveloper.thehunters.GameComponentOf
 import me.ihdeveloper.thehunters.GamePlayer
 import me.ihdeveloper.thehunters.plugin
+import me.ihdeveloper.thehunters.util.COLOR_GOLD
+import me.ihdeveloper.thehunters.util.COLOR_GRAY
+import me.ihdeveloper.thehunters.util.COLOR_YELLOW
 import net.minecraft.server.v1_8_R3.IChatBaseComponent
 import net.minecraft.server.v1_8_R3.PacketPlayOutTitle
 import org.bukkit.Achievement
@@ -42,6 +45,7 @@ import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
+import org.bukkit.event.player.PlayerAchievementAwardedEvent
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerPickupItemEvent
@@ -388,20 +392,38 @@ class VanishComponent (
 
 }
 
-class AchievementComponent (
+open class AchievementComponent (
         override val gameObject: GamePlayer
 
-) : GameComponentOf<GamePlayer>() {
+) : GameComponentOf<GamePlayer>(), Listener {
 
     override val type = TYPE_ACHIEVEMENT
 
+    private var blocked = false
+
     override fun onInit(gameObject: GamePlayer) {
+        Bukkit.getPluginManager().registerEvents(this, plugin())
+    }
+
+    @EventHandler
+    fun onAwarding(event: PlayerAchievementAwardedEvent) {
+        if (event.player.uniqueId !== gameObject.uniqueId)
+            return
+
+        if (blocked) {
+            event.isCancelled = true
+            return
+        }
+
+        Bukkit.broadcastMessage(message(event.achievement))
     }
 
     fun accept() {
+        blocked = false
     }
 
     fun block() {
+        blocked = true
     }
 
     fun reset() {
@@ -410,7 +432,20 @@ class AchievementComponent (
         }
     }
 
+    open fun message(achievement: Achievement): String {
+        val builder = StringBuilder().run {
+            append("$COLOR_GRAY")
+            append(gameObject.entity.name)
+            append("$COLOR_YELLOW ")
+            append("got an achievement [ $COLOR_GOLD")
+            append(achievement.name)
+            append(" $COLOR_GRAY]")
+        }
+        return builder.toString()
+    }
+
     override fun onDestroy(gameObject: GamePlayer) {
+        PlayerAchievementAwardedEvent.getHandlerList().unregister(this)
     }
 
 }
