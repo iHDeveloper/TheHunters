@@ -29,8 +29,10 @@ import me.ihdeveloper.thehunters.Game
 import me.ihdeveloper.thehunters.GameComponentOf
 import me.ihdeveloper.thehunters.GamePlayer
 import me.ihdeveloper.thehunters.plugin
+import me.ihdeveloper.thehunters.util.COLOR_AQUA
 import me.ihdeveloper.thehunters.util.COLOR_GOLD
 import me.ihdeveloper.thehunters.util.COLOR_GRAY
+import me.ihdeveloper.thehunters.util.COLOR_RED
 import me.ihdeveloper.thehunters.util.COLOR_YELLOW
 import net.minecraft.server.v1_8_R3.IChatBaseComponent
 import net.minecraft.server.v1_8_R3.PacketPlayOutTitle
@@ -445,8 +447,43 @@ open class AchievementComponent (
     }
 
     protected fun name(achievement: Achievement): String {
-        // TODO Provide the title of the achievment provided in the language files of the game
-        return achievement.name
+        // TODO Provide some description for the achievement since the titles from the language file aren't that clear
+        return when (achievement) {
+            Achievement.OPEN_INVENTORY -> "Taking Inventory"
+            Achievement.MINE_WOOD -> "Getting Wood"
+            Achievement.BUILD_WORKBENCH -> "Benchmarking"
+            Achievement.BUILD_PICKAXE -> "Time to Mine!"
+            Achievement.BUILD_FURNACE -> "Hot Topic"
+            Achievement.ACQUIRE_IRON -> "Acquire Hardware"
+            Achievement.BUILD_HOE -> "Time to Farm!"
+            Achievement.MAKE_BREAD -> "Bake Bread"
+            Achievement.BAKE_CAKE -> "The Lie"
+            Achievement.BUILD_BETTER_PICKAXE -> "Getting an Upgrade"
+            Achievement.OVERPOWERED -> "Overpowered"
+            Achievement.COOK_FISH -> "Delicious Fish"
+            Achievement.ON_A_RAIL -> "On A Rail"
+            Achievement.BUILD_SWORD -> "Time to Strike!"
+            Achievement.KILL_ENEMY -> "Monster Hunter"
+            Achievement.KILL_COW -> "Cow Tipper"
+            Achievement.BREED_COW -> "Repopulation"
+            Achievement.FLY_PIG -> "When Pigs Fly"
+            Achievement.SNIPE_SKELETON -> "Sniper Duel"
+            Achievement.GET_DIAMONDS -> "${COLOR_AQUA}DIAMONDS!"
+            Achievement.DIAMONDS_TO_YOU -> "${COLOR_AQUA}Diamonds$COLOR_GOLD to you!"
+            Achievement.NETHER_PORTAL -> "We Need to Go Deeper"
+            Achievement.GHAST_RETURN -> "Return to Sender"
+            Achievement.GET_BLAZE_ROD -> "Into$COLOR_RED Fire"
+            Achievement.BREW_POTION -> "Local Brewery"
+            Achievement.THE_END -> "The End?"
+            Achievement.SPAWN_WITHER -> "The Beginning?"
+            Achievement.KILL_WITHER -> "The Beginning."
+            Achievement.FULL_BEACON -> "Beaconator"
+            Achievement.EXPLORE_ALL_BIOMES -> "Adventuring Time"
+            Achievement.ENCHANTMENTS -> "Enchanter"
+            Achievement.OVERKILL -> "Overkill"
+            Achievement.BOOKCASE -> "Librarian"
+            else -> "${COLOR_GRAY}Unknown"
+        }
     }
 
     override fun onDestroy(gameObject: GamePlayer) {
