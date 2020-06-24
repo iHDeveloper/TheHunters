@@ -38,6 +38,7 @@ import me.ihdeveloper.thehunters.component.gameplay.TargetComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetDimensionComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetGetReadyComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetScoreboardComponent
+import me.ihdeveloper.thehunters.component.gameplay.TargetSignalComponent
 import me.ihdeveloper.thehunters.event.hunter.HunterJoinEvent
 import me.ihdeveloper.thehunters.event.player.GameQuitEvent
 import me.ihdeveloper.thehunters.event.target.TargetJoinEvent
@@ -103,6 +104,7 @@ class Gameplay : GameObject(), Listener {
                 player.add(TargetGetReadyComponent(player))
                 player.add(TargetDimensionComponent(player))
                 player.add(TargetScoreboardComponent(player))
+                player.add(TargetSignalComponent(player))
 
                 continue
             }

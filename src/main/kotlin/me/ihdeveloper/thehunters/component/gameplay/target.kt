@@ -41,10 +41,9 @@ import me.ihdeveloper.thehunters.event.hunter.HunterJoinEvent
 import me.ihdeveloper.thehunters.event.target.TargetDimensionEvent
 import me.ihdeveloper.thehunters.event.target.TargetLostEvent
 import me.ihdeveloper.thehunters.event.target.TargetRecoverEvent
+import me.ihdeveloper.thehunters.event.target.TargetSignalEvent
 import me.ihdeveloper.thehunters.plugin
-import me.ihdeveloper.thehunters.util.COLOR_BLUE
 import me.ihdeveloper.thehunters.util.COLOR_BOLD
-import me.ihdeveloper.thehunters.util.COLOR_GOLD
 import me.ihdeveloper.thehunters.util.COLOR_RED
 import me.ihdeveloper.thehunters.util.COLOR_WHITE
 import me.ihdeveloper.thehunters.util.COLOR_YELLOW
@@ -53,12 +52,14 @@ import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerChangedWorldEvent
+import org.bukkit.scheduler.BukkitTask
 import org.bukkit.scoreboard.Score
 
 const val TYPE_GAMEPLAY_TARGET: Short = 310
 const val TYPE_GAMEPLAY_TARGET_GET_READY: Short = 311
 const val TYPE_GAMEPLAY_TARGET_DIMENSION: Short = 312
 const val TYPE_GAMEPLAY_TARGET_SCOREBOARD: Short = 313
+const val TYPE_GAMEPLAY_TARGET_SIGNAL: Short = 314
 
 class TargetComponent (
         override val gameObject: GamePlayer
@@ -286,6 +287,46 @@ class TargetScoreboardComponent (
         huntersScore = null
 
         super.onDestroy(gameObject)
+    }
+
+}
+
+class TargetSignalComponent (
+        override val gameObject: GamePlayer
+) : GameComponentOf<GamePlayer>(), Listener, Runnable {
+
+    override val type = TYPE_GAMEPLAY_TARGET_SIGNAL
+
+    private var task: BukkitTask? = null
+
+    override fun onInit(gameObject: GamePlayer) {
+        Bukkit.getPluginManager().registerEvents(this, plugin())
+    }
+
+    override fun run() {
+        val message = "${COLOR_RED}A signal has been sent to the hunters!"
+
+        gameObject.entity.sendMessage(message)
+
+        val event = TargetSignalEvent(gameObject, gameObject.entity.location)
+        Bukkit.getPluginManager().callEvent(event)
+    }
+
+    fun onRecover(event: TargetRecoverEvent) {
+        task = Bukkit.getScheduler().runTaskTimer(plugin(), this, 0L, 30 * 20L)
+
+        val message = "${COLOR_YELLOW}The hunters are going to receive a signal from you every$COLOR_RED 30$COLOR_YELLOW seconds!"
+
+        gameObject.entity.sendMessage(message)
+    }
+
+    override fun onDestroy(gameObject: GamePlayer) {
+        if (task != null) {
+            task!!.cancel()
+            task = null
+        }
+
+        TargetRecoverEvent.getHandlerList().unregister(this)
     }
 
 }
