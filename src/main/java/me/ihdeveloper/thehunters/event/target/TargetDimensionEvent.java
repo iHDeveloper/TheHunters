@@ -44,15 +44,7 @@ public class TargetDimensionEvent extends TargetEvent {
 
         String world = player.getEntity().getWorld().getName();
 
-        if (Dimension.THE_END.check(world)) {
-            dimension = Dimension.THE_END;
-        } else if (Dimension.NETHER.check(world)) {
-            dimension = Dimension.NETHER;
-        } else if (Dimension.WORLD.check(world)) {
-            dimension = Dimension.WORLD;
-        } else {
-            dimension = Dimension.UNKNOWN;
-        }
+        dimension = Dimension.Companion.get(world);
     }
 
     public void setDimension(Dimension dimension) {

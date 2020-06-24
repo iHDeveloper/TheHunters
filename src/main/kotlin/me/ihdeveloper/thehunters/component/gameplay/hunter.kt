@@ -50,6 +50,7 @@ import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.player.PlayerChangedWorldEvent
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scoreboard.Score
@@ -192,6 +193,21 @@ class HunterSignalComponent (
     }
 
     @EventHandler
+    fun onTargetDimensionChanged(event: TargetDimensionEvent) {
+        val hunterDimension = Dimension.get(gameObject.entity.world.name)
+        updateDimension(event.dimension, hunterDimension, event.target.entity.location)
+    }
+
+    private fun updateDimension(target: Dimension, hunter: Dimension, location: Location?) {
+        if (target == hunter) {
+            gameObject.get<HunterCompassComponent>(TYPE_GAMEPLAY_HUNTER_COMPASS).found(location!!)
+            return
+        }
+
+        gameObject.get<HunterCompassComponent>(TYPE_GAMEPLAY_HUNTER_COMPASS).lost()
+    }
+
+    @EventHandler
     fun recover(event: TargetRecoverEvent) {
         val msg = "${COLOR_YELLOW}We recovered the signal of the target!"
 
@@ -209,6 +225,7 @@ class HunterSignalComponent (
     }
 
     override fun onDestroy(gameObject: GamePlayer) {
+        TargetDimensionEvent.getHandlerList().unregister(this)
         TargetLostEvent.getHandlerList().unregister(this)
         TargetRecoverEvent.getHandlerList().unregister(this)
     }

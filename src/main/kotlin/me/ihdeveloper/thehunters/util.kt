@@ -39,5 +39,22 @@ enum class Dimension (
     NETHER("${COLOR_RED}Nether", { it === "world_nether" }),
     THE_END("${COLOR_PURPLE}The End", { it === "world_the_end" });
 
+    companion object {
+
+        fun get(name: String): Dimension {
+            return when (THE_END.check(name)) {
+                true -> THE_END
+                else -> when (NETHER.check(name)) {
+                    true -> NETHER
+                    else -> when (WORLD.check(name)) {
+                        true -> WORLD
+                        else -> UNKNOWN
+                    }
+                }
+            }
+        }
+
+    }
+
     fun check(name: String) = checker(name)
 }
