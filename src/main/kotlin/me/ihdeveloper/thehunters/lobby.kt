@@ -30,6 +30,7 @@ import me.ihdeveloper.thehunters.component.AchievementComponent
 import me.ihdeveloper.thehunters.component.NoHungerComponent
 import me.ihdeveloper.thehunters.component.AdventureComponent
 import me.ihdeveloper.thehunters.component.ClearInventoryComponent
+import me.ihdeveloper.thehunters.component.ConfigurationComponent
 import me.ihdeveloper.thehunters.component.CountdownComponent
 import me.ihdeveloper.thehunters.component.DisableBlockBreakComponent
 import me.ihdeveloper.thehunters.component.DisableBlockPlaceComponent
@@ -55,6 +56,7 @@ import me.ihdeveloper.thehunters.util.COLOR_RED
 import me.ihdeveloper.thehunters.util.COLOR_YELLOW
 import me.ihdeveloper.thehunters.util.COUNTDOWN_LOBBY
 import org.bukkit.Bukkit
+import org.bukkit.Location
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
@@ -62,7 +64,10 @@ class Lobby : GameObject(
         components = listOf(LobbyChatComponent())
 ), Listener {
 
+    private val config = ConfigurationComponent("lobby.yml")
+
     init {
+        add(config)
         add(LobbyForceStartCommand(this))
     }
 
@@ -87,6 +92,11 @@ class Lobby : GameObject(
     @EventHandler
     private fun onJoin(event: GameJoinEvent) {
         val player = event.player
+        player.entity.run {
+            val location = config.read<Location>("location")
+            teleport(location)
+        }
+
         player.add(AdventureComponent(player))
         player.add(NoHungerComponent(player))
         player.add(DisableItemCollectComponent(player))
