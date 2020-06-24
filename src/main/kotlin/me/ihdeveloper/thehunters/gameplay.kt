@@ -39,14 +39,18 @@ import me.ihdeveloper.thehunters.component.gameplay.TargetDimensionComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetGetReadyComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetScoreboardComponent
 import me.ihdeveloper.thehunters.event.hunter.HunterJoinEvent
+import me.ihdeveloper.thehunters.event.player.GameQuitEvent
 import me.ihdeveloper.thehunters.event.target.TargetJoinEvent
+import me.ihdeveloper.thehunters.event.target.TargetQuitEvent
 import me.ihdeveloper.thehunters.util.COUNTDOWN_GAMEPLAY_GET_READY
 import me.ihdeveloper.thehunters.util.COUNTDOWN_GAMEPLAY_INTRO
 import org.bukkit.Bukkit
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
 import java.util.UUID
 import kotlin.random.Random
 
-class Gameplay : GameObject() {
+class Gameplay : GameObject(), Listener {
 
     companion object {
         lateinit var instance: Gameplay
@@ -79,6 +83,8 @@ class Gameplay : GameObject() {
     }
 
     override fun onInit() {
+        Bukkit.getPluginManager().registerEvents(this, plugin())
+
         Game.lock()
 
         val random = Random(Game.count + 1)
@@ -120,7 +126,17 @@ class Gameplay : GameObject() {
         intro.start()
     }
 
+    @EventHandler
+    fun onGameQuit(event: GameQuitEvent) {
+        if (event.player.uniqueId === target) {
+            Bukkit.getPluginManager().callEvent(TargetQuitEvent(event.player))
+            return
+        }
+    }
+
     override fun onDestroy() {
+        GameQuitEvent.getHandlerList().unregister(this)
+
         intro.stop()
         countdown.stop()
     }

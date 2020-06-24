@@ -35,6 +35,7 @@ import me.ihdeveloper.thehunters.component.VanishComponent
 import me.ihdeveloper.thehunters.event.target.TargetDimensionEvent
 import me.ihdeveloper.thehunters.event.target.TargetJoinEvent
 import me.ihdeveloper.thehunters.event.target.TargetLostEvent
+import me.ihdeveloper.thehunters.event.target.TargetQuitEvent
 import me.ihdeveloper.thehunters.event.target.TargetRecoverEvent
 import me.ihdeveloper.thehunters.plugin
 import me.ihdeveloper.thehunters.util.COLOR_BLUE
@@ -122,6 +123,11 @@ class HunterScoreboardComponent (
     @EventHandler
     fun onTargetJoin(event: TargetJoinEvent) {
         targets!!.addEntry(event.target.entity.name)
+    }
+
+    @EventHandler
+    fun onTargetQuit(event: TargetQuitEvent) {
+        targets!!.removeEntry(event.target.entity.name)
     }
 
     @EventHandler
