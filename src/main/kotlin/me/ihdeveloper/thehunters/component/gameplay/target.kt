@@ -29,6 +29,7 @@ import me.ihdeveloper.thehunters.Game
 import me.ihdeveloper.thehunters.GameComponentOf
 import me.ihdeveloper.thehunters.GamePlayer
 import me.ihdeveloper.thehunters.Gameplay
+import me.ihdeveloper.thehunters.component.AchievementComponent
 import me.ihdeveloper.thehunters.component.TYPE_TITLE
 import me.ihdeveloper.thehunters.component.TYPE_VANISH
 import me.ihdeveloper.thehunters.component.TitleComponent
@@ -44,10 +45,12 @@ import me.ihdeveloper.thehunters.event.target.TargetRecoverEvent
 import me.ihdeveloper.thehunters.event.target.TargetSignalEvent
 import me.ihdeveloper.thehunters.plugin
 import me.ihdeveloper.thehunters.util.COLOR_BOLD
+import me.ihdeveloper.thehunters.util.COLOR_GOLD
 import me.ihdeveloper.thehunters.util.COLOR_RED
 import me.ihdeveloper.thehunters.util.COLOR_WHITE
 import me.ihdeveloper.thehunters.util.COLOR_YELLOW
 import me.ihdeveloper.thehunters.util.COUNTDOWN_GAMEPLAY_GET_READY
+import org.bukkit.Achievement
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -333,6 +336,24 @@ class TargetSignalComponent (
         }
 
         TargetRecoverEvent.getHandlerList().unregister(this)
+    }
+
+}
+
+class TargetAchievementComponent (
+        override val gameObject: GamePlayer
+): AchievementComponent(gameObject) {
+
+    override fun message(achievement: Achievement): String {
+        val builder = StringBuilder().run {
+            append("$COLOR_RED")
+            append(gameObject.entity.name)
+            append("$COLOR_YELLOW ")
+            append("is moving forward towards winning")
+            append("$COLOR_GOLD ${achievement.name}")
+            append("${COLOR_YELLOW}.")
+        }
+        return builder.toString()
     }
 
 }

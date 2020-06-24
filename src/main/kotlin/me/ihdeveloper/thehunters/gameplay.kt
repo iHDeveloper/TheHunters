@@ -34,6 +34,7 @@ import me.ihdeveloper.thehunters.component.gameplay.HunterCompassComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterScoreboardComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterSignalComponent
+import me.ihdeveloper.thehunters.component.gameplay.TargetAchievementComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetDimensionComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetGetReadyComponent
@@ -105,6 +106,7 @@ class Gameplay : GameObject(), Listener {
                 player.add(TargetDimensionComponent(player))
                 player.add(TargetScoreboardComponent(player))
                 player.add(TargetSignalComponent(player))
+                player.add(TargetAchievementComponent(player).apply { reset() })
 
                 continue
             }
