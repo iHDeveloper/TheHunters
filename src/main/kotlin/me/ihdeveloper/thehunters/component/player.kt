@@ -52,7 +52,7 @@ import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerPickupItemEvent
 import org.bukkit.scoreboard.Scoreboard
-import java.util.*
+import java.util.UUID
 
 const val TYPE_SCOREBOARD: Short = 101
 const val TYPE_NO_HUNGER: Short = 102
@@ -68,6 +68,7 @@ const val TYPE_CLEAR_INVENTORY: Short = 111
 const val TYPE_VANISH: Short = 112
 const val TYPE_ACHIEVEMENT: Short = 113
 const val TYPE_CLEAR_POTION_EFFECT: Short = 114
+const val TYPE_RESET_HEALTH: Short = 115
 
 class ScoreboardComponent (
         override val gameObject: GamePlayer
@@ -504,6 +505,24 @@ class ClearPotionEffectComponent (
             for (activeEffect in activePotionEffects) {
                 removePotionEffect(activeEffect.type)
             }
+        }
+    }
+
+    override fun onDestroy(gameObject: GamePlayer) {}
+
+}
+
+class ResetHealthComponent (
+        override val gameObject: GamePlayer
+) : GameComponentOf<GamePlayer>() {
+
+    override val type = TYPE_RESET_HEALTH
+
+    override fun onInit(gameObject: GamePlayer) {
+        gameObject.entity.run {
+            val h = 20.0
+            health = h
+            maxHealth = h
         }
     }
 

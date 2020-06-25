@@ -43,6 +43,7 @@ import me.ihdeveloper.thehunters.component.LobbyComponent
 import me.ihdeveloper.thehunters.component.LobbyScoreboardComponent
 import me.ihdeveloper.thehunters.component.NoDamageComponent
 import me.ihdeveloper.thehunters.component.NoInteractComponent
+import me.ihdeveloper.thehunters.component.ResetHealthComponent
 import me.ihdeveloper.thehunters.event.CountdownEvent
 import me.ihdeveloper.thehunters.event.player.GameJoinEvent
 import me.ihdeveloper.thehunters.event.GamePlayerEvent
@@ -98,12 +99,10 @@ class Lobby : GameObject(
         player.entity.run {
             val location = config.read<Location>("location")
 
-            if (location == null) {
+            if (location == null)
                 Game.logger.warning("The lobby spawn location wasn't set to use it ( Use /setlobbyspawn )")
-                return
-            }
-
-            teleport(location)
+            else
+                teleport(location)
         }
 
         player.add(AdventureComponent(player))
@@ -116,6 +115,7 @@ class Lobby : GameObject(
         player.add(NoInteractComponent(player))
         player.add(ClearInventoryComponent(player))
         player.add(ClearPotionEffectComponent(player))
+        player.add(ResetHealthComponent(player))
         player.add(AchievementComponent(player).apply {
             this.reset()
             this.block()
