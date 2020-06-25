@@ -529,3 +529,18 @@ class ResetHealthComponent (
     override fun onDestroy(gameObject: GamePlayer) {}
 
 }
+
+abstract class DeathComponent (
+        override val gameObject: GamePlayer
+) : GameComponentOf<GamePlayer>(), Listener {
+
+    abstract override val type: Short
+
+    override fun onInit(gameObject: GamePlayer) {
+        Bukkit.getPluginManager().registerEvents(this, plugin())
+    }
+
+    override fun onDestroy(gameObject: GamePlayer) {
+        EntityDamageEvent.getHandlerList().unregister(this)
+    }
+}
