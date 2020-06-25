@@ -25,6 +25,7 @@
 
 package me.ihdeveloper.thehunters
 
+import me.ihdeveloper.thehunters.command.GameShoutCommand
 import me.ihdeveloper.thehunters.command.GameplaySetSpawnCommand
 import me.ihdeveloper.thehunters.component.ConfigurationComponent
 import me.ihdeveloper.thehunters.component.CountdownComponent
@@ -37,6 +38,7 @@ import me.ihdeveloper.thehunters.component.gameplay.HunterChatComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterCompassComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterScoreboardComponent
+import me.ihdeveloper.thehunters.component.gameplay.HunterShoutComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterSignalComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetAchievementComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetChatComponent
@@ -99,6 +101,7 @@ class Gameplay : GameObject(
         add(config)
         add(intro)
         add(GameplaySetSpawnCommand(config))
+        add(GameShoutCommand())
 
         instance = this
     }
@@ -168,6 +171,7 @@ class Gameplay : GameObject(
         player.add(HunterSignalComponent(player))
         player.add(HunterCompassComponent(player))
         player.add(HunterAchievementComponent(player))
+        player.add(HunterShoutComponent(player))
 
         if (join) {
             teleportToSpawn(player)

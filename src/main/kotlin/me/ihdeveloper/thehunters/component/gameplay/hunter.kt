@@ -58,6 +58,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.inventory.ItemStack
+import org.bukkit.scheduler.BukkitTask
 import org.bukkit.scoreboard.Score
 
 const val TYPE_GAMEPLAY_HUNTER: Short = 350
@@ -65,8 +66,10 @@ const val TYPE_GAMEPLAY_HUNTER_SCOREBOARD: Short = 351
 const val TYPE_GAMEPLAY_HUNTER_SIGNAL: Short = 352
 const val TYPE_GAMEPLAY_HUNTER_COMPASS: Short = 353
 const val TYPE_GAMEPLAY_HUNTER_CHAT: Short = 354
+const val TYPE_GAMEPLAY_HUNTER_SHOUT: Short = 355
 
 private const val COMPASS_SLOT = 8
+private const val SHOUT_COOLDOWN = 60
 
 class HunterComponent (
         override val gameObject: GamePlayer
@@ -416,6 +419,49 @@ class HunterChatComponent : ChatComponent() {
         return Game.players.values.filter {
             it.has(TYPE_GAMEPLAY_HUNTER)
         }
+    }
+
+}
+
+class HunterShoutComponent (
+        override val gameObject: GamePlayer
+) : GameComponentOf<GamePlayer>(), Runnable {
+
+    override val type = TYPE_GAMEPLAY_HUNTER_SHOUT
+
+    private var seconds: Int = -1
+
+    val can: Boolean get() { return seconds != -1 }
+    val remaining: Int get() { return seconds }
+
+    private var task: BukkitTask? = null
+
+    override fun onInit(gameObject: GamePlayer) {}
+
+    fun shout() {
+        seconds = 60
+
+        task = Bukkit.getScheduler().runTaskTimer(plugin(), this, 0L, 20L)
+    }
+
+    private fun stop() {
+        if (task != null) {
+            task!!.cancel()
+            task = null
+        }
+    }
+
+    override fun run() {
+        seconds--
+
+        if (seconds <= 0) {
+            seconds = -1
+            stop()
+        }
+    }
+
+    override fun onDestroy(gameObject: GamePlayer) {
+        stop()
     }
 
 }
