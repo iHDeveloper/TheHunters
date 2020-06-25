@@ -572,7 +572,44 @@ abstract class DeathComponent (
                 return
         }
 
+        if (event.cause === EntityDamageEvent.DamageCause.BLOCK_EXPLOSION) {
+            byBlockExplosion(event.damager)
+            return
+        }
+
         byBlock(event.damager, event)
+    }
+
+    @EventHandler
+    fun onDamage(event: EntityDamageEvent) {
+        if (event is EntityDamageByBlockEvent)
+            return
+        if (event is EntityDamageByEntityEvent)
+            return
+
+        if (event.entity.uniqueId !== gameObject.uniqueId)
+            return
+
+        when (event.cause) {
+            EntityDamageEvent.DamageCause.CONTACT -> byContact()
+            EntityDamageEvent.DamageCause.CUSTOM -> unknown(event)
+            EntityDamageEvent.DamageCause.DROWNING -> byDrowning()
+            EntityDamageEvent.DamageCause.FALL -> byFalling()
+            EntityDamageEvent.DamageCause.FIRE -> byFire()
+            EntityDamageEvent.DamageCause.FIRE_TICK -> byFire()
+            EntityDamageEvent.DamageCause.LAVA -> byLava()
+            EntityDamageEvent.DamageCause.LIGHTNING -> byLighting()
+            EntityDamageEvent.DamageCause.MAGIC -> byMagic()
+            EntityDamageEvent.DamageCause.MELTING -> byMelting()
+            EntityDamageEvent.DamageCause.POISON -> byPoison()
+            EntityDamageEvent.DamageCause.STARVATION -> byStarvation()
+            EntityDamageEvent.DamageCause.SUFFOCATION -> bySuffocation()
+            EntityDamageEvent.DamageCause.SUICIDE -> bySuicide()
+            EntityDamageEvent.DamageCause.THORNS -> byThorns()
+            EntityDamageEvent.DamageCause.VOID -> byVoid()
+            EntityDamageEvent.DamageCause.WITHER -> byWither()
+            else -> unknown(event)
+        }
     }
 
     override fun onDestroy(gameObject: GamePlayer) {
@@ -582,4 +619,21 @@ abstract class DeathComponent (
     abstract fun byPlayer(killer: GamePlayer, event: EntityDamageByEntityEvent)
     abstract fun byEntity(killer: Entity, event: EntityDamageByEntityEvent)
     abstract fun byBlock(killer: Block, event: EntityDamageByBlockEvent)
+    abstract fun byBlockExplosion(killer: Block)
+    abstract fun byContact()
+    abstract fun byDrowning()
+    abstract fun byFalling()
+    abstract fun byFire()
+    abstract fun byLava()
+    abstract fun byLighting()
+    abstract fun byMagic()
+    abstract fun byMelting()
+    abstract fun byPoison()
+    abstract fun byStarvation()
+    abstract fun bySuffocation()
+    abstract fun bySuicide()
+    abstract fun byThorns()
+    abstract fun byVoid()
+    abstract fun byWither()
+    abstract fun unknown(event: EntityDamageEvent)
 }
