@@ -40,6 +40,7 @@ import org.bukkit.Achievement
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer
+import org.bukkit.entity.Entity
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
@@ -540,7 +541,23 @@ abstract class DeathComponent (
         Bukkit.getPluginManager().registerEvents(this, plugin())
     }
 
+    @EventHandler
+    fun onDamageByEntity(event: EntityDamageByEntityEvent) {
+        if (event.entity.uniqueId !== gameObject.uniqueId)
+            return
+
+        gameObject.entity.run {
+            if (health - event.finalDamage > 0.0) {
+                return
+            }
+        }
+
+        byEntity(event.damager, event)
+    }
+
     override fun onDestroy(gameObject: GamePlayer) {
         EntityDamageEvent.getHandlerList().unregister(this)
     }
+
+    abstract fun byEntity(entity: Entity, event: EntityDamageByEntityEvent)
 }
