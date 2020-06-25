@@ -45,7 +45,7 @@ import org.bukkit.command.Command
 const val TYPE_GAMEPLAY_COMMAND_SET_SPAWN: Short = 1101
 const val TYPE_GAMEPLAY_COMMAND_SHOUT: Short = 1102
 
-class GameplaySetSpawnCommand (
+class GameSetSpawnCommand (
         private val config: ConfigurationComponent
 ) : PlayerCommandComponent("setgamespawn") {
 

@@ -26,7 +26,7 @@
 package me.ihdeveloper.thehunters
 
 import me.ihdeveloper.thehunters.command.GameShoutCommand
-import me.ihdeveloper.thehunters.command.GameplaySetSpawnCommand
+import me.ihdeveloper.thehunters.command.GameSetSpawnCommand
 import me.ihdeveloper.thehunters.component.ConfigurationComponent
 import me.ihdeveloper.thehunters.component.CountdownComponent
 import me.ihdeveloper.thehunters.component.ScoreboardComponent
@@ -100,7 +100,7 @@ class Gameplay : GameObject(
     init {
         add(config)
         add(intro)
-        add(GameplaySetSpawnCommand(config))
+        add(GameSetSpawnCommand(config))
         add(GameShoutCommand())
 
         instance = this
