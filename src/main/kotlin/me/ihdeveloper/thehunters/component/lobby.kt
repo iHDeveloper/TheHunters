@@ -141,6 +141,8 @@ class LobbyScoreboardComponent (
     private var scoreboard: Scoreboard? = null
     private var sidebar: Objective? = null
 
+    private var waitingScore: Score? = null
+
     private var showTimeLeft = false
     private var timeLeftSeconds = 60
     private var timeLeftLastSeconds = 61
@@ -172,7 +174,7 @@ class LobbyScoreboardComponent (
         }
 
         sidebar!!.getScore("$COLOR_BOLD$COLOR_WHITE").score = 4
-        updateTimeLeft()
+        showWaiting()
         sidebar!!.getScore("$COLOR_BOLD$COLOR_RED").score = 2
 
         updatePlayersCount()
@@ -195,9 +197,13 @@ class LobbyScoreboardComponent (
             return
         timeLeftLastSeconds = timeLeftSeconds
 
+        if (waitingScore != null) {
+            scoreboard!!.resetScores(waitingScore!!.entry)
+            waitingScore = null
+        }
+
         if (timeLeftScore != null) {
             scoreboard!!.resetScores(timeLeftScore!!.entry)
-            timeLeftScore = null
         }
 
         var secs = timeLeftSeconds
@@ -217,6 +223,14 @@ class LobbyScoreboardComponent (
 
         timeLeftScore = sidebar!!.getScore(builder.toString())
         timeLeftScore!!.score = 3
+    }
+
+    private fun showWaiting() {
+        if (waitingScore != null)
+            return
+
+        waitingScore = sidebar!!.getScore("${COLOR_YELLOW}Waiting... ")
+        waitingScore!!.score = 3
     }
 
     private fun updatePlayersCount() {
@@ -273,6 +287,7 @@ class LobbyScoreboardComponent (
         }
 
         showTimeLeft = false
+        showWaiting()
     }
 
     @EventHandler
@@ -282,6 +297,7 @@ class LobbyScoreboardComponent (
         }
 
         showTimeLeft = false
+        showWaiting()
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -303,6 +319,7 @@ class LobbyScoreboardComponent (
 
         playersScore = null
         timeLeftScore = null
+        waitingScore = null
 
         scoreboard = null
     }
