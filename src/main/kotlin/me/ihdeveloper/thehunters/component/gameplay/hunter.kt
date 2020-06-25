@@ -26,9 +26,11 @@
 package me.ihdeveloper.thehunters.component.gameplay
 
 import me.ihdeveloper.thehunters.Dimension
+import me.ihdeveloper.thehunters.Game
 import me.ihdeveloper.thehunters.GameComponentOf
 import me.ihdeveloper.thehunters.GamePlayer
 import me.ihdeveloper.thehunters.component.AchievementComponent
+import me.ihdeveloper.thehunters.component.ChatComponent
 import me.ihdeveloper.thehunters.component.TYPE_TITLE
 import me.ihdeveloper.thehunters.component.TYPE_VANISH
 import me.ihdeveloper.thehunters.component.TitleComponent
@@ -45,6 +47,7 @@ import me.ihdeveloper.thehunters.util.COLOR_BOLD
 import me.ihdeveloper.thehunters.util.COLOR_GOLD
 import me.ihdeveloper.thehunters.util.COLOR_GRAY
 import me.ihdeveloper.thehunters.util.COLOR_RED
+import me.ihdeveloper.thehunters.util.COLOR_WHITE
 import me.ihdeveloper.thehunters.util.COLOR_YELLOW
 import org.bukkit.Achievement
 import org.bukkit.Bukkit
@@ -53,7 +56,6 @@ import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.event.player.PlayerChangedWorldEvent
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scoreboard.Score
@@ -62,6 +64,7 @@ const val TYPE_GAMEPLAY_HUNTER: Short = 350
 const val TYPE_GAMEPLAY_HUNTER_SCOREBOARD: Short = 351
 const val TYPE_GAMEPLAY_HUNTER_SIGNAL: Short = 352
 const val TYPE_GAMEPLAY_HUNTER_COMPASS: Short = 353
+const val TYPE_GAMEPLAY_HUNTER_CHAT: Short = 354
 
 private const val COMPASS_SLOT = 8
 
@@ -387,6 +390,32 @@ class HunterAchievementComponent (
             append("${COLOR_YELLOW}.")
         }
         return builder.toString()
+    }
+
+}
+
+class HunterChatComponent : ChatComponent() {
+
+    override val type = TYPE_GAMEPLAY_HUNTER_CHAT
+
+    override fun allow(sender: GamePlayer): Boolean {
+        return sender.has(TYPE_GAMEPLAY_HUNTER)
+    }
+
+    override fun build(sender: GamePlayer, message: String): String {
+        val builder = StringBuilder().run {
+            append("$COLOR_BLUE")
+            append(sender.entity.name)
+            append("$COLOR_WHITE")
+            append(": $message")
+        }
+        return builder.toString()
+    }
+
+    override fun toWho(sender: GamePlayer): Collection<GamePlayer> {
+        return Game.players.values.filter {
+            it.has(TYPE_GAMEPLAY_HUNTER)
+        }
     }
 
 }

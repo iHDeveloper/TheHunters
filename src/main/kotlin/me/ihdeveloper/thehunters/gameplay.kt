@@ -33,6 +33,7 @@ import me.ihdeveloper.thehunters.component.TYPE_COUNTDOWN
 import me.ihdeveloper.thehunters.component.TitleComponent
 import me.ihdeveloper.thehunters.component.VanishComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterAchievementComponent
+import me.ihdeveloper.thehunters.component.gameplay.HunterChatComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterCompassComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterScoreboardComponent
@@ -59,7 +60,10 @@ import java.util.UUID
 import kotlin.random.Random
 
 class Gameplay : GameObject(
-        components = listOf(TargetChatComponent())
+        components = listOf(
+                TargetChatComponent(),
+                HunterChatComponent()
+        )
 ), Listener {
 
     companion object {
