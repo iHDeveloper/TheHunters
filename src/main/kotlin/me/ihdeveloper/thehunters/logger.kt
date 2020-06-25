@@ -25,22 +25,34 @@
 
 package me.ihdeveloper.thehunters
 
+import me.ihdeveloper.thehunters.util.COLOR_AQUA
+import me.ihdeveloper.thehunters.util.COLOR_GOLD
+import me.ihdeveloper.thehunters.util.COLOR_GRAY
+import me.ihdeveloper.thehunters.util.COLOR_RED
+import me.ihdeveloper.thehunters.util.COLOR_YELLOW
+import org.bukkit.Bukkit
+import org.bukkit.ChatColor
+
 class GameLogger (
         private val name: String
 ) {
 
-    fun info(message: String) = print("INFO", message)
-    fun warn(message: String) = print("WARN", message)
-    fun err(message: String) = print("ERR", message)
-    fun debug(message: String) = print("DEBUG", message)
+    fun info(message: String) = print(COLOR_AQUA, "INFO", message)
+    fun warning(message: String) = print(COLOR_YELLOW, "WARN", message)
+    fun error(message: String) = print(COLOR_RED, "ERR", message)
+    fun debug(message: String) = print(COLOR_GOLD, "DEBUG", message)
 
-    private fun print(prefix: String, message: String) {
-        val builder = StringBuilder()
-        builder.append("[${name}] ")
-        builder.append("[${prefix}] ")
-        builder.append(message)
+    private fun print(color: ChatColor, prefix: String, message: String) {
+        val builder = StringBuilder().run {
+            append("[${name}] ")
+            append("[")
+            append("$color$prefix${COLOR_GRAY}")
+            append("] ")
+            append("$color")
+            append(message)
+        }
 
-        println(builder.toString())
+        Bukkit.getConsoleSender().sendMessage(builder.toString())
     }
 
 }

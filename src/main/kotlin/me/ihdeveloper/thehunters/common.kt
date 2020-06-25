@@ -186,7 +186,7 @@ open class GameInstance (
         components = components,
         children = children
 ) {
-    val logger = GameLogger(name)
+    protected val logger = GameLogger(name)
 
     override fun onInit() {
         logger.info("Initializing...")

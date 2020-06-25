@@ -55,6 +55,7 @@ class Game : GameInstance (name, components, children) {
         companion object {
                 lateinit var instance: Game
 
+                val logger: GameLogger get() = instance.logger
                 val players: Map<UUID, GamePlayer> get() = playersManager.players
                 val count: Int get() = playersManager.count
                 val max: Int get() = Bukkit.getMaxPlayers()
