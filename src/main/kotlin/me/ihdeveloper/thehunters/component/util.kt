@@ -187,6 +187,10 @@ abstract class ChatComponent : GameComponent, Listener {
     fun onChat(event: AsyncPlayerChatEvent) {
         val sender = Game.players[event.player.uniqueId] ?: error("Failed to find the player game object from the game")
 
+        if (!allow(sender)) {
+            return
+        }
+
         val message = build(sender, event.message)
 
         // Bukkit.broadcastMessage() is expensive since it broadcast with permission
@@ -206,6 +210,7 @@ abstract class ChatComponent : GameComponent, Listener {
         AsyncPlayerChatEvent.getHandlerList().unregister(this)
     }
 
+    open fun allow(sender: GamePlayer): Boolean = true
     abstract fun build(sender: GamePlayer, message: String): String
 }
 

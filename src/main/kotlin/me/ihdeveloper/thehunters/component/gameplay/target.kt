@@ -30,6 +30,7 @@ import me.ihdeveloper.thehunters.GameComponentOf
 import me.ihdeveloper.thehunters.GamePlayer
 import me.ihdeveloper.thehunters.Gameplay
 import me.ihdeveloper.thehunters.component.AchievementComponent
+import me.ihdeveloper.thehunters.component.ChatComponent
 import me.ihdeveloper.thehunters.component.TYPE_TITLE
 import me.ihdeveloper.thehunters.component.TYPE_VANISH
 import me.ihdeveloper.thehunters.component.TitleComponent
@@ -65,6 +66,7 @@ const val TYPE_GAMEPLAY_TARGET_GET_READY: Short = 311
 const val TYPE_GAMEPLAY_TARGET_DIMENSION: Short = 312
 const val TYPE_GAMEPLAY_TARGET_SCOREBOARD: Short = 313
 const val TYPE_GAMEPLAY_TARGET_SIGNAL: Short = 314
+const val TYPE_GAMEPLAY_TARGET_CHAT: Short = 315
 
 class TargetComponent (
         override val gameObject: GamePlayer
@@ -352,6 +354,26 @@ class TargetAchievementComponent (
             append("is moving forward towards winning by getting")
             append("$COLOR_GOLD ${name(achievement)}")
             append("${COLOR_YELLOW}.")
+        }
+        return builder.toString()
+    }
+
+}
+
+class TargetChatComponent : ChatComponent() {
+
+    override val type = TYPE_GAMEPLAY_TARGET_CHAT
+
+    override fun allow(sender: GamePlayer): Boolean {
+        return sender.has(TYPE_GAMEPLAY_TARGET)
+    }
+
+    override fun build(sender: GamePlayer, message: String): String {
+        val builder = StringBuilder().run {
+            append("$COLOR_RED")
+            append("[TARGET] ${sender.entity.name}")
+            append("$COLOR_WHITE")
+            append(": $message")
         }
         return builder.toString()
     }

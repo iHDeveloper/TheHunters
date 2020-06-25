@@ -38,6 +38,7 @@ import me.ihdeveloper.thehunters.component.gameplay.HunterComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterScoreboardComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterSignalComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetAchievementComponent
+import me.ihdeveloper.thehunters.component.gameplay.TargetChatComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetDimensionComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetGetReadyComponent
@@ -57,7 +58,9 @@ import org.bukkit.event.Listener
 import java.util.UUID
 import kotlin.random.Random
 
-class Gameplay : GameObject(), Listener {
+class Gameplay : GameObject(
+        components = listOf(TargetChatComponent())
+), Listener {
 
     companion object {
         lateinit var instance: Gameplay
