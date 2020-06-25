@@ -96,6 +96,12 @@ class Lobby : GameObject(
         val player = event.player
         player.entity.run {
             val location = config.read<Location>("location")
+
+            if (location == null) {
+                Game.logger.warning("The lobby spawn location wasn't set to use it ( Use /setlobbyspawn )")
+                return
+            }
+
             teleport(location)
         }
 
