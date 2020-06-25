@@ -65,7 +65,7 @@ class Lobby : GameObject(
         components = listOf(LobbyChatComponent())
 ), Listener {
 
-    private val config = ConfigurationComponent("lobby.yml")
+    private val config = ConfigurationComponent("lobby")
 
     init {
         add(config)
