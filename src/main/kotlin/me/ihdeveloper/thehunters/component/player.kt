@@ -39,6 +39,7 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutTitle
 import org.bukkit.Achievement
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
+import org.bukkit.block.Block
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer
 import org.bukkit.entity.Entity
 import org.bukkit.entity.EntityType
@@ -46,6 +47,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
+import org.bukkit.event.entity.EntityDamageByBlockEvent
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
@@ -548,9 +550,8 @@ abstract class DeathComponent (
             return
 
         gameObject.entity.run {
-            if (health - event.finalDamage > 0.0) {
+            if (health - event.finalDamage > 0.0)
                 return
-            }
         }
 
         if (event.damager.type === EntityType.PLAYER) {
@@ -561,10 +562,24 @@ abstract class DeathComponent (
         byEntity(event.damager, event)
     }
 
+    @EventHandler
+    fun onDamageByBlock(event: EntityDamageByBlockEvent) {
+        if (event.entity.uniqueId !== gameObject.uniqueId)
+            return
+
+        gameObject.entity.run {
+            if (health - event.finalDamage > 0)
+                return
+        }
+
+        byBlock(event.damager, event)
+    }
+
     override fun onDestroy(gameObject: GamePlayer) {
         EntityDamageEvent.getHandlerList().unregister(this)
     }
 
     abstract fun byPlayer(player: GamePlayer, event: EntityDamageByEntityEvent)
     abstract fun byEntity(entity: Entity, event: EntityDamageByEntityEvent)
+    abstract fun byBlock(block: Block, event: EntityDamageByBlockEvent)
 }
