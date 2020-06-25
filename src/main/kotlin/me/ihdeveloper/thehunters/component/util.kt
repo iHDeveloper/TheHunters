@@ -61,8 +61,12 @@ class ConfigurationComponent (
     private val config: YamlConfiguration = YamlConfiguration()
 
     override fun init() {
-        if (!file.exists())
+        Game.logger.info("Loading configuration [${name}]...")
+
+        if (!file.exists()) {
+            Game.logger.warning("Configuration [lobby] doesn't exist - Creating empty one...")
             file.createNewFile()
+        }
 
         config.load(file)
     }
@@ -77,6 +81,7 @@ class ConfigurationComponent (
     }
 
     override fun destroy() {
+        Game.logger.info("Saving configuration [${name}]...")
         config.save(file)
     }
 
