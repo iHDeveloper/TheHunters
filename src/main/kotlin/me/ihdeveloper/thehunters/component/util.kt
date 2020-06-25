@@ -52,15 +52,18 @@ const val TYPE_CONFIGURATION: Short = 1
 const val TYPE_COUNTDOWN: Short = 2
 
 class ConfigurationComponent (
-        name: String
+        private val name: String
 ) : GameComponent {
 
     override val type = TYPE_CONFIGURATION
 
-    private val file: File = File(plugin().dataFolder, "${name}.yml")
+    private val file: File get() { return File(plugin().dataFolder, "${name}.yml") }
     private val config: YamlConfiguration = YamlConfiguration()
 
     override fun init() {
+        if (!file.exists())
+            file.createNewFile()
+
         config.load(file)
     }
 
