@@ -30,6 +30,7 @@ import me.ihdeveloper.thehunters.Lobby
 import me.ihdeveloper.thehunters.component.CommandComponent
 import me.ihdeveloper.thehunters.component.ConfigurationComponent
 import me.ihdeveloper.thehunters.component.PlayerCommandComponent
+import me.ihdeveloper.thehunters.util.COLOR_GREEN
 import me.ihdeveloper.thehunters.util.COLOR_RED
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
@@ -73,6 +74,7 @@ class LobbySetSpawnCommand (
     override fun onPlayerExecute(sender: GamePlayer, command: Command?, label: String?, args: Array<out String>?): Boolean {
         sender.entity.run {
             config.write("location", location)
+            sendMessage("${COLOR_GREEN}Successfully set the lobby spawn for the game!")
         }
         return true
     }
