@@ -64,8 +64,9 @@ class ConfigurationComponent (
         config.load(file)
     }
 
-    fun <T> read(key: String): T {
-        return config.get(key) as T
+    fun <T : Any> read(key: String): T? {
+        val value = config.get(key, null) ?: return null
+        return value as T
     }
 
     fun <T> write(key: String, value: T) {
