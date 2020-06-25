@@ -31,6 +31,7 @@ import me.ihdeveloper.thehunters.component.AchievementComponent
 import me.ihdeveloper.thehunters.component.NoHungerComponent
 import me.ihdeveloper.thehunters.component.AdventureComponent
 import me.ihdeveloper.thehunters.component.ClearInventoryComponent
+import me.ihdeveloper.thehunters.component.ClearPotionEffectComponent
 import me.ihdeveloper.thehunters.component.ConfigurationComponent
 import me.ihdeveloper.thehunters.component.CountdownComponent
 import me.ihdeveloper.thehunters.component.DisableBlockBreakComponent
@@ -114,6 +115,7 @@ class Lobby : GameObject(
         player.add(DisableBlockBreakComponent(player))
         player.add(NoInteractComponent(player))
         player.add(ClearInventoryComponent(player))
+        player.add(ClearPotionEffectComponent(player))
         player.add(AchievementComponent(player).apply {
             this.reset()
             this.block()

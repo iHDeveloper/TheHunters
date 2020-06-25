@@ -67,6 +67,7 @@ const val TYPE_NO_INTERACT: Short = 110
 const val TYPE_CLEAR_INVENTORY: Short = 111
 const val TYPE_VANISH: Short = 112
 const val TYPE_ACHIEVEMENT: Short = 113
+const val TYPE_CLEAR_POTION_EFFECT: Short = 114
 
 class ScoreboardComponent (
         override val gameObject: GamePlayer
@@ -489,5 +490,23 @@ open class AchievementComponent (
     override fun onDestroy(gameObject: GamePlayer) {
         PlayerAchievementAwardedEvent.getHandlerList().unregister(this)
     }
+
+}
+
+class ClearPotionEffectComponent (
+        override val gameObject: GamePlayer
+) : GameComponentOf<GamePlayer>() {
+
+    override val type = TYPE_CLEAR_POTION_EFFECT
+
+    override fun onInit(gameObject: GamePlayer) {
+        gameObject.entity.run {
+            for (activeEffect in activePotionEffects) {
+                removePotionEffect(activeEffect.type)
+            }
+        }
+    }
+
+    override fun onDestroy(gameObject: GamePlayer) {}
 
 }
