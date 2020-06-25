@@ -31,6 +31,7 @@ import java.util.UUID
 
 private val playersManager = PlayersManager()
 private val loginManager = LoginManager()
+private val worldsManager = WorldsManager()
 private val lobby = Lobby()
 private val gameplay = Gameplay()
 
@@ -38,7 +39,7 @@ private const val name = "TheHunters"
 private val components = listOf<GameComponent>()
 private val children = listOf(
         loginManager,
-        WorldsManager(),
+        worldsManager,
         playersManager,
         lobby
 )
@@ -54,6 +55,8 @@ class Game : GameInstance (name, components, children) {
 
         companion object {
                 lateinit var instance: Game
+
+                fun resetTime() = worldsManager.resetTime()
 
                 val logger: GameLogger get() = instance.logger
                 val players: Map<UUID, GamePlayer> get() = playersManager.players

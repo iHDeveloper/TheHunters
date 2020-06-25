@@ -96,6 +96,7 @@ class Gameplay : GameObject(), Listener {
         Bukkit.getPluginManager().registerEvents(this, plugin())
 
         Game.lock()
+        Game.resetTime()
 
         val random = Random(Game.count + 1)
         var found = false

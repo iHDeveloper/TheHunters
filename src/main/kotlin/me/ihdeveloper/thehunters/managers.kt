@@ -97,8 +97,16 @@ class PlayersManager : GameObject(), Listener {
 class WorldsManager : GameObject() {
 
     override fun onInit() {
-        for (world in Bukkit.getWorlds()) {
-            world.isAutoSave = false
+        Bukkit.getWorlds().forEach {
+            it.isAutoSave = false
+        }
+    }
+
+    fun resetTime() {
+        Bukkit.getWorlds().forEach {
+            it.time = 1000
+            it.weatherDuration = 0
+            it.isThundering = false
         }
     }
 
