@@ -579,7 +579,7 @@ abstract class DeathComponent (
         EntityDamageEvent.getHandlerList().unregister(this)
     }
 
-    abstract fun byPlayer(player: GamePlayer, event: EntityDamageByEntityEvent)
-    abstract fun byEntity(entity: Entity, event: EntityDamageByEntityEvent)
-    abstract fun byBlock(block: Block, event: EntityDamageByBlockEvent)
+    abstract fun byPlayer(killer: GamePlayer, event: EntityDamageByEntityEvent)
+    abstract fun byEntity(killer: Entity, event: EntityDamageByEntityEvent)
+    abstract fun byBlock(killer: Block, event: EntityDamageByBlockEvent)
 }
