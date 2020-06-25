@@ -431,7 +431,7 @@ class HunterShoutComponent (
 
     private var seconds: Int = -1
 
-    val can: Boolean get() { return seconds != -1 }
+    val can: Boolean get() { return seconds == -1 }
     val remaining: Int get() { return seconds }
 
     private var task: BukkitTask? = null

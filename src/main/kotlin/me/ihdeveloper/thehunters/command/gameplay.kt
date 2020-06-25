@@ -92,8 +92,8 @@ class GameShoutCommand : PlayerCommandComponent("shout") {
         }
 
         val builder = StringBuilder().run {
-            append("${COLOR_GOLD}[Shout]")
-            append("${COLOR_BLUE}[Hunter]")
+            append("${COLOR_GOLD}[Shout] ")
+            append("${COLOR_BLUE}[Hunter] ")
             append(sender.entity.name)
             append("${COLOR_WHITE}: $message")
         }
