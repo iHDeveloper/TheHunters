@@ -44,6 +44,7 @@ import me.ihdeveloper.thehunters.component.gameplay.TargetGetReadyComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetScoreboardComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetSignalComponent
 import me.ihdeveloper.thehunters.event.hunter.HunterJoinEvent
+import me.ihdeveloper.thehunters.event.player.GameJoinEvent
 import me.ihdeveloper.thehunters.event.player.GameQuitEvent
 import me.ihdeveloper.thehunters.event.target.TargetJoinEvent
 import me.ihdeveloper.thehunters.event.target.TargetQuitEvent
@@ -71,7 +72,10 @@ class Gameplay : GameObject(), Listener {
 
     private val countdown = CountdownComponent(
             id = COUNTDOWN_GAMEPLAY_GET_READY,
-            defaultStart = 20 * 60
+            defaultStart = 20 * 60,
+            onFinish = {
+                Game.unlock()
+            }
     )
 
     private val intro = CountdownComponent(
@@ -120,12 +124,7 @@ class Gameplay : GameObject(), Listener {
                 continue
             }
 
-            hunters++
-            player.add(HunterComponent(player))
-            player.add(HunterScoreboardComponent(player))
-            player.add(HunterSignalComponent(player))
-            player.add(HunterCompassComponent(player))
-            player.add(HunterAchievementComponent(player))
+            addHunter(player)
         }
     }
 
@@ -133,14 +132,7 @@ class Gameplay : GameObject(), Listener {
         Bukkit.getPluginManager().callEvent(TargetJoinEvent(Game.players[target!!]))
 
         for (player in Game.players.values) {
-            player.entity.run {
-                val location = config.read<Location>("location")
-
-                if (location == null)
-                    Game.logger.warning("Game spawn location doesn't exist ( use /setgamespawn )")
-                else
-                    teleport(location)
-            }
+            teleportToSpawn(player)
 
             if (player.uniqueId === target)
                 continue
@@ -152,6 +144,9 @@ class Gameplay : GameObject(), Listener {
     }
 
     @EventHandler
+    fun onGameJoin(event: GameJoinEvent) = addHunter(event.player, true)
+
+    @EventHandler
     fun onGameQuit(event: GameQuitEvent) {
         if (event.player.uniqueId === target) {
             Bukkit.getPluginManager().callEvent(TargetQuitEvent(event.player))
@@ -159,7 +154,33 @@ class Gameplay : GameObject(), Listener {
         }
     }
 
+    private fun addHunter(player: GamePlayer, join: Boolean = false) {
+        hunters++
+        player.add(HunterComponent(player))
+        player.add(HunterScoreboardComponent(player))
+        player.add(HunterSignalComponent(player))
+        player.add(HunterCompassComponent(player))
+        player.add(HunterAchievementComponent(player))
+
+        if (join) {
+            teleportToSpawn(player)
+            Bukkit.getPluginManager().callEvent(HunterJoinEvent(player))
+        }
+    }
+
+    private fun teleportToSpawn(player: GamePlayer) {
+        player.entity.run {
+            val location = config.read<Location>("location")
+
+            if (location == null)
+                Game.logger.warning("Game spawn location doesn't exist ( use /setgamespawn )")
+            else
+                teleport(location)
+        }
+    }
+
     override fun onDestroy() {
+        GameJoinEvent.getHandlerList().unregister(this)
         GameQuitEvent.getHandlerList().unregister(this)
 
         intro.stop()

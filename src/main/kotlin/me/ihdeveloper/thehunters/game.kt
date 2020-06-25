@@ -68,9 +68,8 @@ class Game : GameInstance (name, components, children) {
                         instance.add(gameplay)
                 }
 
-                fun lock() {
-                        loginManager.lock = true
-                }
+                fun lock() { loginManager.lock = true }
+                fun unlock() { loginManager.lock = false }
         }
 
 }
