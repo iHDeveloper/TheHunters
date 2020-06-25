@@ -126,6 +126,8 @@ open class GameObject (
         for (child in children)
             child.init()
 
+        afterInit()
+
         initialized = true
     }
 
@@ -152,6 +154,7 @@ open class GameObject (
     }
 
     open fun onInit() {}
+    open fun afterInit() {}
     open fun onDestroy() {}
 }
 
