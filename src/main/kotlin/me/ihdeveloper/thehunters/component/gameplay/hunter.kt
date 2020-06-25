@@ -379,12 +379,12 @@ class HunterAchievementComponent (
 
     override fun message(achievement: Achievement): String {
         val builder = StringBuilder().run {
-            append("${COLOR_BLUE}[Hunter] ")
+            append("$COLOR_BLUE")
             append(gameObject.entity.name)
             append("$COLOR_YELLOW ")
-            append("just got achievement [")
+            append("just got achievement ")
             append("$COLOR_GOLD ${name(achievement)}")
-            append("$COLOR_YELLOW ].")
+            append("${COLOR_YELLOW}.")
         }
         return builder.toString()
     }
