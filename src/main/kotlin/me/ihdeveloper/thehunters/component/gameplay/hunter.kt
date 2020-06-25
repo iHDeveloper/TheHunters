@@ -35,6 +35,8 @@ import me.ihdeveloper.thehunters.component.TYPE_TITLE
 import me.ihdeveloper.thehunters.component.TYPE_VANISH
 import me.ihdeveloper.thehunters.component.TitleComponent
 import me.ihdeveloper.thehunters.component.VanishComponent
+import me.ihdeveloper.thehunters.event.hunter.HunterJoinEvent
+import me.ihdeveloper.thehunters.event.hunter.HunterQuitEvent
 import me.ihdeveloper.thehunters.event.target.TargetDimensionEvent
 import me.ihdeveloper.thehunters.event.target.TargetJoinEvent
 import me.ihdeveloper.thehunters.event.target.TargetLostEvent
@@ -152,6 +154,16 @@ class HunterScoreboardComponent (
         updateTargetDimension(dimension)
     }
 
+    @EventHandler
+    fun onHunterJoin(event: HunterJoinEvent) {
+        hunters!!.addEntry(event.hunter.entity.name)
+    }
+
+    @EventHandler
+    fun onHunterQuit(event: HunterQuitEvent) {
+        hunters!!.removeEntry(event.hunter.entity.name)
+    }
+
     private fun updateTargetDimension(dimension: Dimension, force: Boolean = false) {
         if (lastDimension == dimension && !force)
             return
@@ -169,6 +181,8 @@ class HunterScoreboardComponent (
         TargetJoinEvent.getHandlerList().unregister(this)
         TargetDimensionEvent.getHandlerList().unregister(this)
         TargetLostEvent.getHandlerList().unregister(this)
+        HunterJoinEvent.getHandlerList().unregister(this)
+        HunterQuitEvent.getHandlerList().unregister(this)
 
         dimensionScore = null
 
