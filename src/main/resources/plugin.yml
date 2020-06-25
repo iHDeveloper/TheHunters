@@ -16,3 +16,9 @@ commands:
     description: "Sets location for the players to spawn when the game didn't start yet"
     permission: "thehunters.spawn.lobby"
     permission-message: "You don't have the permission to do this command!"
+  setgamespawn:
+    usage: "setgamespawn"
+    aliases: []
+    description: "Sets location for the players to spawn when the game starts"
+    permission: "thehunters.spawn.game"
+    permission-message: "You don't have the permission to do this command!"

@@ -25,6 +25,7 @@
 
 package me.ihdeveloper.thehunters
 
+import me.ihdeveloper.thehunters.command.GameplaySetSpawnCommand
 import me.ihdeveloper.thehunters.component.ConfigurationComponent
 import me.ihdeveloper.thehunters.component.CountdownComponent
 import me.ihdeveloper.thehunters.component.ScoreboardComponent
@@ -86,6 +87,7 @@ class Gameplay : GameObject(), Listener {
     init {
         add(config)
         add(intro)
+        add(GameplaySetSpawnCommand(config))
 
         instance = this
     }
@@ -99,14 +101,6 @@ class Gameplay : GameObject(), Listener {
         var found = false
 
         for (player in Game.players.values) {
-            player.entity.run {
-                val location = config.read<Location>("location")
-
-                if (location == null)
-                    Game.logger.warning("Game spawn location doesn't exist ( use /setgamespawn )")
-                else
-                    teleport(location)
-            }
             player.add(ScoreboardComponent(player))
             player.add(TitleComponent(player))
             player.add(VanishComponent(player))
@@ -132,10 +126,21 @@ class Gameplay : GameObject(), Listener {
             player.add(HunterCompassComponent(player))
             player.add(HunterAchievementComponent(player))
         }
+    }
 
+    override fun afterInit() {
         Bukkit.getPluginManager().callEvent(TargetJoinEvent(Game.players[target!!]))
 
         for (player in Game.players.values) {
+            player.entity.run {
+                val location = config.read<Location>("location")
+
+                if (location == null)
+                    Game.logger.warning("Game spawn location doesn't exist ( use /setgamespawn )")
+                else
+                    teleport(location)
+            }
+
             if (player.uniqueId === target)
                 continue
 
