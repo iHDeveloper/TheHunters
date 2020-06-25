@@ -559,6 +559,11 @@ abstract class DeathComponent (
             return
         }
 
+        if (event.cause === EntityDamageEvent.DamageCause.ENTITY_EXPLOSION) {
+            byEntityExplosion(event.damager)
+            return
+        }
+
         byEntity(event.damager, event)
     }
 
@@ -618,6 +623,7 @@ abstract class DeathComponent (
 
     abstract fun byPlayer(killer: GamePlayer, event: EntityDamageByEntityEvent)
     abstract fun byEntity(killer: Entity, event: EntityDamageByEntityEvent)
+    abstract fun byEntityExplosion(entity: Entity)
     abstract fun byBlock(killer: Block, event: EntityDamageByBlockEvent)
     abstract fun byBlockExplosion(killer: Block)
     abstract fun byContact()
