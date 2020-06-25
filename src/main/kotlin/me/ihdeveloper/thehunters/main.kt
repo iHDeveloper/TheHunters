@@ -33,6 +33,8 @@ class Main : GameEntryPoint<Game>(Game()) {
 
     init {
         _plugin = this
+
+        dataFolder.mkdir()
     }
 
     override fun onDisable() {
