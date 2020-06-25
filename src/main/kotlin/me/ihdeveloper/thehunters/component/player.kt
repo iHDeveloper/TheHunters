@@ -559,12 +559,11 @@ abstract class DeathComponent (
             return
         }
 
-        if (event.cause === EntityDamageEvent.DamageCause.ENTITY_EXPLOSION) {
-            byEntityExplosion(event.damager)
-            return
+        when (event.cause) {
+            EntityDamageEvent.DamageCause.ENTITY_EXPLOSION -> byEntityExplosion(event.damager)
+            EntityDamageEvent.DamageCause.WITHER -> byWither()
+            else -> byEntity(event.damager, event)
         }
-
-        byEntity(event.damager, event)
     }
 
     @EventHandler
@@ -612,7 +611,6 @@ abstract class DeathComponent (
             EntityDamageEvent.DamageCause.SUICIDE -> bySuicide()
             EntityDamageEvent.DamageCause.THORNS -> byThorns()
             EntityDamageEvent.DamageCause.VOID -> byVoid()
-            EntityDamageEvent.DamageCause.WITHER -> byWither()
             else -> unknown(event)
         }
     }
