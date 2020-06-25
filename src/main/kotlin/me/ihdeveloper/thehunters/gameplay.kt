@@ -25,6 +25,7 @@
 
 package me.ihdeveloper.thehunters
 
+import me.ihdeveloper.thehunters.component.ConfigurationComponent
 import me.ihdeveloper.thehunters.component.CountdownComponent
 import me.ihdeveloper.thehunters.component.ScoreboardComponent
 import me.ihdeveloper.thehunters.component.TYPE_COUNTDOWN
@@ -48,6 +49,7 @@ import me.ihdeveloper.thehunters.event.target.TargetQuitEvent
 import me.ihdeveloper.thehunters.util.COUNTDOWN_GAMEPLAY_GET_READY
 import me.ihdeveloper.thehunters.util.COUNTDOWN_GAMEPLAY_INTRO
 import org.bukkit.Bukkit
+import org.bukkit.Location
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import java.util.UUID
@@ -63,6 +65,8 @@ class Gameplay : GameObject(), Listener {
 
     private var target: UUID? = null
     private var hunters: Int = 0
+
+    private val config = ConfigurationComponent("game")
 
     private val countdown = CountdownComponent(
             id = COUNTDOWN_GAMEPLAY_GET_READY,
@@ -80,6 +84,7 @@ class Gameplay : GameObject(), Listener {
     )
 
     init {
+        add(config)
         add(intro)
 
         instance = this
@@ -94,6 +99,14 @@ class Gameplay : GameObject(), Listener {
         var found = false
 
         for (player in Game.players.values) {
+            player.entity.run {
+                val location = config.read<Location>("location")
+
+                if (location == null)
+                    Game.logger.warning("Game spawn location doesn't exist ( use /setgamespawn )")
+                else
+                    teleport(location)
+            }
             player.add(ScoreboardComponent(player))
             player.add(TitleComponent(player))
             player.add(VanishComponent(player))
