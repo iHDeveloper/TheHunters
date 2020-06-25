@@ -41,6 +41,7 @@ import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer
 import org.bukkit.entity.Entity
+import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
@@ -552,6 +553,11 @@ abstract class DeathComponent (
             }
         }
 
+        if (event.damager.type === EntityType.PLAYER) {
+            Game.players[event.damager.uniqueId]?.let { byPlayer(it, event) }
+            return
+        }
+
         byEntity(event.damager, event)
     }
 
@@ -559,5 +565,6 @@ abstract class DeathComponent (
         EntityDamageEvent.getHandlerList().unregister(this)
     }
 
+    abstract fun byPlayer(player: GamePlayer, event: EntityDamageByEntityEvent)
     abstract fun byEntity(entity: Entity, event: EntityDamageByEntityEvent)
 }
