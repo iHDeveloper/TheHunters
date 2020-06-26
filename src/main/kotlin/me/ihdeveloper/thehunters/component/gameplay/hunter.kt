@@ -691,6 +691,11 @@ class HunterDeathComponent (
         val builder = StringBuilder().apply {
             append(name)
             block(this)
+
+            val dimension = Dimension.get(gameObject.entity.world.name)
+
+            if (dimension != Dimension.WORLD)
+                append("$COLOR_YELLOW in ${dimension.displayName}")
         }
 
         val message = builder.toString()
