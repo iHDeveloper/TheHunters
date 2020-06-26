@@ -44,6 +44,7 @@ import me.ihdeveloper.thehunters.component.VictoryComponent
 import me.ihdeveloper.thehunters.component.gameplay.TYPE_GAMEPLAY_HUNTER_SCOREBOARD
 import me.ihdeveloper.thehunters.component.gameplay.TYPE_GAMEPLAY_TARGET
 import me.ihdeveloper.thehunters.component.gameplay.TYPE_GAMEPLAY_TARGET_SCOREBOARD
+import me.ihdeveloper.thehunters.util.COLOR_YELLOW
 import me.ihdeveloper.thehunters.util.COUNTDOWN_RESTARTING
 
 class TheEnd (
@@ -54,6 +55,15 @@ class TheEnd (
             id = COUNTDOWN_RESTARTING,
             defaultStart = 20 * 60,
             onFinish = {
+                val message = StringBuilder().apply {
+                    append("$COLOR_YELLOW")
+                    append("The game is restarting...")
+                }.toString()
+
+                Game.players.values.forEach {
+                    it.entity.kickPlayer(message)
+                }
+
                 // TODO Restart the game
             }
     )
