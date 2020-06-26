@@ -73,6 +73,7 @@ const val TYPE_VANISH: Short = 112
 const val TYPE_ACHIEVEMENT: Short = 113
 const val TYPE_CLEAR_POTION_EFFECT: Short = 114
 const val TYPE_RESET_HEALTH: Short = 115
+const val TYPE_SPECTATOR: Short = 116
 
 class ScoreboardComponent (
         override val gameObject: GamePlayer
@@ -661,4 +662,28 @@ abstract class DeathComponent : GameComponentOf<GamePlayer>(), Listener {
     abstract fun unknown(event: EntityDamageEvent)
 
     open fun onDeath() {}
+}
+
+class SpectatorComponent (
+        override val gameObject: GamePlayer
+) : GameComponentOf<GamePlayer>() {
+
+    override val type = TYPE_SPECTATOR
+
+    private var last: GameMode? = null
+
+    override fun onInit(gameObject: GamePlayer) {
+        gameObject.entity.run {
+            last = gameMode
+            gameMode = GameMode.SPECTATOR
+        }
+    }
+
+    override fun onDestroy(gameObject: GamePlayer) {
+        gameObject.entity.run {
+            gameMode = last
+        }
+        last = null
+    }
+
 }
