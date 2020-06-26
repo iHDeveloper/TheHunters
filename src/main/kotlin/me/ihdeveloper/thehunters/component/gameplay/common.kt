@@ -37,7 +37,6 @@ import me.ihdeveloper.thehunters.util.COLOR_BLUE
 import me.ihdeveloper.thehunters.util.COLOR_BOLD
 import me.ihdeveloper.thehunters.util.COLOR_GOLD
 import me.ihdeveloper.thehunters.util.COLOR_GRAY
-import me.ihdeveloper.thehunters.util.COLOR_PURPLE
 import me.ihdeveloper.thehunters.util.COLOR_RED
 import me.ihdeveloper.thehunters.util.COLOR_WHITE
 import me.ihdeveloper.thehunters.util.COLOR_YELLOW
