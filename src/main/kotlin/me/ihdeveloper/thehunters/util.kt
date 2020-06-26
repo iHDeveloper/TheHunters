@@ -29,24 +29,25 @@ import me.ihdeveloper.thehunters.util.COLOR_GRAY
 import me.ihdeveloper.thehunters.util.COLOR_GREEN
 import me.ihdeveloper.thehunters.util.COLOR_PURPLE
 import me.ihdeveloper.thehunters.util.COLOR_RED
+import org.bukkit.World
 
 enum class Dimension (
         val displayName: String,
-        private val checker: (String) -> Boolean
+        private val checker: (World) -> Boolean
 ) {
     UNKNOWN("${COLOR_GRAY}Unknown", { false }),
-    WORLD("${COLOR_GREEN}World", { it == "world" }),
-    NETHER("${COLOR_RED}Nether", { it == "world_nether" }),
-    THE_END("${COLOR_PURPLE}The End", { it == "world_the_end" });
+    WORLD("${COLOR_GREEN}World", { it.environment === org.bukkit.World.Environment.NORMAL }),
+    NETHER("${COLOR_RED}Nether", { it.environment === org.bukkit.World.Environment.NETHER }),
+    THE_END("${COLOR_PURPLE}The End", { it.environment === org.bukkit.World.Environment.THE_END });
 
     companion object {
 
-        fun get(name: String): Dimension {
-            return when (THE_END.check(name)) {
+        fun get(world: World): Dimension {
+            return when (THE_END.check(world)) {
                 true -> THE_END
-                else -> when (NETHER.check(name)) {
+                else -> when (NETHER.check(world)) {
                     true -> NETHER
-                    else -> when (WORLD.check(name)) {
+                    else -> when (WORLD.check(world)) {
                         true -> WORLD
                         else -> UNKNOWN
                     }
@@ -56,5 +57,5 @@ enum class Dimension (
 
     }
 
-    fun check(name: String) = checker(name)
+    fun check(world: World) = checker(world)
 }

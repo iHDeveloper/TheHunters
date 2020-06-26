@@ -284,7 +284,7 @@ class HunterSignalComponent (
 
     @EventHandler
     fun onTargetDimensionChanged(event: TargetDimensionEvent) {
-        val hunterDimension = Dimension.get(gameObject.entity.world.name)
+        val hunterDimension = Dimension.get(gameObject.entity.world)
         updateDimension(event.dimension, hunterDimension, event.target.entity.location)
     }
 
@@ -306,8 +306,8 @@ class HunterSignalComponent (
 
     @EventHandler
     fun signal(event: TargetSignalEvent) {
-        val targetDimension = Dimension.get(event.target.entity.world.name)
-        val ourDimension = Dimension.get(gameObject.entity.world.name)
+        val targetDimension = Dimension.get(event.target.entity.world)
+        val ourDimension = Dimension.get(gameObject.entity.world)
 
         if (targetDimension != ourDimension) {
             gameObject.get<HunterCompassComponent>(TYPE_GAMEPLAY_HUNTER_COMPASS).lost()
@@ -754,7 +754,7 @@ class HunterDeathComponent (
             append(name)
             block(this)
 
-            val dimension = Dimension.get(gameObject.entity.world.name)
+            val dimension = Dimension.get(gameObject.entity.world)
 
             if (dimension != Dimension.WORLD)
                 append("$COLOR_YELLOW in ${dimension.displayName}")

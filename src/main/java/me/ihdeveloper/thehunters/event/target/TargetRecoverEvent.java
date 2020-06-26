@@ -27,6 +27,7 @@ package me.ihdeveloper.thehunters.event.target;
 
 import me.ihdeveloper.thehunters.Dimension;
 import me.ihdeveloper.thehunters.GamePlayer;
+import org.bukkit.World;
 import org.bukkit.event.HandlerList;
 
 public class TargetRecoverEvent extends TargetEvent {
@@ -42,7 +43,7 @@ public class TargetRecoverEvent extends TargetEvent {
     public TargetRecoverEvent(GamePlayer target) {
         super(target);
 
-        String world = target.getEntity().getWorld().getName();
+        World world = target.getEntity().getWorld();
 
         dimension = Dimension.Companion.get(world);
     }
