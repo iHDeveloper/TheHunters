@@ -25,6 +25,7 @@
 
 package me.ihdeveloper.thehunters
 
+import me.ihdeveloper.thehunters.component.ConfigurationComponent
 import net.minecraft.server.v1_8_R3.DedicatedServer
 import org.bukkit.Bukkit
 import java.util.UUID
@@ -35,8 +36,10 @@ private val worldsManager = WorldsManager()
 private val lobby = Lobby()
 private val gameplay = Gameplay()
 
+private val config = ConfigurationComponent("config")
+
 private const val name = "TheHunters"
-private val components = listOf<GameComponent>()
+private val components = listOf<GameComponent>(config)
 private val children = listOf(
         loginManager,
         worldsManager,
@@ -80,6 +83,22 @@ class Game : GameInstance (name, components, children) {
 
                 fun lock() { loginManager.lock = true }
                 fun unlock() { loginManager.lock = false }
+        }
+
+        override fun afterInit() {
+                config.run {
+                        writeDefault("worlds.normal", "world")
+                        writeDefault("worlds.nether", "world_nether")
+                        writeDefault("worlds.the_end", "world_the_end")
+                        writeDefault("world", "the_hunters")
+
+                        worldsManager.run {
+                                name = read<String>("world")
+                                normal = read<String>("worlds.normal")
+                                nether = read<String>("worlds.nether")
+                                theEnd = read<String>("worlds.the_end")
+                        }
+                }
         }
 
 }

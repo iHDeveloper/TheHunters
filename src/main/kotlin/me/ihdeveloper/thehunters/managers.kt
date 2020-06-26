@@ -96,6 +96,12 @@ class PlayersManager : GameObject(), Listener {
 
 class WorldsManager : GameObject() {
 
+    var name: String? = null
+
+    var normal: String? = null
+    var nether: String? = null
+    var theEnd: String? = null
+
     override fun onInit() {
         Bukkit.getWorlds().forEach {
             it.isAutoSave = false
