@@ -51,6 +51,7 @@ import org.bukkit.event.entity.EntityDamageByBlockEvent
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
+import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerAchievementAwardedEvent
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerInteractEvent
@@ -563,7 +564,7 @@ abstract class DeathComponent : GameComponentOf<GamePlayer>(), Listener {
                 return
         }
 
-        onDeath()
+        beforeDeath()
 
         if (event.damager.type === EntityType.PLAYER) {
             Game.players[event.damager.uniqueId]?.let { byPlayer(it, event) }
@@ -587,7 +588,7 @@ abstract class DeathComponent : GameComponentOf<GamePlayer>(), Listener {
                 return
         }
 
-        onDeath()
+        beforeDeath()
 
         if (event.cause === EntityDamageEvent.DamageCause.BLOCK_EXPLOSION) {
             byBlockExplosion(event.damager)
@@ -612,7 +613,7 @@ abstract class DeathComponent : GameComponentOf<GamePlayer>(), Listener {
                 return
         }
 
-        onDeath()
+        beforeDeath()
 
         when (event.cause) {
             EntityDamageEvent.DamageCause.CONTACT -> byContact()
@@ -632,6 +633,20 @@ abstract class DeathComponent : GameComponentOf<GamePlayer>(), Listener {
             EntityDamageEvent.DamageCause.THORNS -> byThorns()
             EntityDamageEvent.DamageCause.VOID -> byVoid()
             else -> unknown(event)
+        }
+    }
+
+    @EventHandler
+    fun death(event: PlayerDeathEvent) {
+        gameObject.run {
+            if (event.entity.uniqueId !== uniqueId)
+                return
+
+            entity.run {
+                health = maxHealth
+            }
+
+            afterDeath()
         }
     }
 
@@ -669,7 +684,8 @@ abstract class DeathComponent : GameComponentOf<GamePlayer>(), Listener {
     abstract fun byWither()
     abstract fun unknown(event: EntityDamageEvent)
 
-    open fun onDeath() {}
+    open fun beforeDeath() {}
+    open fun afterDeath() {}
 }
 
 class SpectatorComponent (

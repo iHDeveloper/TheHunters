@@ -745,7 +745,7 @@ class HunterDeathComponent (
         }
     }
 
-    override fun onDeath() {
+    override fun beforeDeath() {
         Bukkit.getPluginManager().callEvent(HunterDeathEvent(gameObject))
     }
 
