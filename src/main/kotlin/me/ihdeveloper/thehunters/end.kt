@@ -48,7 +48,7 @@ import me.ihdeveloper.thehunters.util.COLOR_YELLOW
 import me.ihdeveloper.thehunters.util.COUNTDOWN_RESTARTING
 
 class TheEnd (
-        val won: Boolean = false
+        private val won: Boolean = false
 ) : GameObject() {
 
     private val countdown = CountdownComponent(
