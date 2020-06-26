@@ -28,6 +28,7 @@ package me.ihdeveloper.thehunters.util
 import org.bukkit.ChatColor
 
 val COLOR_GRAY = ChatColor.GRAY
+val COLOR_DARK_GRAY = ChatColor.DARK_GRAY
 val COLOR_GREEN = ChatColor.GREEN
 val COLOR_YELLOW = ChatColor.YELLOW
 val COLOR_GOLD = ChatColor.GOLD

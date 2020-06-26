@@ -29,8 +29,12 @@ import me.ihdeveloper.thehunters.Game
 import me.ihdeveloper.thehunters.GameComponentOf
 import me.ihdeveloper.thehunters.GamePlayer
 import me.ihdeveloper.thehunters.util.COLOR_BOLD
+import me.ihdeveloper.thehunters.util.COLOR_DARK_GRAY
+import me.ihdeveloper.thehunters.util.COLOR_GRAY
 import me.ihdeveloper.thehunters.util.COLOR_GREEN
+import me.ihdeveloper.thehunters.util.COLOR_PURPLE
 import me.ihdeveloper.thehunters.util.COLOR_RED
+import me.ihdeveloper.thehunters.util.COLOR_WHITE
 import me.ihdeveloper.thehunters.util.COLOR_YELLOW
 import me.ihdeveloper.thehunters.util.COUNTDOWN_RESTARTING
 import org.bukkit.Bukkit
@@ -38,6 +42,7 @@ import org.bukkit.Bukkit
 const val TYPE_END_VICTORY: Short = 901
 const val TYPE_END_DEFEATED: Short = 902
 const val TYPE_END_BROADCAST: Short = 903
+const val TYPE_END_CHAT: Short = 904
 
 class VictoryComponent (
         val target: Boolean,
@@ -132,6 +137,25 @@ class TheEndBroadcastComponent : BroadcastComponent(
             }
         }
         Bukkit.getConsoleSender().sendMessage(message)
+    }
+
+}
+
+class TheEndChatComponent : ChatComponent() {
+
+    override val type = TYPE_END_CHAT
+
+    override fun build(sender: GamePlayer, message: String): String {
+        return StringBuilder().apply {
+            append("${COLOR_DARK_GRAY}[")
+            append("${COLOR_PURPLE}The End")
+            append("${COLOR_DARK_GRAY}]")
+            append("$COLOR_GRAY ")
+            append(sender.entity.name)
+            append("$COLOR_WHITE:$COLOR_GRAY")
+            append(' ')
+            append(message)
+        }.toString()
     }
 
 }
