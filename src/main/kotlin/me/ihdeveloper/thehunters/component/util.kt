@@ -195,8 +195,10 @@ abstract class ChatComponent : GameComponent, Listener {
 
         // Bukkit.broadcastMessage() is expensive since it broadcast with permission
         // And checking the permission can be expensive operation in chat events
-        for (player in toWho(sender)) {
-            player.entity.sendMessage(message)
+        toWho(sender).forEach {
+            it.entity.run {
+                sendMessage(message)
+            }
         }
         Bukkit.getConsoleSender().sendMessage(message)
 
