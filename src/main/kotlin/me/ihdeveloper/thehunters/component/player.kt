@@ -177,7 +177,8 @@ class DisableItemDropComponent (
 }
 
 class NoDamageComponent (
-        override val gameObject: GamePlayer
+        override val gameObject: GamePlayer,
+        val canDamage: Boolean = false
 ) : GameComponentOf<GamePlayer>(), Listener {
 
     override val type = TYPE_NO_DAMAGE
@@ -188,17 +189,23 @@ class NoDamageComponent (
 
     @EventHandler
     private fun onDamage(event: EntityDamageEvent) {
-        if (event.entity.uniqueId !== gameObject.uniqueId)
-            return
+        gameObject.run {
+            if (event.entity.uniqueId !== uniqueId)
+                return
+        }
 
         event.isCancelled = true
     }
 
     @EventHandler
     private fun onDamageByEntity(event: EntityDamageByEntityEvent) {
-        if (event.entity.uniqueId !== gameObject.uniqueId
-                && event.damager.uniqueId !== gameObject.uniqueId)
-            return
+        gameObject.run {
+            if (!canDamage && event.damager.uniqueId !== uniqueId)
+                return
+
+            if (event.entity.uniqueId !== uniqueId)
+                return
+        }
 
         event.isCancelled = true
     }
