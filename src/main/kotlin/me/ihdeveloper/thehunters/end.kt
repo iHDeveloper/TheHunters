@@ -64,7 +64,7 @@ class TheEnd (
                     it.entity.kickPlayer(message)
                 }
 
-                // TODO Restart the game
+                Game.restart()
             }
     )
 

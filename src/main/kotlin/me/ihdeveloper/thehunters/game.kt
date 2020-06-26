@@ -73,12 +73,23 @@ class Game : GameInstance (name, components, children) {
                         instance.add(gameplay)
                 }
 
+                fun restart() {
+                        instance.theEnd!!.destroy()
+                        Bukkit.shutdown()
+                }
+
                 fun win() {
+                        end()
                         instance.add(TheEnd(true))
                 }
 
                 fun lost() {
+                        end()
                         instance.add(TheEnd(false))
+                }
+
+                private fun end() {
+                        gameplay.destroy()
                 }
 
                 fun lock() { loginManager.lock = true }
