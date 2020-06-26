@@ -28,6 +28,7 @@ package me.ihdeveloper.thehunters
 import me.ihdeveloper.thehunters.component.AdventureComponent
 import me.ihdeveloper.thehunters.component.ClearInventoryComponent
 import me.ihdeveloper.thehunters.component.ClearPotionEffectComponent
+import me.ihdeveloper.thehunters.component.DefeatedComponent
 import me.ihdeveloper.thehunters.component.DisableBlockBreakComponent
 import me.ihdeveloper.thehunters.component.DisableBlockPlaceComponent
 import me.ihdeveloper.thehunters.component.DisableItemCollectComponent
@@ -38,6 +39,7 @@ import me.ihdeveloper.thehunters.component.NoHungerComponent
 import me.ihdeveloper.thehunters.component.NoInteractComponent
 import me.ihdeveloper.thehunters.component.ResetHealthComponent
 import me.ihdeveloper.thehunters.component.TitleComponent
+import me.ihdeveloper.thehunters.component.VictoryComponent
 import me.ihdeveloper.thehunters.component.gameplay.TYPE_GAMEPLAY_HUNTER_SCOREBOARD
 import me.ihdeveloper.thehunters.component.gameplay.TYPE_GAMEPLAY_TARGET
 import me.ihdeveloper.thehunters.component.gameplay.TYPE_GAMEPLAY_TARGET_SCOREBOARD
@@ -50,7 +52,9 @@ class TheEnd (
         Game.lock()
 
         Game.players.values.forEach {
-            if (it.has(TYPE_GAMEPLAY_TARGET))
+            val target = it.has(TYPE_GAMEPLAY_TARGET)
+
+            if (target)
                 resetTarget(it)
             else
                 resetHunter(it)
@@ -69,6 +73,18 @@ class TheEnd (
                 add(ClearInventoryComponent(this))
                 add(ClearPotionEffectComponent(this))
                 add(ResetHealthComponent(this))
+
+                if (won) {
+                    if (target)
+                        it.add(DefeatedComponent(true, this))
+                    else
+                        it.add(VictoryComponent(false, this))
+                } else {
+                    if (target)
+                        it.add(VictoryComponent(true, this))
+                    else
+                        it.add(DefeatedComponent(false, this))
+                }
             }
         }
     }
