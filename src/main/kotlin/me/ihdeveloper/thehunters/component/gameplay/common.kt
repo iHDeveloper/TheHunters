@@ -37,6 +37,8 @@ import me.ihdeveloper.thehunters.component.TYPE_SCOREBOARD
 import me.ihdeveloper.thehunters.event.CountdownEvent
 import me.ihdeveloper.thehunters.event.countdown.CountdownStartEvent
 import me.ihdeveloper.thehunters.event.countdown.CountdownTickEvent
+import me.ihdeveloper.thehunters.event.player.GameJoinEvent
+import me.ihdeveloper.thehunters.event.player.GameQuitEvent
 import me.ihdeveloper.thehunters.plugin
 import me.ihdeveloper.thehunters.util.COLOR_BLUE
 import me.ihdeveloper.thehunters.util.COLOR_BOLD
@@ -57,6 +59,7 @@ import org.bukkit.Bukkit
 import org.bukkit.block.Block
 import org.bukkit.entity.Entity
 import org.bukkit.entity.EntityType
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByBlockEvent
@@ -86,7 +89,8 @@ abstract class GameScoreboardComponent : GameComponentOf<GamePlayer>(), Listener
     protected var scoreboard: Scoreboard? = null
 
     protected var sidebar: Objective? = null
-    protected var belowName: Objective? = null
+    private var belowName: Objective? = null
+    private var playerList: Objective? = null
 
     protected var hunters: Team? = null
     protected var targets: Team? = null
@@ -134,6 +138,15 @@ abstract class GameScoreboardComponent : GameComponentOf<GamePlayer>(), Listener
             belowName = scoreboard!!.registerNewObjective("hearts", Criterias.HEALTH)
             belowName!!.displaySlot = DisplaySlot.BELOW_NAME
             belowName!!.displayName = "${COLOR_RED}♥"
+        }
+
+        playerList = scoreboard!!.getObjective(DisplaySlot.PLAYER_LIST)
+        if (playerList == null) {
+            playerList = scoreboard!!.registerNewObjective("hearts_in_list", "dummy")
+            playerList!!.displaySlot = DisplaySlot.PLAYER_LIST
+        }
+        Game.players.values.forEach {
+            playerList!!.getScore(it.entity.name).score = it.entity.health.toInt()
         }
 
         sidebar!!.run {
@@ -229,9 +242,30 @@ abstract class GameScoreboardComponent : GameComponentOf<GamePlayer>(), Listener
         updateGameEventTimer(event.ticks / 20)
     }
 
+    @EventHandler
+    fun onJoin(event: GameJoinEvent) {
+        playerList!!.getScore(event.player.entity.name).score = event.player.entity.health.toInt()
+    }
+
+    @EventHandler
+    fun onQuit(event: GameQuitEvent) {
+        scoreboard!!.resetScores(event.player.entity.name)
+    }
+
+    @EventHandler
+    fun onPlayerDamage(event: EntityDamageEvent) {
+        if (event.entityType !== EntityType.PLAYER)
+            return
+
+        playerList!!.getScore(event.entity.name).score = ((event.entity as Player).health).toInt()
+    }
+
 
     override fun onDestroy(gameObject: GamePlayer) {
+        GameJoinEvent.getHandlerList().unregister(this)
+        GameQuitEvent.getHandlerList().unregister(this)
         CountdownEvent.getHandlerList().unregister(this)
+        EntityDamageEvent.getHandlerList().unregister(this)
 
         gameEventHeader = null
         gameEventName = null
