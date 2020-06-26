@@ -27,7 +27,6 @@ package me.ihdeveloper.thehunters.component.gameplay
 
 import me.ihdeveloper.thehunters.Game
 import me.ihdeveloper.thehunters.GameComponentOf
-import me.ihdeveloper.thehunters.GameDeathComponent
 import me.ihdeveloper.thehunters.GamePlayer
 import me.ihdeveloper.thehunters.Gameplay
 import me.ihdeveloper.thehunters.component.AchievementComponent
