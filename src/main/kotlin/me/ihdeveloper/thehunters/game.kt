@@ -46,6 +46,8 @@ private val children = listOf(
 
 class Game : GameInstance (name, components, children) {
 
+        private var theEnd: TheEnd? = null
+
         init {
                // Disable announcing any achievements since we are going to override them
                DedicatedServer.getServer().propertyManager.setProperty("announce-player-achievements", false)
@@ -66,6 +68,14 @@ class Game : GameInstance (name, components, children) {
                 fun start() {
                         lobby.destroy()
                         instance.add(gameplay)
+                }
+
+                fun win() {
+                        instance.add(TheEnd(true))
+                }
+
+                fun lost() {
+                        instance.add(TheEnd(false))
                 }
 
                 fun lock() { loginManager.lock = true }

@@ -48,6 +48,7 @@ import me.ihdeveloper.thehunters.component.gameplay.HunterSignalComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetAchievementComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetChatComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetComponent
+import me.ihdeveloper.thehunters.component.gameplay.TargetDeathComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetDimensionComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetGetReadyComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetScoreboardComponent
@@ -158,6 +159,7 @@ class Gameplay : GameObject(
                     add(TargetScoreboardComponent(this))
                     add(TargetSignalComponent(this))
                     add(TargetAchievementComponent(this))
+                    add(TargetDeathComponent(this))
                 }
 
                 continue
@@ -240,6 +242,8 @@ class Gameplay : GameObject(
 abstract class GameDeathComponent : DeathComponent() {
 
     abstract override val gameObject: GamePlayer
+
+    abstract override val type: Short
 
     protected abstract val name: String
 

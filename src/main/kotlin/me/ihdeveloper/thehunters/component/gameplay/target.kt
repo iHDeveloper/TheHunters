@@ -27,6 +27,7 @@ package me.ihdeveloper.thehunters.component.gameplay
 
 import me.ihdeveloper.thehunters.Game
 import me.ihdeveloper.thehunters.GameComponentOf
+import me.ihdeveloper.thehunters.GameDeathComponent
 import me.ihdeveloper.thehunters.GamePlayer
 import me.ihdeveloper.thehunters.Gameplay
 import me.ihdeveloper.thehunters.component.AchievementComponent
@@ -47,6 +48,7 @@ import me.ihdeveloper.thehunters.event.target.TargetLostEvent
 import me.ihdeveloper.thehunters.event.target.TargetRecoverEvent
 import me.ihdeveloper.thehunters.event.target.TargetSignalEvent
 import me.ihdeveloper.thehunters.plugin
+import me.ihdeveloper.thehunters.util.COLOR_BLUE
 import me.ihdeveloper.thehunters.util.COLOR_BOLD
 import me.ihdeveloper.thehunters.util.COLOR_GOLD
 import me.ihdeveloper.thehunters.util.COLOR_RED
@@ -55,8 +57,10 @@ import me.ihdeveloper.thehunters.util.COLOR_YELLOW
 import me.ihdeveloper.thehunters.util.COUNTDOWN_GAMEPLAY_GET_READY
 import org.bukkit.Achievement
 import org.bukkit.Bukkit
+import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.player.PlayerChangedWorldEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
@@ -69,6 +73,7 @@ const val TYPE_GAMEPLAY_TARGET_DIMENSION: Short = 312
 const val TYPE_GAMEPLAY_TARGET_SCOREBOARD: Short = 313
 const val TYPE_GAMEPLAY_TARGET_SIGNAL: Short = 314
 const val TYPE_GAMEPLAY_TARGET_CHAT: Short = 315
+const val TYPE_GAMEPLAY_TARGET_DEATH: Short = 316
 
 class TargetComponent (
         override val gameObject: GamePlayer
@@ -413,6 +418,27 @@ class TargetChatComponent : ChatComponent() {
             append(": $message")
         }
         return builder.toString()
+    }
+
+}
+
+class TargetDeathComponent (
+        override val gameObject: GamePlayer
+) : GameDeathComponent() {
+
+    override val type = TYPE_GAMEPLAY_TARGET_DEATH
+
+    override val name get() = "$COLOR_RED[Target] ${gameObject.entity.name}"
+
+    override fun byPlayer(killer: GamePlayer, event: EntityDamageByEntityEvent) {
+        broadcast {
+            append("$COLOR_YELLOW was killed by")
+            append("${COLOR_BLUE}[Hunter] ${killer.entity.name}")
+        }
+    }
+
+    override fun afterDeath() {
+        Game.lost()
     }
 
 }
