@@ -73,6 +73,7 @@ class LobbyComponent (
         }
 
         gameObject.entity.run {
+            exp = 0f
             level = 0
             health = 20.0
             maxHealth = 20.0
