@@ -37,6 +37,7 @@ import me.ihdeveloper.thehunters.component.gameplay.HunterAchievementComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterChatComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterCompassComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterComponent
+import me.ihdeveloper.thehunters.component.gameplay.HunterDeathComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterScoreboardComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterShoutComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterSignalComponent
@@ -172,6 +173,7 @@ class Gameplay : GameObject(
         player.add(HunterCompassComponent(player))
         player.add(HunterAchievementComponent(player))
         player.add(HunterShoutComponent(player))
+        player.add(HunterDeathComponent(player))
 
         if (join) {
             teleportToSpawn(player)
