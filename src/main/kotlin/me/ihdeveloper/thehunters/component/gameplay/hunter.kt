@@ -41,6 +41,7 @@ import me.ihdeveloper.thehunters.event.hunter.HunterJoinEvent
 import me.ihdeveloper.thehunters.event.hunter.HunterQuitEvent
 import me.ihdeveloper.thehunters.event.target.TargetDimensionEvent
 import me.ihdeveloper.thehunters.event.target.TargetJoinEvent
+import me.ihdeveloper.thehunters.event.target.TargetKillEvent
 import me.ihdeveloper.thehunters.event.target.TargetLostEvent
 import me.ihdeveloper.thehunters.event.target.TargetQuitEvent
 import me.ihdeveloper.thehunters.event.target.TargetRecoverEvent
@@ -503,6 +504,9 @@ class HunterDeathComponent (
     private val name: String get() = "${COLOR_BLUE}[Hunter] ${gameObject.entity.name}"
 
     override fun byPlayer(killer: GamePlayer, event: EntityDamageByEntityEvent) {
+        if (killer.has(TYPE_GAMEPLAY_TARGET))
+            Bukkit.getPluginManager().callEvent(TargetKillEvent(killer, gameObject))
+
         broadcast {
             append("$COLOR_YELLOW was killed by")
             if (killer.has(TYPE_GAMEPLAY_HUNTER)) {
