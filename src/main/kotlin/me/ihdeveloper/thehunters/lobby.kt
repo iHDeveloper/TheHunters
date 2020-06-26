@@ -105,33 +105,36 @@ class Lobby : GameObject(
                 teleport(location)
         }
 
-        player.add(AdventureComponent(player))
-        player.add(NoHungerComponent(player))
-        player.add(DisableItemCollectComponent(player))
-        player.add(DisableItemDropComponent(player))
-        player.add(NoDamageComponent(player))
-        player.add(DisableBlockPlaceComponent(player))
-        player.add(DisableBlockBreakComponent(player))
-        player.add(NoInteractComponent(player))
-        player.add(ClearInventoryComponent(player))
-        player.add(ClearPotionEffectComponent(player))
-        player.add(ResetHealthComponent(player))
-        player.add(AchievementComponent(player).apply {
-            this.reset()
-            this.block()
-        })
+        player.run {
+            add(AdventureComponent(this))
+            add(NoHungerComponent(this))
+            add(DisableItemCollectComponent(this))
+            add(DisableItemDropComponent(this))
+            add(NoDamageComponent(this))
+            add(DisableBlockPlaceComponent(this))
+            add(DisableBlockBreakComponent(this))
+            add(NoInteractComponent(this))
+            add(ClearInventoryComponent(this))
+            add(ClearPotionEffectComponent(this))
+            add(ResetHealthComponent(this))
+            add(AchievementComponent(this).apply {
+                this.reset()
+                this.block()
+            })
 
-        player.add(LobbyComponent(player))
-        player.add(LobbyScoreboardComponent(player))
+            add(LobbyComponent(this))
+            add(LobbyScoreboardComponent(this))
+        }
 
-        val message = StringBuilder()
-        message.append("${COLOR_YELLOW}[")
-        message.append("${COLOR_GREEN}${Game.count}")
-        message.append("${COLOR_GRAY}/")
-        message.append("${COLOR_RED}${Game.max}")
-        message.append("${COLOR_YELLOW}] ")
-        message.append("${COLOR_GRAY}${player.entity.name}")
-        message.append("$COLOR_GOLD joined the game!")
+        val message = StringBuilder().apply {
+            append("${COLOR_YELLOW}[")
+            append("${COLOR_GREEN}${Game.count}")
+            append("${COLOR_GRAY}/")
+            append("${COLOR_RED}${Game.max}")
+            append("${COLOR_YELLOW}] ")
+            append("${COLOR_GRAY}${player.entity.name}")
+            append("$COLOR_GOLD joined the game!")
+        }
         Bukkit.broadcastMessage(message.toString())
 
         if (Game.count == Game.max) {
