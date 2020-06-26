@@ -720,13 +720,15 @@ class FlyComponent (
 
     override fun onInit(gameObject: GamePlayer) {
         gameObject.entity.run {
+            allowFlight = true
             isFlying = true
         }
     }
 
     override fun onDestroy(gameObject: GamePlayer) {
         gameObject.entity.run {
-            isFlying = true
+            isFlying = false
+            allowFlight = false
         }
     }
 
