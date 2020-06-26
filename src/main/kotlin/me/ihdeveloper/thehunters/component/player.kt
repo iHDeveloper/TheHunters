@@ -619,6 +619,14 @@ abstract class DeathComponent (
         EntityDamageEvent.getHandlerList().unregister(this)
     }
 
+    // TODO The death component needs improvements to handle most of the cases Minecraft handles
+    // For example, The player can fell and get killed directly or takes hard damage and a killer finishes the player
+    // I think the death component needs to be rewritten to match how Minecraft handle the deaths
+    // You can check the en_US.lang to read the messages they have and the game can support.
+    // Maybe we can structure each kill in a separate component for more efficiency.
+    //
+    // - @iHDeveloper
+
     abstract fun byPlayer(killer: GamePlayer, event: EntityDamageByEntityEvent)
     abstract fun byEntity(killer: Entity, event: EntityDamageByEntityEvent)
     abstract fun byEntityExplosion(entity: Entity)
