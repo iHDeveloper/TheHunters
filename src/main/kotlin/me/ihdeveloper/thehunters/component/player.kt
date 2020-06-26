@@ -598,7 +598,10 @@ abstract class DeathComponent : GameComponentOf<GamePlayer>(), Listener {
         if (event.entity.uniqueId !== gameObject.uniqueId)
             return
 
-        // FIX: Doesn't check if the player is about to die or not
+        gameObject.entity.run {
+            if (health - event.finalDamage > 0)
+                return
+        }
 
         onDeath()
 
