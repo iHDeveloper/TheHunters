@@ -42,7 +42,7 @@ public class TargetRecoverEvent extends TargetEvent {
     public TargetRecoverEvent(GamePlayer target) {
         super(target);
 
-        String world = target.getEntity().getWorld().getName()
+        String world = target.getEntity().getWorld().getName();
 
         dimension = Dimension.Companion.get(world);
     }
