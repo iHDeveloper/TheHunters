@@ -119,20 +119,24 @@ class Gameplay : GameObject(
         var found = false
 
         for (player in Game.players.values) {
-            player.add(ScoreboardComponent(player))
-            player.add(TitleComponent(player))
-            player.add(VanishComponent(player))
+            player.run {
+                add(ScoreboardComponent(this))
+                add(TitleComponent(this))
+                add(VanishComponent(this))
+            }
 
             if (!found && random.nextBoolean()) {
                 found = true
                 target = player.entity.uniqueId
 
-                player.add(TargetComponent(player))
-                player.add(TargetGetReadyComponent(player))
-                player.add(TargetDimensionComponent(player))
-                player.add(TargetScoreboardComponent(player))
-                player.add(TargetSignalComponent(player))
-                player.add(TargetAchievementComponent(player))
+                player.run {
+                    add(TargetComponent(this))
+                    add(TargetGetReadyComponent(this))
+                    add(TargetDimensionComponent(this))
+                    add(TargetScoreboardComponent(this))
+                    add(TargetSignalComponent(this))
+                    add(TargetAchievementComponent(this))
+                }
 
                 continue
             }
