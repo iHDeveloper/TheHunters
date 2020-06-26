@@ -40,6 +40,7 @@ import me.ihdeveloper.thehunters.event.countdown.CountdownFinishEvent
 import me.ihdeveloper.thehunters.event.countdown.CountdownStartEvent
 import me.ihdeveloper.thehunters.event.countdown.CountdownTickEvent
 import me.ihdeveloper.thehunters.event.hunter.HunterJoinEvent
+import me.ihdeveloper.thehunters.event.hunter.HunterQuitEvent
 import me.ihdeveloper.thehunters.event.target.TargetDimensionEvent
 import me.ihdeveloper.thehunters.event.target.TargetKillEvent
 import me.ihdeveloper.thehunters.event.target.TargetLostEvent
@@ -315,13 +316,18 @@ class TargetScoreboardComponent (
         hunters!!.addEntry(event.hunter.entity.name)
     }
 
-    // TODO Handle Hunter Quit
+    @EventHandler
+    private fun onHunterQuit(event: HunterQuitEvent) {
+        updateHuntersCount()
+        hunters!!.removeEntry(event.hunter.entity.name)
+    }
 
     @EventHandler
     fun onKill(event: TargetKillEvent) = updateKillsCount()
 
     override fun onDestroy(gameObject: GamePlayer) {
         HunterJoinEvent.getHandlerList().unregister(this)
+        HunterQuitEvent.getHandlerList().unregister(this)
         TargetKillEvent.getHandlerList().unregister(this)
 
         huntersScore = null
