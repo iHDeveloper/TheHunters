@@ -696,7 +696,7 @@ class SpectatorComponent (
 
 }
 
-class FlyCompoennt (
+class FlyComponent (
         override val gameObject: GamePlayer
 ) : GameComponentOf<GamePlayer>() {
 

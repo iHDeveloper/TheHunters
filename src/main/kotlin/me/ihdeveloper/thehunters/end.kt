@@ -56,6 +56,7 @@ class TheEnd (
 
             it.run {
                 add(TitleComponent(this))
+
                 add(AdventureComponent(this))
                 add(NoHungerComponent(this))
                 add(DisableItemCollectComponent(this))
