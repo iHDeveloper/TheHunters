@@ -487,15 +487,20 @@ class GameBroadcastComponent : BroadcastComponent(
     override val onStart: StringBuilder.(Int) -> Unit = {
         append("$COLOR_YELLOW")
         append("The target has")
-        append("$COLOR_RED $it")
-        append("$COLOR_YELLOW seconds to finish the game!")
+        append("$COLOR_RED ${it/60}")
+        append("$COLOR_YELLOW minutes to finish the game!")
     }
 
     override val onSecond: StringBuilder.(Int) -> Unit = {
         append("$COLOR_YELLOW")
         append("The target has")
-        append("$COLOR_RED $it")
-        append("$COLOR_YELLOW seconds left to win!")
+        if (it >= 60) {
+            append("$COLOR_RED $${it / 60}")
+            append("$COLOR_YELLOW minutes left to win!")
+        } else {
+            append("$COLOR_RED $it")
+            append("$COLOR_YELLOW seconds left to win!")
+        }
     }
 
     override val onFinish: StringBuilder.() -> Unit = {
