@@ -27,6 +27,7 @@ package me.ihdeveloper.thehunters.component.gameplay
 
 import me.ihdeveloper.thehunters.Dimension
 import me.ihdeveloper.thehunters.Game
+import me.ihdeveloper.thehunters.GameComponent
 import me.ihdeveloper.thehunters.GameComponentOf
 import me.ihdeveloper.thehunters.GamePlayer
 import me.ihdeveloper.thehunters.component.DeathComponent
@@ -59,6 +60,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByBlockEvent
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
+import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.scoreboard.DisplaySlot
 import org.bukkit.scoreboard.NameTagVisibility
 import org.bukkit.scoreboard.Objective
@@ -66,6 +68,8 @@ import org.bukkit.scoreboard.Score
 import org.bukkit.scoreboard.Scoreboard
 import org.bukkit.scoreboard.Team
 import java.lang.StringBuilder
+
+const val TYPE_GAMEPLAY_ENDER_DRAGON: Short = 300
 
 abstract class GameScoreboardComponent : GameComponentOf<GamePlayer>(), Listener {
 
@@ -435,4 +439,26 @@ abstract class GameDeathComponent : DeathComponent() {
     }
 
     abstract override fun byPlayer(killer: GamePlayer, event: EntityDamageByEntityEvent)
+}
+
+class EnderDragonComponent : GameComponent, Listener {
+
+    override val type = TYPE_GAMEPLAY_ENDER_DRAGON
+
+    override fun init() {
+        Bukkit.getPluginManager().registerEvents(this, plugin())
+    }
+
+    @EventHandler
+    fun onEnderDragonDeath(event: EntityDeathEvent) {
+        if (event.entity.type !== EntityType.ENDER_DRAGON)
+            return
+
+        Game.lost()
+    }
+
+    override fun destroy() {
+        EntityDeathEvent.getHandlerList().unregister(this)
+    }
+
 }
