@@ -186,10 +186,7 @@ class HunterScoreboardComponent (
     fun onTargetLost(event: TargetLostEvent) = updateTargetDimension(Dimension.UNKNOWN)
 
     @EventHandler
-    fun onTargetRecover(event: TargetRecoverEvent) {
-        val dimension = Dimension.get(event.target.entity.world.name)
-        updateTargetDimension(dimension)
-    }
+    fun onTargetRecover(event: TargetRecoverEvent) = updateTargetDimension(event.dimension)
 
     @EventHandler
     fun onHunterJoin(event: HunterJoinEvent) {
