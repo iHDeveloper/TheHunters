@@ -123,7 +123,7 @@ class LoginManager : GameObject(), Listener {
 
     private val full = "${COLOR_YELLOW}The game is full!"
 
-    private val locked = "${COLOR_YELLOW}The game has already started!"
+    private val locked = "${COLOR_YELLOW}The game is getting started! Try again later to join it."
 
     override fun onInit() {
         Bukkit.getPluginManager().registerEvents(this, plugin())
