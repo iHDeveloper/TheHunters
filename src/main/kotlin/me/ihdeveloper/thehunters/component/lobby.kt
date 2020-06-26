@@ -347,15 +347,13 @@ class LobbyChatComponent : ChatComponent() {
     override val type = TYPE_LOBBY_CHAT
 
     override fun build(sender: GamePlayer, message: String): String {
-        val builder = StringBuilder().run {
+        return StringBuilder().apply {
             append("$COLOR_GRAY")
             append(sender.entity.name)
             append("$COLOR_WHITE:$COLOR_GRAY")
             append(' ')
             append(message)
-        }
-
-        return builder.toString()
+        }.toString()
     }
 
 }
