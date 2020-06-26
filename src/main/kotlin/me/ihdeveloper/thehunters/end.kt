@@ -32,6 +32,7 @@ import me.ihdeveloper.thehunters.component.DisableBlockBreakComponent
 import me.ihdeveloper.thehunters.component.DisableBlockPlaceComponent
 import me.ihdeveloper.thehunters.component.DisableItemCollectComponent
 import me.ihdeveloper.thehunters.component.DisableItemDropComponent
+import me.ihdeveloper.thehunters.component.FlyComponent
 import me.ihdeveloper.thehunters.component.NoDamageComponent
 import me.ihdeveloper.thehunters.component.NoHungerComponent
 import me.ihdeveloper.thehunters.component.NoInteractComponent
@@ -56,7 +57,7 @@ class TheEnd (
 
             it.run {
                 add(TitleComponent(this))
-
+                add(FlyComponent(this))
                 add(AdventureComponent(this))
                 add(NoHungerComponent(this))
                 add(DisableItemCollectComponent(this))
