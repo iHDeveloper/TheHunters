@@ -59,6 +59,8 @@ import me.ihdeveloper.thehunters.event.player.GameQuitEvent
 import me.ihdeveloper.thehunters.event.target.TargetJoinEvent
 import me.ihdeveloper.thehunters.event.target.TargetQuitEvent
 import me.ihdeveloper.thehunters.util.COLOR_BLUE
+import me.ihdeveloper.thehunters.util.COLOR_GRAY
+import me.ihdeveloper.thehunters.util.COLOR_GREEN
 import me.ihdeveloper.thehunters.util.COLOR_RED
 import me.ihdeveloper.thehunters.util.COLOR_YELLOW
 import me.ihdeveloper.thehunters.util.COUNTDOWN_GAMEPLAY_GET_READY
@@ -173,7 +175,17 @@ class Gameplay : GameObject(
     }
 
     @EventHandler
-    fun onGameJoin(event: GameJoinEvent) = addHunter(event.player, true)
+    fun onGameJoin(event: GameJoinEvent) {
+        addHunter(event.player, true)
+
+        broadcast {
+            append("${COLOR_GRAY}[")
+            append("$COLOR_GREEN+")
+            append("${COLOR_GRAY}]")
+            append("$COLOR_BLUE [Hunter] ${event.player.entity.name}")
+            append("$COLOR_YELLOW came to hunt the target!")
+        }
+    }
 
     @EventHandler
     fun onGameQuit(event: GameQuitEvent) {
