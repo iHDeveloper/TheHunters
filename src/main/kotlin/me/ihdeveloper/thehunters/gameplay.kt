@@ -193,6 +193,12 @@ class Gameplay : GameObject(
             Bukkit.getPluginManager().callEvent(TargetQuitEvent(event.player))
             return
         }
+        hunters--
+
+        if (hunters > 0)
+            return
+
+        Game.lost()
     }
 
     @EventHandler
