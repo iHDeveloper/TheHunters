@@ -438,7 +438,7 @@ class TargetDeathComponent (
     }
 
     override fun afterDeath() {
-        Game.lost()
+        Game.win()
     }
 
 }
