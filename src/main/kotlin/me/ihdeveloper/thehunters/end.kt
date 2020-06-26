@@ -39,6 +39,7 @@ import me.ihdeveloper.thehunters.component.NoDamageComponent
 import me.ihdeveloper.thehunters.component.NoHungerComponent
 import me.ihdeveloper.thehunters.component.NoInteractComponent
 import me.ihdeveloper.thehunters.component.ResetHealthComponent
+import me.ihdeveloper.thehunters.component.TheEndBroadcastComponent
 import me.ihdeveloper.thehunters.component.TitleComponent
 import me.ihdeveloper.thehunters.component.VictoryComponent
 import me.ihdeveloper.thehunters.component.gameplay.TYPE_GAMEPLAY_HUNTER_SCOREBOARD
@@ -49,7 +50,9 @@ import me.ihdeveloper.thehunters.util.COUNTDOWN_RESTARTING
 
 class TheEnd (
         private val won: Boolean = false
-) : GameObject() {
+) : GameObject(
+        components = listOf(TheEndBroadcastComponent())
+) {
 
     private val countdown = CountdownComponent(
             id = COUNTDOWN_RESTARTING,

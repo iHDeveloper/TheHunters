@@ -25,15 +25,27 @@
 
 package me.ihdeveloper.thehunters.component
 
+import me.ihdeveloper.thehunters.Game
+import me.ihdeveloper.thehunters.GameComponent
 import me.ihdeveloper.thehunters.GameComponentOf
 import me.ihdeveloper.thehunters.GamePlayer
+import me.ihdeveloper.thehunters.event.CountdownEvent
+import me.ihdeveloper.thehunters.event.countdown.CountdownFinishEvent
+import me.ihdeveloper.thehunters.event.countdown.CountdownStartEvent
+import me.ihdeveloper.thehunters.event.countdown.CountdownTickEvent
+import me.ihdeveloper.thehunters.plugin
 import me.ihdeveloper.thehunters.util.COLOR_BOLD
 import me.ihdeveloper.thehunters.util.COLOR_GREEN
 import me.ihdeveloper.thehunters.util.COLOR_RED
 import me.ihdeveloper.thehunters.util.COLOR_YELLOW
+import me.ihdeveloper.thehunters.util.COUNTDOWN_RESTARTING
+import org.bukkit.Bukkit
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
 
 const val TYPE_END_VICTORY: Short = 901
 const val TYPE_END_DEFEATED: Short = 902
+const val TYPE_END_BROADCAST: Short = 903
 
 class VictoryComponent (
         val target: Boolean,
@@ -85,5 +97,85 @@ class DefeatedComponent(
     }
 
     override fun onDestroy(gameObject: GamePlayer) {}
+
+}
+
+class TheEndBroadcastComponent() : GameComponent, Listener {
+
+    override val type = TYPE_END_BROADCAST
+
+    private var lastSeconds: Int = -1
+
+    override fun init() {
+        Bukkit.getPluginManager().registerEvents(this, plugin())
+    }
+
+    @EventHandler
+    fun onStart(event: CountdownStartEvent) {
+        if (event.id != COUNTDOWN_RESTARTING)
+            return
+
+        broadcast {
+            append("$COLOR_YELLOW")
+            append("The game is about to restart in")
+            append("$COLOR_RED ${event.ticks / 20}")
+            append("$COLOR_YELLOW seconds")
+        }
+    }
+
+    @EventHandler
+    fun onTick(event: CountdownTickEvent) {
+        if (event.id != COUNTDOWN_RESTARTING)
+            return
+
+        val seconds = event.ticks / 20
+
+        if (lastSeconds == seconds)
+            return
+        lastSeconds = seconds
+
+        if (seconds != 45
+                && seconds != 30
+                && seconds != 15
+                && seconds != 10
+                && seconds !in 1..5)
+            return
+
+        broadcast {
+            append("$COLOR_YELLOW")
+            append("Game is restarting in")
+            append("$COLOR_RED $seconds")
+            append("$COLOR_YELLOW seconds")
+        }
+    }
+
+    @EventHandler
+    fun onFinish(event: CountdownFinishEvent) {
+        if (event.id != COUNTDOWN_RESTARTING)
+            return
+
+        broadcast {
+            append("$COLOR_YELLOW")
+            append("Game is restarting...")
+        }
+    }
+
+    private inline fun broadcast(block: java.lang.StringBuilder.() -> Unit) {
+        val message = java.lang.StringBuilder().apply {
+            block(this)
+        }.toString()
+
+        // Bukkit.broadcastMessage() is expensive since it broadcast with permission
+        Game.players.values.forEach {
+            it.entity.run {
+                sendMessage(message)
+            }
+        }
+        Bukkit.getConsoleSender().sendMessage(message)
+    }
+
+    override fun destroy() {
+        CountdownEvent.getHandlerList().unregister(this)
+    }
 
 }
