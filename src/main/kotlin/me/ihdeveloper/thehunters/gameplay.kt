@@ -38,6 +38,7 @@ import me.ihdeveloper.thehunters.component.gameplay.HunterChatComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterCompassComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterDeathComponent
+import me.ihdeveloper.thehunters.component.gameplay.HunterRespawnComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterScoreboardComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterShoutComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterSignalComponent
@@ -167,13 +168,16 @@ class Gameplay : GameObject(
 
     private fun addHunter(player: GamePlayer, join: Boolean = false) {
         hunters++
-        player.add(HunterComponent(player))
-        player.add(HunterScoreboardComponent(player))
-        player.add(HunterSignalComponent(player))
-        player.add(HunterCompassComponent(player))
-        player.add(HunterAchievementComponent(player))
-        player.add(HunterShoutComponent(player))
-        player.add(HunterDeathComponent(player))
+        player.run {
+            add(HunterComponent(this))
+            add(HunterScoreboardComponent(this))
+            add(HunterSignalComponent(this))
+            add(HunterCompassComponent(this))
+            add(HunterAchievementComponent(this))
+            add(HunterShoutComponent(this))
+            add(HunterDeathComponent(this))
+            add(HunterRespawnComponent(this))
+        }
 
         if (join) {
             teleportToSpawn(player)

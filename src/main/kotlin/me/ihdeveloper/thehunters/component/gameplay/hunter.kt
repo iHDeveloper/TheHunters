@@ -32,6 +32,8 @@ import me.ihdeveloper.thehunters.GamePlayer
 import me.ihdeveloper.thehunters.component.AchievementComponent
 import me.ihdeveloper.thehunters.component.ChatComponent
 import me.ihdeveloper.thehunters.component.DeathComponent
+import me.ihdeveloper.thehunters.component.SpectatorComponent
+import me.ihdeveloper.thehunters.component.TYPE_SPECTATOR
 import me.ihdeveloper.thehunters.component.TYPE_TITLE
 import me.ihdeveloper.thehunters.component.TYPE_VANISH
 import me.ihdeveloper.thehunters.component.TitleComponent
@@ -39,6 +41,7 @@ import me.ihdeveloper.thehunters.component.VanishComponent
 import me.ihdeveloper.thehunters.event.hunter.HunterDeathEvent
 import me.ihdeveloper.thehunters.event.hunter.HunterJoinEvent
 import me.ihdeveloper.thehunters.event.hunter.HunterQuitEvent
+import me.ihdeveloper.thehunters.event.hunter.HunterRespawnEvent
 import me.ihdeveloper.thehunters.event.target.TargetDimensionEvent
 import me.ihdeveloper.thehunters.event.target.TargetJoinEvent
 import me.ihdeveloper.thehunters.event.target.TargetKillEvent
@@ -84,9 +87,11 @@ const val TYPE_GAMEPLAY_HUNTER_COMPASS: Short = 353
 const val TYPE_GAMEPLAY_HUNTER_CHAT: Short = 354
 const val TYPE_GAMEPLAY_HUNTER_SHOUT: Short = 355
 const val TYPE_GAMEPLAY_HUNTER_DEATH: Short = 356
+const val TYPE_GAMEPLAY_HUNTER_RESPAWN: Short = 357
 
 private const val COMPASS_SLOT = 8
 private const val SHOUT_COOLDOWN = 60
+private const val RESPAWN_COOLDOWN = 5
 
 class HunterComponent (
         override val gameObject: GamePlayer
@@ -711,6 +716,97 @@ class HunterDeathComponent (
             }
         }
         Bukkit.getConsoleSender().sendMessage(message)
+    }
+
+}
+
+class HunterRespawnComponent (
+        override val gameObject: GamePlayer
+) : GameComponentOf<GamePlayer>(), Listener, Runnable {
+
+    override val type = TYPE_GAMEPLAY_HUNTER_RESPAWN
+
+    private var remaining = RESPAWN_COOLDOWN
+    private var task: BukkitTask? = null
+
+    override fun onInit(gameObject: GamePlayer) {
+        Bukkit.getPluginManager().registerEvents(this, plugin())
+    }
+
+    @EventHandler
+    fun onDie(event: HunterDeathEvent) {
+        gameObject.run {
+            remove(TYPE_GAMEPLAY_HUNTER_COMPASS)
+
+            entity.run {
+                closeInventory()
+
+                inventory.forEach {
+                    world.dropItemNaturally(location, it)
+                }
+            }
+
+            add(SpectatorComponent(this))
+            start()
+        }
+
+    }
+
+    override fun run() {
+        if (remaining <= 0) {
+            stop()
+            respawn()
+            return
+        }
+
+        gameObject.run {
+            get<TitleComponent>(TYPE_TITLE).run {
+                reset()
+                title("$COLOR_RED${COLOR_BOLD}You died!")
+                subtitle(StringBuilder().apply {
+                    append("$COLOR_YELLOW")
+                    append("Respawning in")
+                    append("$COLOR_RED $remaining")
+                    append("$COLOR_YELLOW seconds")
+                }.toString())
+                time(5, 20, 5)
+            }
+        }
+
+        remaining--
+    }
+
+    private fun start() {
+        task = Bukkit.getScheduler().runTaskTimer(plugin(), this, 0L, 20L)
+    }
+
+    private fun stop() {
+        if (task != null) {
+            task!!.cancel()
+            task = null
+        }
+    }
+
+    private fun respawn() {
+        gameObject.run {
+            remove(TYPE_SPECTATOR)
+
+            entity.run {
+                val h = 20.0
+                health = h
+                maxHealth = h
+            }
+
+            add(HunterCompassComponent(this))
+        }
+
+        Bukkit.getPluginManager().callEvent(HunterRespawnEvent(gameObject))
+    }
+
+    override fun onDestroy(gameObject: GamePlayer) {
+        HunterDeathEvent.getHandlerList().unregister(this)
+
+        stop()
     }
 
 }
