@@ -136,7 +136,7 @@ class HunterComponent (
 
 class HunterScoreboardComponent (
         override val gameObject: GamePlayer
-) : GameplayScoreboardComponent(), Listener {
+) : GameScoreboardComponent(), Listener {
 
     override val target = false
 

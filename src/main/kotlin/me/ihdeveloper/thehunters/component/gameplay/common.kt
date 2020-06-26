@@ -54,7 +54,7 @@ import org.bukkit.scoreboard.Scoreboard
 import org.bukkit.scoreboard.Team
 import java.lang.StringBuilder
 
-abstract class GameplayScoreboardComponent : GameComponentOf<GamePlayer>(), Listener {
+abstract class GameScoreboardComponent : GameComponentOf<GamePlayer>(), Listener {
 
     abstract override val gameObject: GamePlayer
 

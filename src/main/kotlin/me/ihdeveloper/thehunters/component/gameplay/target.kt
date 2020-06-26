@@ -57,7 +57,6 @@ import me.ihdeveloper.thehunters.util.COLOR_YELLOW
 import me.ihdeveloper.thehunters.util.COUNTDOWN_GAMEPLAY_GET_READY
 import org.bukkit.Achievement
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
@@ -262,7 +261,7 @@ class TargetDimensionComponent (
 
 class TargetScoreboardComponent (
         override val gameObject: GamePlayer
-) : GameplayScoreboardComponent(), Listener {
+) : GameScoreboardComponent(), Listener {
 
     override val target = true
 
