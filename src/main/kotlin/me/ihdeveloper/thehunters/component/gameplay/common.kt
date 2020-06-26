@@ -63,6 +63,7 @@ import org.bukkit.event.entity.EntityDamageByBlockEvent
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityDeathEvent
+import org.bukkit.scoreboard.Criterias
 import org.bukkit.scoreboard.DisplaySlot
 import org.bukkit.scoreboard.NameTagVisibility
 import org.bukkit.scoreboard.Objective
@@ -85,6 +86,7 @@ abstract class GameScoreboardComponent : GameComponentOf<GamePlayer>(), Listener
     protected var scoreboard: Scoreboard? = null
 
     protected var sidebar: Objective? = null
+    protected var belowName: Objective? = null
 
     protected var hunters: Team? = null
     protected var targets: Team? = null
@@ -125,6 +127,13 @@ abstract class GameScoreboardComponent : GameComponentOf<GamePlayer>(), Listener
             sidebar = scoreboard!!.registerNewObjective("stats", "dummy")
             sidebar!!.displaySlot = DisplaySlot.SIDEBAR
             sidebar!!.displayName = "$COLOR_YELLOW${COLOR_BOLD}THE HUNTERS"
+        }
+
+        belowName = scoreboard!!.getObjective(DisplaySlot.BELOW_NAME)
+        if (belowName == null) {
+            belowName = scoreboard!!.registerNewObjective("hearts", Criterias.HEALTH)
+            belowName!!.displaySlot = DisplaySlot.BELOW_NAME
+            belowName!!.displayName = "${COLOR_RED}♥"
         }
 
         sidebar!!.run {
