@@ -44,14 +44,14 @@ import me.ihdeveloper.thehunters.component.VictoryComponent
 import me.ihdeveloper.thehunters.component.gameplay.TYPE_GAMEPLAY_HUNTER_SCOREBOARD
 import me.ihdeveloper.thehunters.component.gameplay.TYPE_GAMEPLAY_TARGET
 import me.ihdeveloper.thehunters.component.gameplay.TYPE_GAMEPLAY_TARGET_SCOREBOARD
-import me.ihdeveloper.thehunters.util.COUNTDOWN_THE_END
+import me.ihdeveloper.thehunters.util.COUNTDOWN_RESTARTING
 
 class TheEnd (
         val won: Boolean = false
 ) : GameObject() {
 
     private val countdown = CountdownComponent(
-            id = COUNTDOWN_THE_END,
+            id = COUNTDOWN_RESTARTING,
             defaultStart = 20 * 60,
             onFinish = {
                 // TODO Restart the game
