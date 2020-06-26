@@ -95,9 +95,11 @@ private const val RESPAWN_COOLDOWN = 5
 
 class HunterComponent (
         override val gameObject: GamePlayer
-) : GameComponentOf<GamePlayer>() {
+) : GameComponentOf<GamePlayer>(), Listener {
 
     override val type = TYPE_GAMEPLAY_HUNTER
+
+    var deaths = 0
 
     override fun onInit(gameObject: GamePlayer) {
         gameObject.entity.run {
@@ -122,9 +124,20 @@ class HunterComponent (
             sendMessage(goal)
             sendMessage("")
         }
+
+        Bukkit.getPluginManager().registerEvents(this, plugin())
+    }
+
+    @EventHandler
+    fun onDeath(event: HunterDeathEvent) {
+        if (event.hunter.uniqueId !== gameObject.uniqueId)
+            return
+
+        deaths++
     }
 
     override fun onDestroy(gameObject: GamePlayer) {
+        HunterDeathEvent.getHandlerList().unregister(this)
     }
 
 }
@@ -140,14 +153,18 @@ class HunterScoreboardComponent (
     private var dimensionScore: Score? = null
     private var lastDimension: Dimension = Dimension.UNKNOWN
 
+    private var deathsScore: Score? = null
+    private var lastDeathsCount = -1
+
     override fun onInit(gameObject: GamePlayer) {
         super.onInit(gameObject)
 
         hunters!!.addEntry(gameObject.entity.name)
 
         updateTargetDimension(Dimension.UNKNOWN, true)
+        updateDeathsCount(0)
 
-        sidebar!!.getScore("$COLOR_BOLD$COLOR_YELLOW").score = 2
+        sidebar!!.getScore("$COLOR_BOLD$COLOR_YELLOW").score = 1
 
         Bukkit.getPluginManager().registerEvents(this, plugin())
     }
@@ -184,6 +201,16 @@ class HunterScoreboardComponent (
         hunters!!.removeEntry(event.hunter.entity.name)
     }
 
+    @EventHandler
+    fun onHunterDeath(event: HunterDeathEvent) {
+        gameObject.run {
+            if (event.hunter.uniqueId !== uniqueId)
+                return
+
+            updateDeathsCount(get<HunterComponent>(TYPE_GAMEPLAY_HUNTER).deaths)
+        }
+    }
+
     private fun updateTargetDimension(dimension: Dimension, force: Boolean = false) {
         if (lastDimension == dimension && !force)
             return
@@ -197,14 +224,29 @@ class HunterScoreboardComponent (
         dimensionScore!!.score = 3
     }
 
+    private fun updateDeathsCount(deaths: Int) {
+        if (lastDeathsCount == deaths)
+            return
+        lastDeathsCount = deaths
+
+        if (deathsScore != null) {
+            scoreboard!!.resetScores(deathsScore!!.entry)
+        }
+
+        deathsScore = sidebar!!.getScore("${COLOR_YELLOW}Deaths: ${deaths}")
+        deathsScore!!.score = 2
+    }
+
     override fun onDestroy(gameObject: GamePlayer) {
         TargetJoinEvent.getHandlerList().unregister(this)
         TargetDimensionEvent.getHandlerList().unregister(this)
         TargetLostEvent.getHandlerList().unregister(this)
         HunterJoinEvent.getHandlerList().unregister(this)
         HunterQuitEvent.getHandlerList().unregister(this)
+        HunterDeathEvent.getHandlerList()
 
         dimensionScore = null
+        deathsScore = null
 
         super.onDestroy(gameObject)
     }
