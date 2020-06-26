@@ -80,6 +80,10 @@ class ConfigurationComponent (
         config.set(key, value)
     }
 
+    fun <T> writeDefault(key: String, value: T) {
+        config.addDefault(key, value)
+    }
+
     override fun destroy() {
         Game.logger.info("Saving configuration [${name}]...")
         config.save(file)
