@@ -41,6 +41,7 @@ import me.ihdeveloper.thehunters.event.countdown.CountdownStartEvent
 import me.ihdeveloper.thehunters.event.countdown.CountdownTickEvent
 import me.ihdeveloper.thehunters.event.hunter.HunterJoinEvent
 import me.ihdeveloper.thehunters.event.target.TargetDimensionEvent
+import me.ihdeveloper.thehunters.event.target.TargetKillEvent
 import me.ihdeveloper.thehunters.event.target.TargetLostEvent
 import me.ihdeveloper.thehunters.event.target.TargetRecoverEvent
 import me.ihdeveloper.thehunters.event.target.TargetSignalEvent
@@ -70,9 +71,11 @@ const val TYPE_GAMEPLAY_TARGET_CHAT: Short = 315
 
 class TargetComponent (
         override val gameObject: GamePlayer
-) : GameComponentOf<GamePlayer>() {
+) : GameComponentOf<GamePlayer>(), Listener {
 
     override val type = TYPE_GAMEPLAY_TARGET
+
+    var kills = 0
 
     override fun onInit(gameObject: GamePlayer) {
         gameObject.entity.run {
@@ -99,9 +102,15 @@ class TargetComponent (
         }
 
         Bukkit.getPluginManager().callEvent(TargetDimensionEvent(gameObject))
+        Bukkit.getPluginManager().registerEvents(this, plugin())
     }
 
+    @EventHandler
+    fun onKill(event: TargetKillEvent) = kills++
+
     override fun onDestroy(gameObject: GamePlayer) {
+        TargetKillEvent.getHandlerList().unregister(this)
+
         gameObject.entity.run {
             val h = 20.0
             health = h
@@ -254,8 +263,10 @@ class TargetScoreboardComponent (
     override val type = TYPE_GAMEPLAY_TARGET_SCOREBOARD
 
     private var huntersScore: Score? = null
+    private var killsScore: Score? = null
 
     private var lastHuntersCount: Int = -1
+    private var lastKillsCount: Int = -1
 
     override fun onInit(gameObject: GamePlayer) {
         super.onInit(gameObject)
@@ -263,8 +274,9 @@ class TargetScoreboardComponent (
         targets!!.addEntry(gameObject.entity.name)
 
         updateHuntersCount()
+        updateKillsCount()
 
-        sidebar!!.getScore("$COLOR_BOLD$COLOR_YELLOW").score = 2
+        sidebar!!.getScore("$COLOR_BOLD$COLOR_YELLOW").score = 1
 
         Bukkit.getPluginManager().registerEvents(this, plugin())
     }
@@ -281,6 +293,20 @@ class TargetScoreboardComponent (
 
         huntersScore = sidebar!!.getScore("${COLOR_YELLOW}Hunters Left:$COLOR_WHITE $count")
         huntersScore!!.score = 3
+    }
+
+    private fun updateKillsCount() {
+        val count = gameObject.get<TargetComponent>(TYPE_GAMEPLAY_TARGET).kills
+        if (lastKillsCount == count)
+            return
+        lastKillsCount = count
+
+        if (killsScore != null) {
+            scoreboard!!.resetScores(killsScore!!.entry)
+        }
+
+        killsScore = sidebar!!.getScore("${COLOR_YELLOW}Kills:$COLOR_WHITE $count")
+        killsScore!!.score = 2
     }
 
     @EventHandler
