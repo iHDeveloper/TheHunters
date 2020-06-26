@@ -23,19 +23,27 @@
  *
  */
 
-package me.ihdeveloper.thehunters.util
+package me.ihdeveloper.thehunters.event.hunter;
 
-import org.bukkit.ChatColor
+import me.ihdeveloper.thehunters.GamePlayer;
+import me.ihdeveloper.thehunters.event.HunterEvent;
+import org.bukkit.event.HandlerList;
 
-val COLOR_GRAY = ChatColor.GRAY
-val COLOR_GREEN = ChatColor.GREEN
-val COLOR_YELLOW = ChatColor.YELLOW
-val COLOR_GOLD = ChatColor.GOLD
-val COLOR_RED = ChatColor.RED
-val COLOR_BOLD = ChatColor.BOLD
-val COLOR_WHITE = ChatColor.WHITE
-val COLOR_BLUE = ChatColor.BLUE
-val COLOR_PURPLE = ChatColor.LIGHT_PURPLE
-val COLOR_DARK_PURPLE = ChatColor.DARK_PURPLE
-val COLOR_AQUA = ChatColor.AQUA
-val COLOR_CYAN = ChatColor.DARK_AQUA
+public class HunterDeathEvent extends HunterEvent {
+
+    private static HandlerList handlerList = new HandlerList();
+
+    public static HandlerList getHandlerList() {
+        return handlerList;
+    }
+
+    public HunterDeathEvent(GamePlayer hunter) {
+       super(hunter);
+    }
+
+    @Override
+    public HandlerList getHandlers() {
+        return handlerList;
+    }
+
+}
