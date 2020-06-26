@@ -87,16 +87,18 @@ class Game : GameInstance (name, components, children) {
 
         override fun afterInit() {
                 config.run {
+                        writeDefault("world", "the_hunters")
                         writeDefault("worlds.normal", "world")
                         writeDefault("worlds.nether", "world_nether")
                         writeDefault("worlds.the_end", "world_the_end")
-                        writeDefault("world", "the_hunters")
 
                         worldsManager.run {
                                 name = read<String>("world")
                                 normal = read<String>("worlds.normal")
                                 nether = read<String>("worlds.nether")
                                 theEnd = read<String>("worlds.the_end")
+
+                                start()
                         }
                 }
         }

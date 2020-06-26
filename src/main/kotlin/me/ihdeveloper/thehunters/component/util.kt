@@ -72,7 +72,7 @@ class ConfigurationComponent (
     }
 
     fun <T : Any> read(key: String): T? {
-        val value = config.get(key, null) ?: return null
+        val value = config.get(key) ?: return null
         return value as T
     }
 

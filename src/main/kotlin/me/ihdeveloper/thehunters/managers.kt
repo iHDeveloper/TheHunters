@@ -35,12 +35,15 @@ import me.ihdeveloper.thehunters.util.COLOR_GRAY
 import me.ihdeveloper.thehunters.util.COLOR_RED
 import me.ihdeveloper.thehunters.util.COLOR_YELLOW
 import org.bukkit.Bukkit
+import org.bukkit.World
+import org.bukkit.WorldCreator
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerLoginEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.event.server.ServerListPingEvent
+import java.io.File
 import java.util.UUID
 
 class PlayersManager : GameObject(), Listener {
@@ -102,10 +105,14 @@ class WorldsManager : GameObject() {
     var nether: String? = null
     var theEnd: String? = null
 
-    override fun onInit() {
-        Bukkit.getWorlds().forEach {
-            it.isAutoSave = false
-        }
+    private var worldNormal: World? = null
+    private var worldNether: World? = null
+    private var worldTheEnd: World? = null
+
+    fun start() {
+        worldNormal = load(name!!, normal!!)
+        worldNether = load("${name}_nether", nether!!)
+        worldTheEnd = load("${name}_the_end", theEnd!!)
     }
 
     fun resetTime() {
@@ -114,6 +121,35 @@ class WorldsManager : GameObject() {
             it.weatherDuration = 0
             it.isThundering = false
         }
+    }
+
+    private fun load(name: String, source: String): World {
+        val world = Bukkit.getWorld(source) ?: error("We couldn't copy world '$source' because it doesn't exist!")
+
+        Game.logger.info("Loading world/${name}...")
+
+        val creator = WorldCreator(name).apply {
+            copy(world)
+        }
+
+        return Bukkit.createWorld(creator).apply {
+            isAutoSave = false
+            time = 1000
+            weatherDuration = 0
+            isThundering = false
+        }
+    }
+
+    private fun unload(world: World) {
+        Game.logger.info("Deleting world/${name}...")
+        Bukkit.unloadWorld(world, false)
+        world.worldFolder.deleteRecursively()
+    }
+
+    override fun onDestroy() {
+        unload(worldNormal!!)
+        unload(worldNether!!)
+        unload(worldTheEnd!!)
     }
 
 }
