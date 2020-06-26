@@ -230,7 +230,7 @@ class HunterScoreboardComponent (
             scoreboard!!.resetScores(deathsScore!!.entry)
         }
 
-        deathsScore = sidebar!!.getScore("${COLOR_YELLOW}Deaths: ${deaths}")
+        deathsScore = sidebar!!.getScore("${COLOR_YELLOW}Deaths: $COLOR_WHITE$deaths")
         deathsScore!!.score = 2
     }
 
