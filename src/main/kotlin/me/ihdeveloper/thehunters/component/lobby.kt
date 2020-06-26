@@ -92,6 +92,7 @@ class LobbyComponent (
                 append("$COLOR_YELLOW")
                 append("https://github.com/iHDeveloper/TheHunters")
             }.toString())
+            sendMessage("")
         }
 
         Bukkit.getPluginManager().registerEvents(this, plugin())
