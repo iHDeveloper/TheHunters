@@ -104,14 +104,22 @@ open class GameObject (
         children.clear()
     }
 
-    fun reset() {
+    fun reset(
+            filter: (GameComponent) -> Boolean = { true }
+    ) {
+        val toDelete = mutableListOf<Short>()
+
         for (component in components.values) {
+            if (!filter(component))
+                continue
+
             component.destroy()
+            toDelete.add(component.type)
         }
 
         removeAllChildren()
 
-        components.clear()
+        toDelete.forEach { components.remove(it) }
     }
 
     fun init() {
