@@ -534,9 +534,9 @@ class ResetHealthComponent (
 
 }
 
-abstract class DeathComponent (
-        override val gameObject: GamePlayer
-) : GameComponentOf<GamePlayer>(), Listener {
+abstract class DeathComponent : GameComponentOf<GamePlayer>(), Listener {
+
+    abstract override val gameObject: GamePlayer
 
     abstract override val type: Short
 
@@ -553,6 +553,8 @@ abstract class DeathComponent (
             if (health - event.finalDamage > 0.0)
                 return
         }
+
+        onDeath()
 
         if (event.damager.type === EntityType.PLAYER) {
             Game.players[event.damager.uniqueId]?.let { byPlayer(it, event) }
@@ -576,6 +578,8 @@ abstract class DeathComponent (
                 return
         }
 
+        onDeath()
+
         if (event.cause === EntityDamageEvent.DamageCause.BLOCK_EXPLOSION) {
             byBlockExplosion(event.damager)
             return
@@ -593,6 +597,10 @@ abstract class DeathComponent (
 
         if (event.entity.uniqueId !== gameObject.uniqueId)
             return
+
+        // FIX: Doesn't check if the player is about to die or not
+
+        onDeath()
 
         when (event.cause) {
             EntityDamageEvent.DamageCause.CONTACT -> byContact()
@@ -648,4 +656,6 @@ abstract class DeathComponent (
     abstract fun byVoid()
     abstract fun byWither()
     abstract fun unknown(event: EntityDamageEvent)
+
+    open fun onDeath() {}
 }
