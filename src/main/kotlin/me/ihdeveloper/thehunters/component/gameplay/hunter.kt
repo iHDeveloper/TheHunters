@@ -812,6 +812,13 @@ class HunterRespawnComponent (
             }
 
             add(HunterCompassComponent(this))
+
+            get<TitleComponent>(TYPE_TITLE).run {
+                reset()
+                title("$COLOR_GREEN${COLOR_BOLD}You respawned!")
+                subtitle("${COLOR_YELLOW}Try to get the target again!")
+                time(5, 20, 5)
+            }
         }
 
         Bukkit.getPluginManager().callEvent(HunterRespawnEvent(gameObject))
