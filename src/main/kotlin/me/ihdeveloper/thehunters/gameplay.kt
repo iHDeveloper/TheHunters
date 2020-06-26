@@ -58,12 +58,16 @@ import me.ihdeveloper.thehunters.event.player.GameJoinEvent
 import me.ihdeveloper.thehunters.event.player.GameQuitEvent
 import me.ihdeveloper.thehunters.event.target.TargetJoinEvent
 import me.ihdeveloper.thehunters.event.target.TargetQuitEvent
+import me.ihdeveloper.thehunters.util.COLOR_BLUE
+import me.ihdeveloper.thehunters.util.COLOR_RED
+import me.ihdeveloper.thehunters.util.COLOR_YELLOW
 import me.ihdeveloper.thehunters.util.COUNTDOWN_GAMEPLAY_GET_READY
 import me.ihdeveloper.thehunters.util.COUNTDOWN_GAMEPLAY_INTRO
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import java.lang.StringBuilder
 import java.util.UUID
 import kotlin.random.Random
 
@@ -176,10 +180,22 @@ class Gameplay : GameObject(
         if (event.player.uniqueId === target) {
             Bukkit.getPluginManager().callEvent(TargetQuitEvent(event.player))
 
+            broadcast {
+                append("$COLOR_RED")
+                append("[Target] ${event.player.entity.name}")
+                append("$COLOR_YELLOW disconnected.")
+            }
+
             Game.win()
             return
         }
         hunters--
+
+        broadcast {
+            append("$COLOR_BLUE")
+            append("[Hunter] ${event.player.entity.name}")
+            append("$COLOR_YELLOW disconnected.")
+        }
 
         if (hunters > 0)
             return
@@ -218,6 +234,20 @@ class Gameplay : GameObject(
             else
                 teleport(location)
         }
+    }
+
+    private inline fun broadcast(block: StringBuilder.() -> Unit) {
+        val message = StringBuilder().apply {
+            block(this)
+        }.toString()
+
+        // Bukkit.broadcastMessage() is expensive since it broadcast with permission
+        Game.players.values.forEach {
+            it.entity.run {
+                sendMessage(message)
+            }
+        }
+        Bukkit.getConsoleSender().sendMessage(message)
     }
 
     override fun onDestroy() {
