@@ -50,6 +50,7 @@ import me.ihdeveloper.thehunters.component.gameplay.TargetGetReadyComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetScoreboardComponent
 import me.ihdeveloper.thehunters.component.gameplay.TargetSignalComponent
 import me.ihdeveloper.thehunters.event.hunter.HunterJoinEvent
+import me.ihdeveloper.thehunters.event.hunter.HunterRespawnEvent
 import me.ihdeveloper.thehunters.event.player.GameJoinEvent
 import me.ihdeveloper.thehunters.event.player.GameQuitEvent
 import me.ihdeveloper.thehunters.event.target.TargetJoinEvent
@@ -166,6 +167,9 @@ class Gameplay : GameObject(
         }
     }
 
+    @EventHandler
+    fun onHunterRespawn(event: HunterRespawnEvent) = teleportToSpawn(event.hunter)
+
     private fun addHunter(player: GamePlayer, join: Boolean = false) {
         hunters++
         player.run {
@@ -199,6 +203,7 @@ class Gameplay : GameObject(
     override fun onDestroy() {
         GameJoinEvent.getHandlerList().unregister(this)
         GameQuitEvent.getHandlerList().unregister(this)
+        HunterRespawnEvent.getHandlerList().unregister(this)
 
         intro.stop()
         countdown.stop()
