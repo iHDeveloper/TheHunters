@@ -74,6 +74,7 @@ const val TYPE_ACHIEVEMENT: Short = 113
 const val TYPE_CLEAR_POTION_EFFECT: Short = 114
 const val TYPE_RESET_HEALTH: Short = 115
 const val TYPE_SPECTATOR: Short = 116
+const val TYPE_FLY: Short = 117
 
 class ScoreboardComponent (
         override val gameObject: GamePlayer
@@ -691,6 +692,26 @@ class SpectatorComponent (
             gameMode = last
         }
         last = null
+    }
+
+}
+
+class FlyCompoennt (
+        override val gameObject: GamePlayer
+) : GameComponentOf<GamePlayer>() {
+
+    override val type = TYPE_FLY
+
+    override fun onInit(gameObject: GamePlayer) {
+        gameObject.entity.run {
+            isFlying = true
+        }
+    }
+
+    override fun onDestroy(gameObject: GamePlayer) {
+        gameObject.entity.run {
+            isFlying = true
+        }
     }
 
 }
