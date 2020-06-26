@@ -472,17 +472,13 @@ class GameBroadcastComponent : BroadcastComponent(
         filter = {
             val min = 60
 
-            if (it == 45 * min
-                    || it == 30 * min || it == 15 * min
-                    || it == 10 * min || it == 5 * min
-                    || it == 3 * min  || it == 2 * min
-                    || it == 1 * min  || it == 45
-                    || it == 30       || it == 15
-                    || it == 10       || it in 1..5)
-                true
-            else
-                false
-
+               it == 45 * min  || it == 30 * min
+            || it == 15 * min || it == 10 * min
+            || it == 5 * min  || it == 3 * min
+            || it == 2 * min  || it == 1 * min
+            || it == 45       || it == 30
+            || it == 15       || it == 10
+            || it in 1..5
         }
 ) {
 

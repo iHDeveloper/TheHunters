@@ -95,9 +95,7 @@ class DefeatedComponent(
 class TheEndBroadcastComponent : BroadcastComponent(
         id = COUNTDOWN_RESTARTING,
         filter = {
-            if (it == 45 || it == 30 || it == 15 || it == 10 || it in 1..5)
-                true
-            false
+            it == 45 || it == 30 || it == 15 || it == 10 || it in 1..5
         }
 ) {
 
