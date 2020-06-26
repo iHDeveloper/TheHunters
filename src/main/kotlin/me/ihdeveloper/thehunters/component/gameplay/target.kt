@@ -317,10 +317,15 @@ class TargetScoreboardComponent (
 
     // TODO Handle Hunter Quit
 
+    @EventHandler
+    fun onKill(event: TargetKillEvent) = updateKillsCount()
+
     override fun onDestroy(gameObject: GamePlayer) {
         HunterJoinEvent.getHandlerList().unregister(this)
+        TargetKillEvent.getHandlerList().unregister(this)
 
         huntersScore = null
+        killsScore = null
 
         super.onDestroy(gameObject)
     }
