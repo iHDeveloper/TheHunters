@@ -687,7 +687,7 @@ class HunterDeathComponent (
         Bukkit.getPluginManager().callEvent(HunterDeathEvent(gameObject))
     }
 
-    private inline fun broadcast(block: StringBuilder.() -> Unit): String {
+    private inline fun broadcast(block: StringBuilder.() -> Unit) {
         val builder = StringBuilder().apply {
             append(name)
             block(this)
