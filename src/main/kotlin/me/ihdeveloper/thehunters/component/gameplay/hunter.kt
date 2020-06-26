@@ -217,6 +217,8 @@ class HunterSignalComponent (
 
     override val type = TYPE_GAMEPLAY_HUNTER_SIGNAL
 
+    private var died = false
+
     override fun onInit(gameObject: GamePlayer) {
         Bukkit.getPluginManager().registerEvents(this, plugin())
     }
@@ -276,7 +278,8 @@ class HunterSignalComponent (
         val message = "${COLOR_YELLOW}You received a signal from the target!"
         gameObject.entity.sendMessage(message)
 
-        gameObject.get<HunterCompassComponent>(TYPE_GAMEPLAY_HUNTER_COMPASS).found(event.location)
+        if (!died)
+            gameObject.get<HunterCompassComponent>(TYPE_GAMEPLAY_HUNTER_COMPASS).found(event.location)
     }
 
     @EventHandler
@@ -296,11 +299,22 @@ class HunterSignalComponent (
         gameObject.get<HunterCompassComponent>(TYPE_GAMEPLAY_HUNTER_COMPASS).found(location)
     }
 
+    @EventHandler
+    fun respawn(event: HunterRespawnEvent) {
+        if (event.hunter.uniqueId !== gameObject.uniqueId)
+            return
+
+        gameObject.run {
+            get<HunterCompassComponent>(TYPE_GAMEPLAY_HUNTER_COMPASS).lost()
+        }
+    }
+
     override fun onDestroy(gameObject: GamePlayer) {
         TargetDimensionEvent.getHandlerList().unregister(this)
         TargetLostEvent.getHandlerList().unregister(this)
         TargetSignalEvent.getHandlerList().unregister(this)
         TargetRecoverEvent.getHandlerList().unregister(this)
+        HunterRespawnEvent.getHandlerList().unregister(this)
 
         gameObject.entity.compassTarget = gameObject.entity.location
         gameObject.entity.inventory.setItem(COMPASS_SLOT, ItemStack(Material.AIR))
