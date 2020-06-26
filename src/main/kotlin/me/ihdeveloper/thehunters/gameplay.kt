@@ -191,6 +191,8 @@ class Gameplay : GameObject(
     fun onGameQuit(event: GameQuitEvent) {
         if (event.player.uniqueId === target) {
             Bukkit.getPluginManager().callEvent(TargetQuitEvent(event.player))
+
+            Game.win()
             return
         }
         hunters--
