@@ -51,6 +51,7 @@ import me.ihdeveloper.thehunters.util.COLOR_YELLOW
 import me.ihdeveloper.thehunters.util.COUNTDOWN_GAMEPLAY_GET_READY
 import me.ihdeveloper.thehunters.util.COUNTDOWN_GAMEPLAY_INTRO
 import me.ihdeveloper.thehunters.util.COUNTDOWN_RESTARTING
+import me.ihdeveloper.thehunters.util.COUNTDOWN_THE_END
 import org.bukkit.Bukkit
 import org.bukkit.block.Block
 import org.bukkit.entity.Entity
@@ -203,7 +204,8 @@ abstract class GameScoreboardComponent : GameComponentOf<GamePlayer>(), Listener
     fun onGameEventStart(event: CountdownStartEvent) {
         val name = when (event.id) {
             COUNTDOWN_GAMEPLAY_INTRO -> "${COLOR_BLUE}Intro"
-            COUNTDOWN_GAMEPLAY_GET_READY ->"${COLOR_GOLD}Getting Ready"
+            COUNTDOWN_GAMEPLAY_GET_READY -> "${COLOR_GOLD}Getting Ready"
+            COUNTDOWN_THE_END -> "${COLOR_PURPLE}The End"
             COUNTDOWN_RESTARTING -> "${COLOR_RED}Restarting"
             else -> "${COLOR_GRAY}Unknown"
         }

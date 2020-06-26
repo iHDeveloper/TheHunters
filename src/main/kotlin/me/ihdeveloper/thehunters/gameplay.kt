@@ -66,6 +66,7 @@ import me.ihdeveloper.thehunters.util.COLOR_RED
 import me.ihdeveloper.thehunters.util.COLOR_YELLOW
 import me.ihdeveloper.thehunters.util.COUNTDOWN_GAMEPLAY_GET_READY
 import me.ihdeveloper.thehunters.util.COUNTDOWN_GAMEPLAY_INTRO
+import me.ihdeveloper.thehunters.util.COUNTDOWN_THE_END
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.event.EventHandler
@@ -93,13 +94,23 @@ class Gameplay : GameObject(
 
     private val config = ConfigurationComponent("game")
 
-    private val countdown = CountdownComponent(
+    private val end = CountdownComponent(
+            id = COUNTDOWN_THE_END,
+            defaultStart = (20 * 60) * 60,
+            onFinish = {
+                Game.win()
+            }
+    )
+
+    private val gettingReady = CountdownComponent(
             id = COUNTDOWN_GAMEPLAY_GET_READY,
             defaultStart = 20 * 60,
             onFinish = {
                 Game.players.values.forEach { it.remove(TYPE_NO_DAMAGE) }
 
                 Game.unlock()
+
+                end.start()
             }
     )
 
@@ -108,8 +119,8 @@ class Gameplay : GameObject(
             defaultStart = 20 * 5,
             onFinish = {
                 remove(TYPE_COUNTDOWN)
-                add(countdown)
-                countdown.start()
+                add(gettingReady)
+                gettingReady.start()
 
                 Game.players.values.forEach { it.add(NoDamageComponent(it, false)) }
             }
@@ -270,7 +281,7 @@ class Gameplay : GameObject(
         HunterRespawnEvent.getHandlerList().unregister(this)
 
         intro.stop()
-        countdown.stop()
+        gettingReady.stop()
     }
 
 }
