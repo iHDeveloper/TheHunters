@@ -468,7 +468,7 @@ class HunterShoutComponent (
     override fun onInit(gameObject: GamePlayer) {}
 
     fun shout() {
-        seconds = 60
+        seconds = SHOUT_COOLDOWN
 
         task = Bukkit.getScheduler().runTaskTimer(plugin(), this, 0L, 20L)
     }
