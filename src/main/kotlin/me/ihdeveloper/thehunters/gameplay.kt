@@ -29,8 +29,10 @@ import me.ihdeveloper.thehunters.command.GameShoutCommand
 import me.ihdeveloper.thehunters.command.GameSetSpawnCommand
 import me.ihdeveloper.thehunters.component.ConfigurationComponent
 import me.ihdeveloper.thehunters.component.CountdownComponent
+import me.ihdeveloper.thehunters.component.NoDamageComponent
 import me.ihdeveloper.thehunters.component.ScoreboardComponent
 import me.ihdeveloper.thehunters.component.TYPE_COUNTDOWN
+import me.ihdeveloper.thehunters.component.TYPE_NO_DAMAGE
 import me.ihdeveloper.thehunters.component.TitleComponent
 import me.ihdeveloper.thehunters.component.VanishComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterAchievementComponent
@@ -86,6 +88,8 @@ class Gameplay : GameObject(
             id = COUNTDOWN_GAMEPLAY_GET_READY,
             defaultStart = 20 * 60,
             onFinish = {
+                Game.players.values.forEach { it.remove(TYPE_NO_DAMAGE) }
+
                 Game.unlock()
             }
     )
@@ -97,6 +101,8 @@ class Gameplay : GameObject(
                 remove(TYPE_COUNTDOWN)
                 add(countdown)
                 countdown.start()
+
+                Game.players.values.forEach { it.add(NoDamageComponent(it, false)) }
             }
     )
 
