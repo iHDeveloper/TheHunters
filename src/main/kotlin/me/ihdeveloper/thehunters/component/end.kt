@@ -100,64 +100,34 @@ class DefeatedComponent(
 
 }
 
-class TheEndBroadcastComponent() : GameComponent, Listener {
+class TheEndBroadcastComponent : BroadcastComponent(
+        id = COUNTDOWN_RESTARTING,
+        filter = {
+            if (it == 45 || it == 30 || it == 15 || it == 10 || it in 1..5)
+                true
+            false
+        }
+), Listener {
 
     override val type = TYPE_END_BROADCAST
 
-    private var lastSeconds: Int = -1
-
-    override fun init() {
-        Bukkit.getPluginManager().registerEvents(this, plugin())
+    override val onStart: StringBuilder.(Int) -> Unit = {
+        append("$COLOR_YELLOW")
+        append("The game is about to restart in")
+        append("$COLOR_RED $it")
+        append("$COLOR_YELLOW seconds")
     }
 
-    @EventHandler
-    fun onStart(event: CountdownStartEvent) {
-        if (event.id != COUNTDOWN_RESTARTING)
-            return
-
-        broadcast {
-            append("$COLOR_YELLOW")
-            append("The game is about to restart in")
-            append("$COLOR_RED ${event.ticks / 20}")
-            append("$COLOR_YELLOW seconds")
-        }
+    override val onSecond: StringBuilder.(Int) -> Unit = {
+        append("$COLOR_YELLOW")
+        append("Game is restarting in")
+        append("$COLOR_RED $it")
+        append("$COLOR_YELLOW seconds")
     }
 
-    @EventHandler
-    fun onTick(event: CountdownTickEvent) {
-        if (event.id != COUNTDOWN_RESTARTING)
-            return
-
-        val seconds = event.ticks / 20
-
-        if (lastSeconds == seconds)
-            return
-        lastSeconds = seconds
-
-        if (seconds != 45
-                && seconds != 30
-                && seconds != 15
-                && seconds != 10
-                && seconds !in 1..5)
-            return
-
-        broadcast {
-            append("$COLOR_YELLOW")
-            append("Game is restarting in")
-            append("$COLOR_RED $seconds")
-            append("$COLOR_YELLOW seconds")
-        }
-    }
-
-    @EventHandler
-    fun onFinish(event: CountdownFinishEvent) {
-        if (event.id != COUNTDOWN_RESTARTING)
-            return
-
-        broadcast {
-            append("$COLOR_YELLOW")
-            append("Game is restarting...")
-        }
+    override val onFinish: StringBuilder.() -> Unit = {
+        append("$COLOR_YELLOW")
+        append("Game is restarting...")
     }
 
     private inline fun broadcast(block: java.lang.StringBuilder.() -> Unit) {
@@ -172,10 +142,6 @@ class TheEndBroadcastComponent() : GameComponent, Listener {
             }
         }
         Bukkit.getConsoleSender().sendMessage(message)
-    }
-
-    override fun destroy() {
-        CountdownEvent.getHandlerList().unregister(this)
     }
 
 }

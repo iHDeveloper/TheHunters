@@ -28,6 +28,7 @@ package me.ihdeveloper.thehunters.component
 import me.ihdeveloper.thehunters.Game
 import me.ihdeveloper.thehunters.GameComponent
 import me.ihdeveloper.thehunters.GamePlayer
+import me.ihdeveloper.thehunters.event.CountdownEvent
 import me.ihdeveloper.thehunters.event.countdown.CountdownCancelEvent
 import me.ihdeveloper.thehunters.event.countdown.CountdownFinishEvent
 import me.ihdeveloper.thehunters.event.countdown.CountdownStartEvent
@@ -239,4 +240,79 @@ abstract class PlayerCommandComponent (
     }
 
     abstract fun onPlayerExecute(sender: GamePlayer, command: Command?, label: String?, args: Array<out String>?): Boolean
+}
+
+abstract class BroadcastComponent (
+        val id: Byte,
+        val filter: (Int) -> Boolean = { true }
+) : GameComponent, Listener {
+
+    abstract override val type: Short
+
+    abstract val onStart: StringBuilder.(Int) -> Unit
+    abstract val onSecond: StringBuilder.(Int) -> Unit
+    abstract val onFinish: StringBuilder.() -> Unit
+
+    private var lastSeconds: Int = -1
+
+    override fun init() {
+        Bukkit.getPluginManager().registerEvents(this, plugin())
+    }
+
+    @EventHandler
+    fun start(event: CountdownStartEvent) {
+        if (event.id != id)
+            return
+
+        broadcast {
+            onStart(this, event.ticks / 20)
+        }
+    }
+
+    @EventHandler
+    fun tick(event: CountdownTickEvent) {
+        if (event.id != id)
+            return
+
+        val seconds = event.ticks / 20
+
+        if (lastSeconds == seconds)
+            return
+        lastSeconds = seconds
+
+        if (!filter(seconds))
+            return
+
+        broadcast {
+            onSecond(this, seconds)
+        }
+    }
+
+    @EventHandler
+    fun finish(event: CountdownFinishEvent) {
+        if (event.id != id)
+            return
+
+        broadcast {
+            onFinish(this)
+        }
+    }
+
+    private inline fun broadcast(block: java.lang.StringBuilder.() -> Unit) {
+        val message = java.lang.StringBuilder().apply {
+            block(this)
+        }.toString()
+
+        // Bukkit.broadcastMessage() is expensive since it broadcast with permission
+        Game.players.values.forEach {
+            it.entity.run {
+                sendMessage(message)
+            }
+        }
+        Bukkit.getConsoleSender().sendMessage(message)
+    }
+
+    override fun destroy() {
+        CountdownEvent.getHandlerList().unregister(this)
+    }
 }
