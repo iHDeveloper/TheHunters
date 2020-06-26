@@ -28,6 +28,7 @@ package me.ihdeveloper.thehunters
 import me.ihdeveloper.thehunters.component.AdventureComponent
 import me.ihdeveloper.thehunters.component.ClearInventoryComponent
 import me.ihdeveloper.thehunters.component.ClearPotionEffectComponent
+import me.ihdeveloper.thehunters.component.CountdownComponent
 import me.ihdeveloper.thehunters.component.DefeatedComponent
 import me.ihdeveloper.thehunters.component.DisableBlockBreakComponent
 import me.ihdeveloper.thehunters.component.DisableBlockPlaceComponent
@@ -43,10 +44,19 @@ import me.ihdeveloper.thehunters.component.VictoryComponent
 import me.ihdeveloper.thehunters.component.gameplay.TYPE_GAMEPLAY_HUNTER_SCOREBOARD
 import me.ihdeveloper.thehunters.component.gameplay.TYPE_GAMEPLAY_TARGET
 import me.ihdeveloper.thehunters.component.gameplay.TYPE_GAMEPLAY_TARGET_SCOREBOARD
+import me.ihdeveloper.thehunters.util.COUNTDOWN_THE_END
 
 class TheEnd (
         val won: Boolean = false
 ) : GameObject() {
+
+    private val countdown = CountdownComponent(
+            id = COUNTDOWN_THE_END,
+            defaultStart = 20 * 60,
+            onFinish = {
+                // TODO Restart the game
+            }
+    )
 
     override fun onInit() {
         Game.lock()
@@ -87,6 +97,8 @@ class TheEnd (
                 }
             }
         }
+
+        countdown.start()
     }
 
     private fun resetTarget(player: GamePlayer) {

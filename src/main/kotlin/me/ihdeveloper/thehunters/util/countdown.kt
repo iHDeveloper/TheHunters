@@ -28,3 +28,4 @@ package me.ihdeveloper.thehunters.util
 const val COUNTDOWN_LOBBY: Byte = 1
 const val COUNTDOWN_GAMEPLAY_INTRO: Byte = 2
 const val COUNTDOWN_GAMEPLAY_GET_READY: Byte = 3
+const val COUNTDOWN_THE_END: Byte = 4
