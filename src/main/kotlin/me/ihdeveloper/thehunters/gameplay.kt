@@ -36,6 +36,7 @@ import me.ihdeveloper.thehunters.component.TYPE_NO_DAMAGE
 import me.ihdeveloper.thehunters.component.TitleComponent
 import me.ihdeveloper.thehunters.component.VanishComponent
 import me.ihdeveloper.thehunters.component.gameplay.EnderDragonComponent
+import me.ihdeveloper.thehunters.component.gameplay.GameBroadcastComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterAchievementComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterChatComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterCompassComponent
@@ -79,7 +80,8 @@ class Gameplay : GameObject(
         components = listOf(
                 TargetChatComponent(),
                 HunterChatComponent(),
-                EnderDragonComponent()
+                EnderDragonComponent(),
+                GameBroadcastComponent()
         )
 ), Listener {
 

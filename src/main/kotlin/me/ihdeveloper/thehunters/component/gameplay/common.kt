@@ -30,6 +30,7 @@ import me.ihdeveloper.thehunters.Game
 import me.ihdeveloper.thehunters.GameComponent
 import me.ihdeveloper.thehunters.GameComponentOf
 import me.ihdeveloper.thehunters.GamePlayer
+import me.ihdeveloper.thehunters.component.BroadcastComponent
 import me.ihdeveloper.thehunters.component.DeathComponent
 import me.ihdeveloper.thehunters.component.ScoreboardComponent
 import me.ihdeveloper.thehunters.component.TYPE_SCOREBOARD
@@ -68,9 +69,10 @@ import org.bukkit.scoreboard.Objective
 import org.bukkit.scoreboard.Score
 import org.bukkit.scoreboard.Scoreboard
 import org.bukkit.scoreboard.Team
-import java.lang.StringBuilder
+
 
 const val TYPE_GAMEPLAY_ENDER_DRAGON: Short = 300
+const val TYPE_GAMEPLAY_BROADCAST: Short = 301
 
 abstract class GameScoreboardComponent : GameComponentOf<GamePlayer>(), Listener {
 
@@ -461,6 +463,48 @@ class EnderDragonComponent : GameComponent, Listener {
 
     override fun destroy() {
         EntityDeathEvent.getHandlerList().unregister(this)
+    }
+
+}
+
+class GameBroadcastComponent : BroadcastComponent(
+        id = COUNTDOWN_THE_END,
+        filter = {
+            val min = 60
+
+            if (it == 45 * min
+                    || it == 30 * min || it == 15 * min
+                    || it == 10 * min || it == 5 * min
+                    || it == 3 * min  || it == 2 * min
+                    || it == 1 * min  || it == 45
+                    || it == 30       || it == 15
+                    || it == 10       || it in 1..5)
+                true
+            else
+                false
+
+        }
+) {
+
+    override val type = TYPE_GAMEPLAY_BROADCAST
+
+    override val onStart: StringBuilder.(Int) -> Unit = {
+        append("$COLOR_YELLOW")
+        append("The target has")
+        append("$COLOR_RED $it")
+        append("$COLOR_YELLOW seconds to finish the game!")
+    }
+
+    override val onSecond: StringBuilder.(Int) -> Unit = {
+        append("$COLOR_YELLOW")
+        append("The target has")
+        append("$COLOR_RED $it")
+        append("$COLOR_YELLOW seconds left to win!")
+    }
+
+    override val onFinish: StringBuilder.() -> Unit = {
+        append("$COLOR_YELLOW")
+        append("The target failed to finish the game!")
     }
 
 }

@@ -26,22 +26,14 @@
 package me.ihdeveloper.thehunters.component
 
 import me.ihdeveloper.thehunters.Game
-import me.ihdeveloper.thehunters.GameComponent
 import me.ihdeveloper.thehunters.GameComponentOf
 import me.ihdeveloper.thehunters.GamePlayer
-import me.ihdeveloper.thehunters.event.CountdownEvent
-import me.ihdeveloper.thehunters.event.countdown.CountdownFinishEvent
-import me.ihdeveloper.thehunters.event.countdown.CountdownStartEvent
-import me.ihdeveloper.thehunters.event.countdown.CountdownTickEvent
-import me.ihdeveloper.thehunters.plugin
 import me.ihdeveloper.thehunters.util.COLOR_BOLD
 import me.ihdeveloper.thehunters.util.COLOR_GREEN
 import me.ihdeveloper.thehunters.util.COLOR_RED
 import me.ihdeveloper.thehunters.util.COLOR_YELLOW
 import me.ihdeveloper.thehunters.util.COUNTDOWN_RESTARTING
 import org.bukkit.Bukkit
-import org.bukkit.event.EventHandler
-import org.bukkit.event.Listener
 
 const val TYPE_END_VICTORY: Short = 901
 const val TYPE_END_DEFEATED: Short = 902
@@ -107,7 +99,7 @@ class TheEndBroadcastComponent : BroadcastComponent(
                 true
             false
         }
-), Listener {
+) {
 
     override val type = TYPE_END_BROADCAST
 
