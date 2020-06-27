@@ -431,7 +431,7 @@ class TargetDeathComponent (
     override fun byPlayer(killer: GamePlayer, event: EntityDamageByEntityEvent) {
         broadcast {
             append("$COLOR_YELLOW was killed by")
-            append("${COLOR_BLUE}[Hunter] ${killer.entity.name}")
+            append("$COLOR_BLUE [Hunter] ${killer.entity.name}")
         }
     }
 
