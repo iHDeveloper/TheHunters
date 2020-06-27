@@ -38,7 +38,6 @@ import me.ihdeveloper.thehunters.event.CountdownEvent
 import me.ihdeveloper.thehunters.event.countdown.CountdownStartEvent
 import me.ihdeveloper.thehunters.event.countdown.CountdownTickEvent
 import me.ihdeveloper.thehunters.event.player.GameJoinEvent
-import me.ihdeveloper.thehunters.event.player.GameQuitEvent
 import me.ihdeveloper.thehunters.plugin
 import me.ihdeveloper.thehunters.util.COLOR_BLUE
 import me.ihdeveloper.thehunters.util.COLOR_BOLD
@@ -249,11 +248,6 @@ abstract class GameScoreboardComponent : GameComponentOf<GamePlayer>(), Listener
     }
 
     @EventHandler
-    fun onQuit(event: GameQuitEvent) {
-        scoreboard!!.resetScores(event.player.entity.name)
-    }
-
-    @EventHandler
     fun onPlayerDamage(event: EntityDamageEvent) {
         if (event.entityType !== EntityType.PLAYER)
             return
@@ -264,7 +258,6 @@ abstract class GameScoreboardComponent : GameComponentOf<GamePlayer>(), Listener
 
     override fun onDestroy(gameObject: GamePlayer) {
         GameJoinEvent.getHandlerList().unregister(this)
-        GameQuitEvent.getHandlerList().unregister(this)
         CountdownEvent.getHandlerList().unregister(this)
         EntityDamageEvent.getHandlerList().unregister(this)
 
