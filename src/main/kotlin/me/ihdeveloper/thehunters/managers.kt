@@ -75,8 +75,10 @@ class PlayersManager : GameObject(), Listener {
     @EventHandler
     private fun onQuit(event: PlayerQuitEvent) {
         val uniqueId = event.player.uniqueId
+        val gameObject = players[uniqueId]!!
 
-        Bukkit.getPluginManager().callEvent(GameQuitEvent(players[uniqueId]!!))
+        Bukkit.getPluginManager().callEvent(GameQuitEvent(gameObject))
+        gameObject.destroy()
 
         players.remove(uniqueId)
 
