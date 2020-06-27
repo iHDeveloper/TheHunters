@@ -114,6 +114,8 @@ class HunterComponent (
             sendMessage("${COLOR_YELLOW}You're $role")
             sendMessage(goal)
             sendMessage("")
+
+            inventory.addItem(ItemStack(Material.COOKED_BEEF, 10))
         }
 
         Bukkit.getPluginManager().registerEvents(this, plugin())

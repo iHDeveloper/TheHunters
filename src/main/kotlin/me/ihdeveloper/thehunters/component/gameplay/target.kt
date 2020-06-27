@@ -170,6 +170,7 @@ class TargetGetReadyComponent (
             sendMessage(builder.toString())
 
             inventory.addItem(ItemStack(Material.STONE_SWORD, 1))
+            inventory.addItem(ItemStack(Material.COOKED_BEEF, 10))
 
             val speedEffect = PotionEffect(PotionEffectType.SPEED, 60 * 20, 1, false)
             addPotionEffect(speedEffect)
