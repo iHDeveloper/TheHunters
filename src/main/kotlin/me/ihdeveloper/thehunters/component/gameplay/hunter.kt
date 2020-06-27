@@ -116,6 +116,7 @@ class HunterComponent (
             sendMessage(goal)
             sendMessage("")
 
+            inventory.addItem(ItemStack(Material.WOOD_SWORD, 1))
             inventory.addItem(ItemStack(Material.COOKED_BEEF, 10))
         }
 
