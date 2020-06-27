@@ -613,6 +613,9 @@ class HunterRespawnComponent (
     @EventHandler
     fun onDie(event: HunterDeathEvent) {
         gameObject.run {
+            if (event.hunter.uniqueId !== uniqueId)
+                return
+
             remove(TYPE_GAMEPLAY_HUNTER_COMPASS)
 
             entity.run {
