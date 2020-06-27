@@ -151,8 +151,10 @@ class HunterScoreboardComponent (
         super.onInit(gameObject)
 
         Game.players.values.forEach {
-            if (it.has(TYPE_GAMEPLAY_TARGET))
+            if (it.has(TYPE_GAMEPLAY_TARGET)) {
                 targets!!.addEntry(it.entity.name)
+                updateTargetDimension(Dimension.get(it.entity.world), true)
+            }
             else
                 hunters!!.addEntry(it.entity.name)
         }
