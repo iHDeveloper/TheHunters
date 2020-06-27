@@ -579,12 +579,14 @@ class GameWarningComponent (
 
     override fun onInit(gameObject: GamePlayer) {
         gameObject.entity.run {
-            sendMessage("")
-            sendMessage(header)
-            sendMessage("")
-            sendMessage(description)
-            sendMessage(link)
-            sendMessage("")
+            sendMessage(arrayOf(
+                    "\n",
+                    header,
+                    "\n",
+                    description,
+                    link,
+                    "\n"
+            ))
         }
     }
 
