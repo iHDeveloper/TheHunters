@@ -110,6 +110,7 @@ class Game : GameInstance (name, components, children) {
                                 theEnd = read<String>("worlds.the_end")
 
                                 start()
+                                lobby.load()
                         }
                 }
         }

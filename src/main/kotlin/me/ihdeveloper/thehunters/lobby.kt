@@ -68,7 +68,7 @@ class Lobby : GameObject(
         components = listOf(LobbyChatComponent())
 ), Listener {
 
-    private val config = ConfigurationComponent("lobby")
+    private val config = ConfigurationComponent("lobby", true)
 
     init {
         add(config)
@@ -92,6 +92,10 @@ class Lobby : GameObject(
 
     override fun onInit() {
         Bukkit.getPluginManager().registerEvents(this, plugin())
+    }
+
+    fun load() {
+        config.load()
     }
 
     @EventHandler

@@ -53,7 +53,8 @@ const val TYPE_CONFIGURATION: Short = 1
 const val TYPE_COUNTDOWN: Short = 2
 
 class ConfigurationComponent (
-        private val name: String
+        private val name: String,
+        private val lazyLoad: Boolean = false
 ) : GameComponent {
 
     override val type = TYPE_CONFIGURATION
@@ -64,6 +65,11 @@ class ConfigurationComponent (
     override fun init() {
         Game.logger.info("Loading configuration [${name}]...")
 
+        if (!lazyLoad)
+            load()
+    }
+
+    fun load() {
         if (!file.exists()) {
             Game.logger.warning("Configuration [lobby] doesn't exist - Creating empty one...")
             file.createNewFile()
