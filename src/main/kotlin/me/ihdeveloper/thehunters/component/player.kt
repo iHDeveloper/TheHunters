@@ -360,7 +360,14 @@ class ClearInventoryComponent (
     override val type = TYPE_CLEAR_INVENTORY
 
     override fun onInit(gameObject: GamePlayer) {
-        gameObject.entity.inventory.clear()
+        gameObject.entity.run {
+            inventory.clear()
+
+            inventory.helmet = null
+            inventory.chestplate = null
+            inventory.leggings = null
+            inventory.boots = null
+        }
     }
 
     override fun onDestroy(gameObject: GamePlayer) {
