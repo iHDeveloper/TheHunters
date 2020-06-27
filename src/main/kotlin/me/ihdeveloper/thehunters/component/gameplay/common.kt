@@ -37,6 +37,7 @@ import me.ihdeveloper.thehunters.component.TYPE_SCOREBOARD
 import me.ihdeveloper.thehunters.event.CountdownEvent
 import me.ihdeveloper.thehunters.event.countdown.CountdownStartEvent
 import me.ihdeveloper.thehunters.event.countdown.CountdownTickEvent
+import me.ihdeveloper.thehunters.event.hunter.HunterRespawnEvent
 import me.ihdeveloper.thehunters.event.player.GameJoinEvent
 import me.ihdeveloper.thehunters.plugin
 import me.ihdeveloper.thehunters.util.COLOR_BLUE
@@ -255,11 +256,17 @@ abstract class GameScoreboardComponent : GameComponentOf<GamePlayer>(), Listener
         playerList!!.getScore(event.entity.name).score = ((event.entity as Player).health).toInt()
     }
 
+    @EventHandler
+    fun onRespawn(event: HunterRespawnEvent) {
+        playerList!!.getScore(event.hunter.entity.name).score = 20
+    }
+
 
     override fun onDestroy(gameObject: GamePlayer) {
         GameJoinEvent.getHandlerList().unregister(this)
         CountdownEvent.getHandlerList().unregister(this)
         EntityDamageEvent.getHandlerList().unregister(this)
+        HunterRespawnEvent.getHandlerList().unregister(this)
 
         gameEventHeader = null
         gameEventName = null

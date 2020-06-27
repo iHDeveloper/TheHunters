@@ -58,17 +58,25 @@ class TheEnd (
         )
 ) {
 
+    companion object {
+        val restartMessage = StringBuilder().apply {
+            append("$COLOR_YELLOW")
+            append("The game is restarting...")
+        }.toString()
+    }
+
     private val countdown = CountdownComponent(
             id = COUNTDOWN_RESTARTING,
             defaultStart = 20 * 60,
             onFinish = {
-                val message = StringBuilder().apply {
-                    append("$COLOR_YELLOW")
-                    append("The game is restarting...")
-                }.toString()
 
+                val list = mutableListOf<GamePlayer>()
                 Game.players.values.forEach {
-                    it.entity.kickPlayer(message)
+                    list.add(it)
+                }
+
+                list.forEach {
+                    it.entity.kickPlayer(restartMessage)
                 }
 
                 Game.restart()
