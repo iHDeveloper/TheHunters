@@ -56,10 +56,12 @@ import me.ihdeveloper.thehunters.util.COLOR_YELLOW
 import me.ihdeveloper.thehunters.util.COUNTDOWN_GAMEPLAY_GET_READY
 import org.bukkit.Achievement
 import org.bukkit.Bukkit
+import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.player.PlayerChangedWorldEvent
+import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitTask
@@ -166,6 +168,8 @@ class TargetGetReadyComponent (
             }
             sendMessage(" ")
             sendMessage(builder.toString())
+
+            inventory.addItem(ItemStack(Material.STONE_SWORD, 1))
 
             val speedEffect = PotionEffect(PotionEffectType.SPEED, 60 * 20, 1, false)
             addPotionEffect(speedEffect)
