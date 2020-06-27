@@ -659,6 +659,7 @@ abstract class DeathComponent : GameComponentOf<GamePlayer>(), Listener {
 
             afterDeath()
         }
+        event.drops.clear()
 
         event.deathMessage = null
     }
