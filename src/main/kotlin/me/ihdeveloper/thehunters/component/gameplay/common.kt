@@ -532,7 +532,7 @@ class GameBroadcastComponent : BroadcastComponent(
         append("$COLOR_YELLOW")
         append("The target has")
         if (it >= 60) {
-            append("$COLOR_RED $${it / 60}")
+            append("$COLOR_RED ${it / 60}")
             append("$COLOR_YELLOW minutes left to win!")
         } else {
             append("$COLOR_RED $it")
