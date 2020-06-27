@@ -141,7 +141,7 @@ class WorldsManager : GameObject() {
     }
 
     private fun unload(world: World) {
-        Game.logger.info("Deleting world/${name}...")
+        Game.logger.info("Deleting world/${world.name}...")
         Bukkit.unloadWorld(world, false)
         world.worldFolder.deleteRecursively()
     }
