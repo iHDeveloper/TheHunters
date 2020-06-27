@@ -150,6 +150,12 @@ class HunterScoreboardComponent (
     override fun onInit(gameObject: GamePlayer) {
         super.onInit(gameObject)
 
+        Game.players.values.forEach {
+            if (it.has(TYPE_GAMEPLAY_TARGET))
+                targets!!.addEntry(it.entity.name)
+            else
+                hunters!!.addEntry(it.entity.name)
+        }
         hunters!!.addEntry(gameObject.entity.name)
 
         updateTargetDimension(Dimension.UNKNOWN, true)
