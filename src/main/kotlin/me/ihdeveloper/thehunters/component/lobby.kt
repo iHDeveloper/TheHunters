@@ -77,22 +77,6 @@ class LobbyComponent (
             level = 0
             health = 20.0
             maxHealth = 20.0
-
-            sendMessage("")
-            sendMessage(StringBuilder().apply {
-                append("$COLOR_RED")
-                append("This game is under development. So, you may expect bugs on it!")
-            }.toString())
-            sendMessage("")
-            sendMessage(StringBuilder().apply {
-                append("$COLOR_RED")
-                append("Please report any issue with the game in")
-            }.toString())
-            sendMessage(StringBuilder().apply {
-                append("$COLOR_YELLOW")
-                append("https://github.com/iHDeveloper/TheHunters")
-            }.toString())
-            sendMessage("")
         }
 
         Bukkit.getPluginManager().registerEvents(this, plugin())

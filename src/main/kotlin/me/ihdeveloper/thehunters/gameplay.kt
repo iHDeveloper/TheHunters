@@ -37,6 +37,7 @@ import me.ihdeveloper.thehunters.component.TitleComponent
 import me.ihdeveloper.thehunters.component.VanishComponent
 import me.ihdeveloper.thehunters.component.gameplay.EnderDragonComponent
 import me.ihdeveloper.thehunters.component.gameplay.GameBroadcastComponent
+import me.ihdeveloper.thehunters.component.gameplay.GameWarningComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterAchievementComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterChatComponent
 import me.ihdeveloper.thehunters.component.gameplay.HunterCompassComponent
@@ -247,6 +248,7 @@ class Gameplay : GameObject(
         }
 
         if (join) {
+            player.add(GameWarningComponent(player))
             teleportToSpawn(player)
             Bukkit.getPluginManager().callEvent(HunterJoinEvent(player))
         }

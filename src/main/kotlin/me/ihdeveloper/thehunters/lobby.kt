@@ -44,6 +44,7 @@ import me.ihdeveloper.thehunters.component.LobbyScoreboardComponent
 import me.ihdeveloper.thehunters.component.NoDamageComponent
 import me.ihdeveloper.thehunters.component.NoInteractComponent
 import me.ihdeveloper.thehunters.component.ResetHealthComponent
+import me.ihdeveloper.thehunters.component.gameplay.GameWarningComponent
 import me.ihdeveloper.thehunters.event.CountdownEvent
 import me.ihdeveloper.thehunters.event.player.GameJoinEvent
 import me.ihdeveloper.thehunters.event.GamePlayerEvent
@@ -121,6 +122,8 @@ class Lobby : GameObject(
                 this.reset()
                 this.block()
             })
+
+            add(GameWarningComponent(this))
 
             add(LobbyComponent(this))
             add(LobbyScoreboardComponent(this))

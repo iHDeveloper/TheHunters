@@ -77,6 +77,7 @@ import org.bukkit.scoreboard.Team
 
 const val TYPE_GAMEPLAY_ENDER_DRAGON: Short = 300
 const val TYPE_GAMEPLAY_BROADCAST: Short = 301
+const val TYPE_GAMEPLAY_WARNING: Short = 302
 
 abstract class GameScoreboardComponent : GameComponentOf<GamePlayer>(), Listener {
 
@@ -550,5 +551,43 @@ class GameBroadcastComponent : BroadcastComponent(
         append("$COLOR_YELLOW")
         append("The target failed to finish the game!")
     }
+
+}
+
+class GameWarningComponent (
+        override val gameObject: GamePlayer
+) : GameComponentOf<GamePlayer>() {
+
+    companion object {
+        val header = StringBuilder().apply {
+            append("$COLOR_RED")
+            append("This game is under development. So, you may expect bugs on it!")
+        }.toString()
+
+        val description = StringBuilder().apply {
+            append("$COLOR_RED")
+            append("Please report any issue with the game in")
+        }.toString()
+
+        val link = StringBuilder().apply {
+            append("$COLOR_YELLOW")
+            append("https://github.com/iHDeveloper/TheHunters")
+        }.toString()
+    }
+
+    override val type = TYPE_GAMEPLAY_WARNING
+
+    override fun onInit(gameObject: GamePlayer) {
+        gameObject.entity.run {
+            sendMessage("")
+            sendMessage(header)
+            sendMessage("")
+            sendMessage(description)
+            sendMessage(link)
+            sendMessage("")
+        }
+    }
+
+    override fun onDestroy(gameObject: GamePlayer) {}
 
 }
