@@ -125,7 +125,7 @@ class Gameplay : GameObject(
                 add(gettingReady)
                 gettingReady.start()
 
-                Game.players.values.forEach { it.add(NoDamageComponent(it, false)) }
+                Game.players.values.forEach { it.add(NoDamageComponent(it, true)) }
             }
     )
 
