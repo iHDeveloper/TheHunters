@@ -652,6 +652,8 @@ abstract class DeathComponent : GameComponentOf<GamePlayer>(), Listener {
 
             afterDeath()
         }
+
+        event.deathMessage = null
     }
 
     override fun onDestroy(gameObject: GamePlayer) {
