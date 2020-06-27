@@ -313,11 +313,12 @@ class HunterSignalComponent (
             return
         }
 
-        val message = "${COLOR_YELLOW}You received a signal from the target!"
-        gameObject.entity.sendMessage(message)
+        if (!died) {
+            val message = "${COLOR_YELLOW}You received a signal from the target!"
+            gameObject.entity.sendMessage(message)
 
-        if (!died)
             gameObject.get<HunterCompassComponent>(TYPE_GAMEPLAY_HUNTER_COMPASS).found(event.location)
+        }
     }
 
     @EventHandler
@@ -342,9 +343,19 @@ class HunterSignalComponent (
         if (event.hunter.uniqueId !== gameObject.uniqueId)
             return
 
+        died = false
+
         gameObject.run {
             get<HunterCompassComponent>(TYPE_GAMEPLAY_HUNTER_COMPASS).lost()
         }
+    }
+
+    @EventHandler
+    fun death(event: HunterDeathEvent) {
+        if (event.hunter.uniqueId !== gameObject.uniqueId)
+            return
+
+        died = true
     }
 
     override fun onDestroy(gameObject: GamePlayer) {
