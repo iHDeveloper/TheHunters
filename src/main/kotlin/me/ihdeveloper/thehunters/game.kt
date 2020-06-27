@@ -80,12 +80,14 @@ class Game : GameInstance (name, components, children) {
 
                 fun win() {
                         end()
-                        instance.add(TheEnd(true))
+                        instance.theEnd = TheEnd(true)
+                        instance.add(instance.theEnd!!)
                 }
 
                 fun lost() {
                         end()
-                        instance.add(TheEnd(false))
+                        instance.theEnd = TheEnd(false)
+                        instance.add(instance.theEnd!!)
                 }
 
                 private fun end() {
