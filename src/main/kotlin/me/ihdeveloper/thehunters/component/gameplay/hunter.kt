@@ -602,7 +602,8 @@ class HunterRespawnComponent (
                 closeInventory()
 
                 inventory.forEach {
-                    world.dropItemNaturally(location, it)
+                    if (it != null)
+                        world.dropItemNaturally(location, it)
                 }
             }
 
