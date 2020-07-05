@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "me.ihdeveloper"
-version = "0.1"
+version = "0.0"
 
 val server = Server()
 
@@ -193,7 +193,7 @@ tasks {
      */
     register("build-plugin") {
         dependsOn("build-server")
-        dependsOn("shadowJar")
+        dependsOn("build")
 
         doLast {
 
