@@ -1,6 +1,6 @@
 # The Hunters (`V0.0`)
 A Minecraft mini game has a target and 6 hunters.
-The hunters are to kill the target before it reaches the end and kill the ender dragon.
+The hunters goal is to kill the target before it reaches the end and kill the ender dragon.
 
 The game is currently in **BETA** state and runs only in `Spigot/Craftbukkit 1.8.8` **only**.
 
