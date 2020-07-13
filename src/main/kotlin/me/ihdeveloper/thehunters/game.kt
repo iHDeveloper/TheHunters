@@ -40,7 +40,7 @@ private val config = ConfigurationComponent("config")
 
 private const val name = "TheHunters"
 private val components = listOf<GameComponent>(config)
-private val children = listOf(
+private val children = listOf<GameObject>(
         loginManager,
         worldsManager,
         playersManager,

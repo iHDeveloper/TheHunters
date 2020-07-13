@@ -35,15 +35,17 @@ import me.ihdeveloper.thehunters.util.COLOR_GRAY
 import me.ihdeveloper.thehunters.util.COLOR_RED
 import me.ihdeveloper.thehunters.util.COLOR_YELLOW
 import org.bukkit.Bukkit
+import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.WorldCreator
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerLoginEvent
+import org.bukkit.event.player.PlayerPortalEvent
 import org.bukkit.event.player.PlayerQuitEvent
+import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.event.server.ServerListPingEvent
-import java.io.File
 import java.util.UUID
 
 class PlayersManager : GameObject(), Listener {
@@ -99,7 +101,7 @@ class PlayersManager : GameObject(), Listener {
 
 }
 
-class WorldsManager : GameObject() {
+class WorldsManager : GameObject(), Listener {
 
     var name: String? = null
 
@@ -111,7 +113,12 @@ class WorldsManager : GameObject() {
     private var worldNether: World? = null
     private var worldTheEnd: World? = null
 
+    // FIXME: It updates
+    private val normalPortals = mutableMapOf<Location, Location>()
+
     fun start() {
+        Bukkit.getPluginManager().registerEvents(this, plugin())
+
         worldNormal = load(name!!, normal!!)
         worldNether = load("${name}_nether", nether!!)
         worldTheEnd = load("${name}_the_end", theEnd!!)
@@ -122,6 +129,31 @@ class WorldsManager : GameObject() {
             it.time = 1000
             it.weatherDuration = 0
             it.isThundering = false
+        }
+    }
+
+    @EventHandler
+    fun onPortalTeleport(event: PlayerPortalEvent) {
+        if (event.cause !== PlayerTeleportEvent.TeleportCause.NETHER_PORTAL
+            && event.cause !== PlayerTeleportEvent.TeleportCause.END_PORTAL)
+            return
+
+        val source = event.from.world
+        when (source.environment) {
+            World.Environment.NORMAL -> {
+                event.to.world = worldNether
+                normalPortals[event.to] = event.from
+            }
+            World.Environment.NETHER -> {
+                event.to = event.from.clone().apply {
+                    world = worldNormal
+                }
+            }
+            World.Environment.THE_END -> {
+                event.to = event.from.clone().apply {
+                    world = worldNormal
+                }
+            }
         }
     }
 
@@ -152,6 +184,8 @@ class WorldsManager : GameObject() {
         unload(worldNormal!!)
         unload(worldNether!!)
         unload(worldTheEnd!!)
+
+        PlayerPortalEvent.getHandlerList().unregister(this)
     }
 
 }
