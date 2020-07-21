@@ -109,7 +109,7 @@ class WorldsManager : GameObject(), Listener {
     var nether: String? = null
     var theEnd: String? = null
 
-    private var worldNormal: World? = null
+    var worldNormal: World? = null
     private var worldNether: World? = null
     private var worldTheEnd: World? = null
 

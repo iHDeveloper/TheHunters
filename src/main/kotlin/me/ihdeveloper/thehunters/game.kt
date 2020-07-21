@@ -28,6 +28,7 @@ package me.ihdeveloper.thehunters
 import me.ihdeveloper.thehunters.component.ConfigurationComponent
 import net.minecraft.server.v1_8_R3.DedicatedServer
 import org.bukkit.Bukkit
+import org.bukkit.World
 import java.util.UUID
 
 private val playersManager = PlayersManager()
@@ -67,6 +68,7 @@ class Game : GameInstance (name, components, children) {
                 val players: Map<UUID, GamePlayer> get() = playersManager.players
                 val count: Int get() = playersManager.count
                 val max: Int get() = Bukkit.getMaxPlayers()
+                val worldNormal: World? get() = worldsManager.worldNormal
 
                 fun start() {
                         lobby.destroy()

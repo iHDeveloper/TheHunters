@@ -104,9 +104,16 @@ class Lobby : GameObject(
         player.entity.run {
             val location = config.read<Location>("location")
 
-            if (location == null)
+            if (location == null) {
                 Game.logger.warning("The lobby spawn location wasn't set to use it ( Use /setlobbyspawn )")
-            else
+
+                // If the game doesn't have a lobby location.
+                // We just teleport the players with the same location
+                // But, different worlds
+                teleport(this.location.apply {
+                    world = Game.worldNormal
+                })
+            }  else
                 teleport(location)
         }
 
