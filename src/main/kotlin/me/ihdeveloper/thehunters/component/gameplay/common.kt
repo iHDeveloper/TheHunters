@@ -268,6 +268,7 @@ abstract class GameScoreboardComponent : GameComponentOf<GamePlayer>(), Listener
     override fun run() {
         for (player in Bukkit.getOnlinePlayers()) {
             belowName!!.getScore(player.name).score = player.health.toInt()
+            playerList!!.getScore(player.name).score = player.health.toInt()
         }
     }
 
