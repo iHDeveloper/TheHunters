@@ -36,6 +36,7 @@ import me.ihdeveloper.thehunters.util.COLOR_RED
 import me.ihdeveloper.thehunters.util.COLOR_YELLOW
 import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.World
 import org.bukkit.WorldCreator
 import org.bukkit.event.EventHandler
@@ -46,7 +47,8 @@ import org.bukkit.event.player.PlayerPortalEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.event.server.ServerListPingEvent
-import java.util.UUID
+import org.bukkit.util.Vector
+import java.util.*
 
 class PlayersManager : GameObject(), Listener {
 
@@ -113,9 +115,6 @@ class WorldsManager : GameObject(), Listener {
     private var worldNether: World? = null
     private var worldTheEnd: World? = null
 
-    // FIXME: It updates
-    private val normalPortals = mutableMapOf<Location, Location>()
-
     fun start() {
         Bukkit.getPluginManager().registerEvents(this, plugin())
 
@@ -141,18 +140,66 @@ class WorldsManager : GameObject(), Listener {
         val source = event.from.world
         when (source.environment) {
             World.Environment.NORMAL -> {
-                event.to.world = worldNether
-                normalPortals[event.to] = event.from
+                if (event.cause === PlayerTeleportEvent.TeleportCause.NETHER_PORTAL) {
+                    event.run {
+                        useTravelAgent(true)
+                        portalTravelAgent.canCreatePortal = true
+                    }
+
+                    /* When the player is teleporting to the nether */
+                    val portalLocation = event.from.clone().apply {
+                        world = worldNether
+                        x = blockX / 8.0
+                        z = blockZ / 8.0
+                    }
+
+                    event.to = event.run {
+                        portalTravelAgent.findOrCreate(portalLocation)
+                    }
+                } else if (event.cause === PlayerTeleportEvent.TeleportCause.END_PORTAL) {
+                    /* Obsidian platform location (aka spawn location) */
+                    val obsidianPlatformLocation = Location(worldTheEnd, 100.0, 49.0, 0.0).apply {
+                        /* Sets the direction to WEST */
+                        direction = Vector(-1, 0, 0)
+                    }
+
+                    /* Build the obsidian platform */
+                    for (x in 98..102) {
+                        for (z in -2..2) {
+                            worldTheEnd!!.getBlockAt(x, 48, z).type = Material.OBSIDIAN
+
+                            /* Make sure the player spawns in clear area */
+                            for (y in 49..51) {
+                                val block = worldTheEnd!!.getBlockAt(x, y, z)
+
+                                if (block.type !== Material.AIR) {
+                                    block.type = Material.AIR
+                                }
+                            }
+                        }
+                    }
+
+                    /* Sets the location to the obsidian platform spawn location */
+                    event.to = obsidianPlatformLocation
+                }
             }
             World.Environment.NETHER -> {
-                event.to = event.from.clone().apply {
+                val portalLocation = event.from.clone().apply {
                     world = worldNormal
+                    x = blockX * 8.0
+                    z = blockZ * 8.0
+                }
+
+                event.to = event.run {
+                    portalTravelAgent.findOrCreate(portalLocation)
                 }
             }
             World.Environment.THE_END -> {
-                event.to = event.from.clone().apply {
-                    world = worldNormal
-                }
+                event.to = worldNormal!!.spawnLocation
+            }
+            null -> {
+                /* That's going to be a weird error to encounter */
+                error("A weird has just occurred (aka unexpected error)")
             }
         }
     }
