@@ -61,7 +61,7 @@ class VictoryComponent (
                 if (target)
                     append("You proved that you can't be hunted!")
                 else
-                    append("Good hunt!")
+                    append("Good hunt! You defeated the target \\o/")
             }.toString())
             time(10, 60, 10)
         }
