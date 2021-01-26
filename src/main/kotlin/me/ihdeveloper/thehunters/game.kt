@@ -108,10 +108,10 @@ class Game : GameInstance (name, components, children) {
                         writeDefault("worlds.the_end", "world_the_end")
 
                         worldsManager.run {
-                                name = read<String>("world")
-                                normal = read<String>("worlds.normal")
-                                nether = read<String>("worlds.nether")
-                                theEnd = read<String>("worlds.the_end")
+                                name = read("world")
+                                normal = read("worlds.normal")
+                                nether = read("worlds.nether")
+                                theEnd = read("worlds.the_end")
 
                                 start()
                                 lobby.load()

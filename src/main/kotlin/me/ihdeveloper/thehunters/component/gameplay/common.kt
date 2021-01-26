@@ -79,7 +79,7 @@ const val TYPE_GAMEPLAY_ENDER_DRAGON: Short = 300
 const val TYPE_GAMEPLAY_BROADCAST: Short = 301
 const val TYPE_GAMEPLAY_WARNING: Short = 302
 
-abstract class GameScoreboardComponent : GameComponentOf<GamePlayer>(), Listener {
+abstract class GameScoreboardComponent : GameComponentOf<GamePlayer>(), Listener, Runnable {
 
     abstract override val gameObject: GamePlayer
 
@@ -102,6 +102,8 @@ abstract class GameScoreboardComponent : GameComponentOf<GamePlayer>(), Listener
 
     private var gameEventTimer: Score? = null
     private var lastGameEventSeconds = -1
+
+    private var updateHealthTaskId: Int = -1
 
     override fun onInit(gameObject: GamePlayer) {
         scoreboard = gameObject.get<ScoreboardComponent>(TYPE_SCOREBOARD).scoreboard
@@ -140,6 +142,8 @@ abstract class GameScoreboardComponent : GameComponentOf<GamePlayer>(), Listener
             belowName!!.displaySlot = DisplaySlot.BELOW_NAME
             belowName!!.displayName = "${COLOR_RED}♥"
         }
+
+        updateHealthTaskId = Bukkit.getScheduler().runTaskTimer(plugin(), this, 20L, 10L).taskId
 
         playerList = scoreboard!!.getObjective(DisplaySlot.PLAYER_LIST)
         if (playerList == null) {
@@ -261,6 +265,11 @@ abstract class GameScoreboardComponent : GameComponentOf<GamePlayer>(), Listener
         playerList!!.getScore(event.hunter.entity.name).score = 20
     }
 
+    override fun run() {
+        for (player in Bukkit.getOnlinePlayers()) {
+            belowName!!.getScore(player.name).score = player.health.toInt()
+        }
+    }
 
     override fun onDestroy(gameObject: GamePlayer) {
         GameJoinEvent.getHandlerList().unregister(this)
@@ -280,6 +289,9 @@ abstract class GameScoreboardComponent : GameComponentOf<GamePlayer>(), Listener
 
         sidebar!!.unregister()
         sidebar = null
+
+        if (updateHealthTaskId != -1)
+            Bukkit.getScheduler().cancelTask(updateHealthTaskId)
 
         scoreboard = null
     }
