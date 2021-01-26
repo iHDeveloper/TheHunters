@@ -200,7 +200,7 @@ class Lobby : GameObject(
             || seconds == 10
             || (seconds in 1..5) ) {
             val builder = StringBuilder()
-            builder.append("${COLOR_YELLOW}Game starting in ")
+            builder.append("${COLOR_YELLOW}Game is starting in ")
             builder.append("$COLOR_RED")
             builder.append(seconds)
             builder.append(" ${COLOR_YELLOW}seconds")
