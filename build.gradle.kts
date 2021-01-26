@@ -35,7 +35,7 @@ val buildTools = BuildTools(
 
 allprojects {
     group = "me.ihdeveloper"
-    version = "0.3"
+    version = "0.3.1"
 
     if (project != rootProject) {
         apply(plugin = "java")
@@ -58,8 +58,6 @@ allprojects {
         val stdlib = kotlin("stdlib-jdk8")
 
         if (project == rootProject) {
-            compileOnly(stdlib)
-        } else {
             implementation(stdlib)
         }
 

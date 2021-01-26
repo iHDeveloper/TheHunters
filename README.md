@@ -1,4 +1,4 @@
-# The Hunters (`V0.3`) - [Spigot](https://www.spigotmc.org/resources/the-hunters.81065/)
+# The Hunters (`V0.3.1`) - [Spigot](https://www.spigotmc.org/resources/the-hunters.81065/)
 
 A Minecraft mini-game has a target and 6 hunters.
 The hunter's goal is to kill the target before it reaches the end and kills the ender dragon.
