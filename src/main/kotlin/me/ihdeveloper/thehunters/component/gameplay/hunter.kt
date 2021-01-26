@@ -62,6 +62,7 @@ import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageByEntityEvent
@@ -116,11 +117,15 @@ class HunterComponent (
             sendMessage(goal)
             sendMessage("")
 
-            inventory.addItem(ItemStack(Material.WOOD_SWORD, 1))
-            inventory.addItem(ItemStack(Material.COOKED_BEEF, 10))
+            addSpawnItems()
         }
 
         Bukkit.getPluginManager().registerEvents(this, plugin())
+    }
+
+    @EventHandler
+    fun onRespawn(event: HunterRespawnEvent) {
+        gameObject.entity.addSpawnItems()
     }
 
     @EventHandler
@@ -133,8 +138,13 @@ class HunterComponent (
 
     override fun onDestroy(gameObject: GamePlayer) {
         HunterDeathEvent.getHandlerList().unregister(this)
+        HunterRespawnEvent.getHandlerList().unregister(this)
     }
 
+    private fun Player.addSpawnItems() {
+        inventory.addItem(ItemStack(Material.WOOD_SWORD, 1))
+        inventory.addItem(ItemStack(Material.COOKED_BEEF, 10))
+    }
 }
 
 class HunterScoreboardComponent (
