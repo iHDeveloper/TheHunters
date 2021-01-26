@@ -1,18 +1,21 @@
 import de.undercouch.gradle.tasks.download.Download
 import java.io.ByteArrayInputStream
 import java.nio.charset.StandardCharsets
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     java
-    kotlin("jvm") version "1.3.72"
+    kotlin("jvm") version "1.4.21"
     id ("de.undercouch.download") version "4.0.4"
     id ("com.github.johnrengelman.shadow") version "5.2.0"
 }
 
-group = "me.ihdeveloper"
-version = "0.1"
-
-val server = Server()
+val server = Server(
+        /**
+         * Directory of the server
+         */
+        dir = File("${rootProject.projectDir}/server")
+)
 
 val buildTools = BuildTools(
 
@@ -21,52 +24,111 @@ val buildTools = BuildTools(
 
         // Spigot = true
         // Craftbukkit = false
-        useSpigot = true
+        useSpigot = true,
+
+        // Use local cached dependency (default = false)
+        useLocalDependency = true,
+
+        // The version of the built local dependency
+        localDependencyVersion = "1.8.8-R0.1-SNAPSHOT"
 )
 
-repositories {
-    mavenCentral()
-}
+allprojects {
+    group = "com.example"
+    version = "0.1"
 
-dependencies {
-    // Include the server jar source
-    compileOnly(files(buildTools.serverJar.absolutePath))
-
-    // Kotlin standard library
-    implementation(kotlin("stdlib-jdk8"))
-
-    testCompileOnly("junit", "junit", "4.12")
-}
-
-configure<JavaPluginConvention> {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-}
-
-tasks {
-
-    /**
-     * Delete the server after the gradle clean task is done
-     */
-    getByName("clean").doLast {
-        // Delete the server folder
-        server.delete()
+    if (project != rootProject) {
+        apply(plugin = "java")
+        apply(plugin = "kotlin")
+        apply(plugin = "de.undercouch.download")
+        apply(plugin = "com.github.johnrengelman.shadow")
     }
 
-    /**
-     * Overwrite the build task to put the compiled jar into the build folder instead of build/libs
-     */
-    build {
-        dependsOn("shadowJar")
+    val compileKotlin: KotlinCompile by tasks
+    compileKotlin.kotlinOptions {
+        languageVersion = "1.4"
+    }
 
-        // Copy the compiled plugin jar from build/libs to build/
-        doLast {
-            copy {
-                val libsDir = buildTools.libsDir
-                from(libsDir)
-                into(libsDir.parent)
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+
+    dependencies {
+        val stdlib = kotlin("stdlib-jdk8")
+
+        if (project == rootProject) {
+            compileOnly(stdlib)
+        } else {
+            implementation(stdlib)
+        }
+
+        // Include the server jar source
+        if (buildTools.useLocalDependency && buildTools.localDependencyVersion != null) {
+            compileOnly("org.spigotmc:spigot:${buildTools.localDependencyVersion}")
+        } else {
+            if (server.jar.exists()) {
+                compileOnly(files(server.jar.absolutePath))
+            } else if (buildTools.serverJar.exists()) {
+                compileOnly(files(buildTools.serverJar.absolutePath))
+            }
+        }
+
+        testCompileOnly("junit", "junit", "4.12")
+    }
+
+    configure<JavaPluginConvention> {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    tasks {
+        /**
+         * Overwrite the build task to put the compiled jar into the build folder instead of build/libs
+         */
+        build {
+            dependsOn("shadowJar")
+
+            // Copy the compiled plugin jar from build/libs to build/
+            doLast {
+                copy {
+                    val libsDir = File("${project.buildDir}/libs")
+                    from(libsDir)
+                    into(libsDir.parent)
+                }
+            }
+        }
+
+        shadowJar {
+            from("LICENSE")
+
+            val name = "${archiveBaseName.get()}-${archiveVersion.get()}.${archiveExtension.get()}"
+            archiveFileName.set(name)
+        }
+
+        /**
+         * Build the plugin for the server
+         */
+        register("build-plugin") {
+            dependsOn("build")
+            if (project == rootProject) {
+                subprojects.forEach { dependsOn(":${it.name}:build-plugin") }
+            }
+
+            doLast {
+
+                // Copy generated plugin jar into server plugins folder
+                copy {
+                    from(project.buildDir)
+                    into(server.plugins)
+                }
+
+                logger.lifecycle("Built! plugins/${shadowJar.get().archiveFileName.get()}")
             }
         }
     }
+}
+
+tasks {
 
     /**
      *  Setup the workspace to develop the plugin
@@ -82,7 +144,7 @@ tasks {
      */
     register<Download>("download-build-tools") {
         onlyIf {
-            !buildTools.file.exists()
+            !buildTools.useLocalDependency && !buildTools.file.exists() && !server.jar.exists()
         }
 
         val temp = buildTools.buildDir
@@ -109,7 +171,7 @@ tasks {
         dependsOn("download-build-tools")
 
         onlyIf {
-            !buildTools.serverJar.exists()
+            !buildTools.useLocalDependency && !server.jar.exists()
         }
 
         doLast {
@@ -133,7 +195,7 @@ tasks {
         dependsOn("run-build-tools")
 
         onlyIf {
-            !server.exists
+            !buildTools.useLocalDependency && !server.exists
         }
 
         server.mkdir()
@@ -142,9 +204,9 @@ tasks {
             // Print the EULA to the user
             printEULA()
 
-            // Wait for 10 seconds to realise the message
+            // Wait for 2 seconds to realise the message
             try {
-                Thread.sleep(10 * 1000)
+                Thread.sleep(2 * 1000)
             } catch (e: Exception) {}
 
             // Since the process didn't stop
@@ -189,32 +251,13 @@ tasks {
     }
 
     /**
-     * Build the plugin for the server
-     */
-    register("build-plugin") {
-        dependsOn("build-server")
-        dependsOn("build")
-
-        doLast {
-
-            // Copy generated plugin jar into server plugins folder
-            copy {
-                from(buildTools.libsDir)
-                into(server.plugins)
-                rename {
-                    "${rootProject.name}.jar"
-                }
-            }
-        }
-    }
-
-    /**
      * Run the server with the plugin on it
      */
     register("run") {
         dependsOn("build-plugin")
 
         doLast {
+
             printIntro()
             logger.lifecycle("> Starting the server...")
             logger.lifecycle("")
@@ -230,15 +273,6 @@ tasks {
             }
         }
     }
-
-    /**
-     * Configure the generated shadow jar
-     */
-    shadowJar {
-        val name = "${archiveBaseName.get()}-${archiveVersion.get()}.${archiveExtension.get()}"
-        archiveFileName.set(name)
-    }
-
 }
 
 /**
@@ -296,11 +330,12 @@ fun printIntro() {
 
 class BuildTools (
         val minecraftVersion: String,
-        val useSpigot: Boolean
+        val useSpigot: Boolean,
+        val useLocalDependency: Boolean,
+        val localDependencyVersion: String? = null
 ) {
     val buildDir = File(".build-tools")
     val file = File(buildDir, "build-tools.jar")
-    val libsDir = File("build/libs/")
 
     val serverJar = if (useSpigot) {
         File(buildDir, "spigot-${minecraftVersion}.jar")
@@ -312,12 +347,9 @@ class BuildTools (
 /**
  * Help making the server and structuring it
  */
-class Server {
-    /**
-     * Directory of the server
-     */
-    val dir = File("server")
-
+class Server(
+        val dir: File = File("server")
+) {
     /**
      * Plugins of the sever
      */
