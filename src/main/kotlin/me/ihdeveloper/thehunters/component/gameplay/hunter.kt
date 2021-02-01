@@ -125,6 +125,9 @@ class HunterComponent (
 
     @EventHandler
     fun onRespawn(event: HunterRespawnEvent) {
+        if (event.hunter.uniqueId !== gameObject.uniqueId)
+            return
+
         gameObject.entity.addSpawnItems()
     }
 
