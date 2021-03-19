@@ -118,7 +118,7 @@ allprojects {
 
                 // Copy generated plugin jar into server plugins folder
                 copy {
-                    from(project.buildDir)
+                    from(File(project.buildDir, "libs"))
                     into(server.plugins)
                 }
 
