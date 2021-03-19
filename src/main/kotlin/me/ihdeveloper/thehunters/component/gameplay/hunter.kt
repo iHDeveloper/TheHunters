@@ -199,7 +199,7 @@ class HunterScoreboardComponent (
     fun onTargetDimension(event: TargetDimensionEvent) = updateTargetDimension(event.dimension)
 
     @EventHandler
-    fun onTargetLost(event: TargetLostEvent) = updateTargetDimension(Dimension.UNKNOWN)
+    fun onTargetLost(@Suppress("UNUSED_PARAMETER") event: TargetLostEvent) = updateTargetDimension(Dimension.UNKNOWN)
 
     @EventHandler
     fun onTargetRecover(event: TargetRecoverEvent) = updateTargetDimension(event.dimension)

@@ -10,14 +10,16 @@ plugins {
     id ("com.github.johnrengelman.shadow") version "5.2.0"
 }
 
-val server = Server(
+val useLocalDependency: String by project
+
+internal val server = Server(
         /**
          * Directory of the server
          */
         dir = File("${rootProject.projectDir}/server")
 )
 
-val buildTools = BuildTools(
+internal val buildTools = BuildTools(
 
         // Server Version
         minecraftVersion = "1.8.8",
@@ -27,7 +29,7 @@ val buildTools = BuildTools(
         useSpigot = true,
 
         // Use local cached dependency (default = false)
-        useLocalDependency = true,
+        useLocalDependency = if (project.hasProperty("useLocalDependency")) useLocalDependency.toBoolean() else true,
 
         // The version of the built local dependency
         localDependencyVersion = "1.8.8-R0.1-SNAPSHOT"
@@ -172,7 +174,7 @@ tasks {
         dependsOn("download-build-tools")
 
         onlyIf {
-            !buildTools.useLocalDependency && !server.jar.exists()
+            !buildTools.useLocalDependency && (!server.jar.exists() && !buildTools.serverJar.exists())
         }
 
         doLast {
@@ -329,7 +331,7 @@ fun printIntro() {
     }
 }
 
-class BuildTools (
+internal class BuildTools (
         val minecraftVersion: String,
         val useSpigot: Boolean,
         val useLocalDependency: Boolean,
@@ -348,7 +350,7 @@ class BuildTools (
 /**
  * Help making the server and structuring it
  */
-class Server(
+internal class Server(
         val dir: File = File("server")
 ) {
     /**
