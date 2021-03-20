@@ -27,24 +27,29 @@ package me.ihdeveloper.thehunters
 
 import org.bukkit.plugin.java.JavaPlugin
 
-private var _plugin: JavaPlugin? = null
+private var plugin: JavaPlugin? = null
 
+/**
+ * The main class for the plugin
+ */
+@Suppress("UNUSED")
 class Main : GameEntryPoint<Game>(Game()) {
 
     init {
-        _plugin = this
+        plugin = this
 
         dataFolder.mkdir()
+        saveDefaultConfig()
     }
 
     override fun onDisable() {
         super.onDisable()
 
-        _plugin = null
+        plugin = null
     }
 
 }
 
 fun plugin(): JavaPlugin {
-    return _plugin!!
+    return plugin!!
 }

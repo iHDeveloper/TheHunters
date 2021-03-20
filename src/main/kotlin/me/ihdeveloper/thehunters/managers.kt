@@ -115,12 +115,22 @@ class WorldsManager : GameObject(), Listener {
     private var worldNether: World? = null
     private var worldTheEnd: World? = null
 
+    private var disableCopyWorlds: Boolean = false
+
     fun start() {
         Bukkit.getPluginManager().registerEvents(this, plugin())
 
-        worldNormal = load(name!!, normal!!)
-        worldNether = load("${name}_nether", nether!!)
-        worldTheEnd = load("${name}_the_end", theEnd!!)
+        if (disableCopyWorlds) {
+            Game.logger.warning("WORLDS ARE NOT BEING COPIED!! This means the worlds aren't being reset after game ends.")
+            Game.logger.warning("Disable the option 'disable-copy-worlds' in config.yml to hide this warning")
+            worldNormal = Bukkit.getWorld(normal)
+            worldNether = Bukkit.getWorld(nether)
+            worldTheEnd = Bukkit.getWorld(theEnd)
+        } else {
+            worldNormal = load(name!!, normal!!)
+            worldNether = load("${name}_nether", nether!!)
+            worldTheEnd = load("${name}_the_end", theEnd!!)
+        }
     }
 
     fun resetTime() {
@@ -132,6 +142,7 @@ class WorldsManager : GameObject(), Listener {
     }
 
     @EventHandler
+    @Suppress("UNUSED")
     fun onPortalTeleport(event: PlayerPortalEvent) {
         if (event.cause !== PlayerTeleportEvent.TeleportCause.NETHER_PORTAL
             && event.cause !== PlayerTeleportEvent.TeleportCause.END_PORTAL)
@@ -228,9 +239,12 @@ class WorldsManager : GameObject(), Listener {
     }
 
     override fun onDestroy() {
-        unload(worldNormal!!)
-        unload(worldNether!!)
-        unload(worldTheEnd!!)
+
+        if (!disableCopyWorlds) {
+            unload(worldNormal!!)
+            unload(worldNether!!)
+            unload(worldTheEnd!!)
+        }
 
         PlayerPortalEvent.getHandlerList().unregister(this)
     }
