@@ -111,11 +111,12 @@ class WorldsManager : GameObject(), Listener {
     var nether: String? = null
     var theEnd: String? = null
 
+    /* Developer Options */
+    var disableCopyWorlds: Boolean = false
+
     var worldNormal: World? = null
     private var worldNether: World? = null
     private var worldTheEnd: World? = null
-
-    private var disableCopyWorlds: Boolean = false
 
     fun start() {
         Bukkit.getPluginManager().registerEvents(this, plugin())

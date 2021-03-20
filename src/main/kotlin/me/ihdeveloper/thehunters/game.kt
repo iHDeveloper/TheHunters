@@ -102,16 +102,19 @@ class Game : GameInstance (name, components, children) {
 
         override fun afterInit() {
                 config.run {
-                        writeDefault("world", "the_hunters")
+                        writeDefault("world-name", "the_hunters")
                         writeDefault("worlds.normal", "world")
                         writeDefault("worlds.nether", "world_nether")
                         writeDefault("worlds.the_end", "world_the_end")
 
                         worldsManager.run {
-                                name = read("world")
+                                name = read("world-name")
                                 normal = read("worlds.normal")
                                 nether = read("worlds.nether")
                                 theEnd = read("worlds.the_end")
+
+                                // Developer Options
+                                disableCopyWorlds = read("disable-copy-worlds") ?: false
 
                                 start()
                                 lobby.load()

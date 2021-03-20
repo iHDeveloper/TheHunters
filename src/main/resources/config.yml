@@ -1,2 +1,10 @@
+# Copy World Options
+world-prefix: the_hunters
+
+worlds:
+  normal: world
+  nether: world_nether
+  the_end: world_the_end
+
 # Developer Options
 disable-copy-worlds: false
