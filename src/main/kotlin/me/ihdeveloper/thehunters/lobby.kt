@@ -70,6 +70,7 @@ class Lobby: GameObject(
 
     private val config = ConfigurationComponent("lobby", true)
     internal var defaultCountdown: Int = 60
+    internal var disableJoinWarning: Boolean = false
 
     init {
         add(config)
@@ -139,7 +140,8 @@ class Lobby: GameObject(
                 this.block()
             })
 
-            add(GameWarningComponent(this))
+            if (!disableJoinWarning)
+                add(GameWarningComponent(this))
 
             add(LobbyComponent(this))
             add(LobbyScoreboardComponent(this))

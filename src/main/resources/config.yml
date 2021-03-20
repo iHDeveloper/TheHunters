@@ -1,4 +1,7 @@
 # Game Options
+lobby:
+  disable-join-warning: false
+
 countdown:
   lobby: 30
   restart: 60

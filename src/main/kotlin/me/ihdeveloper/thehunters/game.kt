@@ -107,6 +107,7 @@ class Game : GameInstance (name, components, children) {
         override fun afterInit() {
                 config.run {
                         lobby.defaultCountdown = getCountdownFromConfig("lobby")
+                        lobby.disableJoinWarning = config.read("lobby.disable-join-warning") ?: false
 
                         writeDefault("world-name", "the_hunters")
                         writeDefault("worlds.normal", "world")
