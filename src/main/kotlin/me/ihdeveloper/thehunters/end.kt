@@ -50,6 +50,7 @@ import me.ihdeveloper.thehunters.util.COLOR_YELLOW
 import me.ihdeveloper.thehunters.util.COUNTDOWN_RESTARTING
 
 class TheEnd (
+        private val restartCountdown: Int = 60,
         private val won: Boolean = false
 ) : GameObject(
         components = listOf(
@@ -67,7 +68,7 @@ class TheEnd (
 
     private val countdown = CountdownComponent(
             id = COUNTDOWN_RESTARTING,
-            defaultStart = 20 * 60,
+            defaultStart = 20 * restartCountdown,
             onFinish = {
 
                 val list = mutableListOf<GamePlayer>()

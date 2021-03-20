@@ -82,13 +82,13 @@ class Game : GameInstance (name, components, children) {
 
                 fun win() {
                         end()
-                        instance.theEnd = TheEnd(true)
+                        instance.theEnd = TheEnd(getCountdownFromConfig("restart"), true)
                         instance.add(instance.theEnd!!)
                 }
 
                 fun lost() {
                         end()
-                        instance.theEnd = TheEnd(false)
+                        instance.theEnd = TheEnd(getCountdownFromConfig("restart"), false)
                         instance.add(instance.theEnd!!)
                 }
 
@@ -98,6 +98,10 @@ class Game : GameInstance (name, components, children) {
 
                 fun lock() { loginManager.lock = true }
                 fun unlock() { loginManager.lock = false }
+
+                private fun getCountdownFromConfig(name: String): Int {
+                        return config.read<Int>("countdown.${name}") ?: 0
+                }
         }
 
         override fun afterInit() {

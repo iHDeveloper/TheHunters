@@ -1,3 +1,7 @@
+# Game Options
+countdown:
+  restart: 60
+
 # Copy World Options
 world-prefix: the_hunters
 
