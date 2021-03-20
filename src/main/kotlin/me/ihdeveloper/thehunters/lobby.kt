@@ -115,7 +115,11 @@ class Lobby: GameObject(
                     world = Game.worldNormal
                 })
             }  else
-                teleport(location)
+                teleport(location.apply {
+
+                    // FIX: doesn't teleport player to the copied world (aka safe world)
+                    world = Game.worldNormal
+                })
         }
 
         player.run {
