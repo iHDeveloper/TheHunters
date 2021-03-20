@@ -31,6 +31,7 @@ import me.ihdeveloper.thehunters.GamePlayer
 import me.ihdeveloper.thehunters.Gameplay
 import me.ihdeveloper.thehunters.component.AchievementComponent
 import me.ihdeveloper.thehunters.component.ChatComponent
+import me.ihdeveloper.thehunters.component.CountdownComponent
 import me.ihdeveloper.thehunters.component.TYPE_TITLE
 import me.ihdeveloper.thehunters.component.TYPE_VANISH
 import me.ihdeveloper.thehunters.component.TitleComponent
@@ -66,6 +67,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitTask
 import org.bukkit.scoreboard.Score
+import org.bukkit.scoreboard.Team
 
 const val TYPE_GAMEPLAY_TARGET: Short = 310
 const val TYPE_GAMEPLAY_TARGET_GET_READY: Short = 311
@@ -77,11 +79,14 @@ const val TYPE_GAMEPLAY_TARGET_DEATH: Short = 316
 
 class TargetComponent (
         override val gameObject: GamePlayer
-) : GameComponentOf<GamePlayer>(), Listener {
+) : GameComponentOf<GamePlayer>(), Listener, Runnable {
 
     override val type = TYPE_GAMEPLAY_TARGET
 
     var kills = 0
+    var surviveTime = 0
+
+    private var taskId: Int = -1
 
     override fun onInit(gameObject: GamePlayer) {
         gameObject.entity.run {
@@ -114,7 +119,19 @@ class TargetComponent (
     @EventHandler
     fun onKill(event: TargetKillEvent) = kills++
 
+    internal fun startSurviveTimer() {
+        taskId = Bukkit.getScheduler().runTaskTimer(plugin(), this, 0, 20).taskId
+    }
+
+    override fun run() {
+        surviveTime += 20
+        gameObject.get<TargetScoreboardComponent>(TYPE_GAMEPLAY_TARGET_SCOREBOARD).updateSurviveTime()
+    }
+
     override fun onDestroy(gameObject: GamePlayer) {
+        if (taskId != -1)
+            Bukkit.getScheduler().cancelTask(taskId)
+
         TargetKillEvent.getHandlerList().unregister(this)
 
         gameObject.entity.run {
@@ -203,6 +220,8 @@ class TargetGetReadyComponent (
             title("${COLOR_YELLOW}Time is up!")
             subtitle("${COLOR_RED}Be careful from the hunters!")
         }
+
+        gameObject.get<TargetComponent>(TYPE_GAMEPLAY_TARGET).startSurviveTimer()
     }
 
     private fun notify(seconds: Int) {
@@ -274,8 +293,12 @@ class TargetScoreboardComponent (
     private var huntersScore: Score? = null
     private var killsScore: Score? = null
 
+    private var surviveTimeTeam: Team? = null
+
     private var lastHuntersCount: Int = -1
     private var lastKillsCount: Int = -1
+
+    private var lastSurviveTime: Int = 0
 
     override fun onInit(gameObject: GamePlayer) {
         super.onInit(gameObject)
@@ -284,6 +307,7 @@ class TargetScoreboardComponent (
 
         updateHuntersCount()
         updateKillsCount()
+        updateSurviveTime()
 
         sidebar!!.getScore("$COLOR_BOLD$COLOR_YELLOW").score = 1
 
@@ -316,6 +340,32 @@ class TargetScoreboardComponent (
 
         killsScore = sidebar!!.getScore("${COLOR_YELLOW}Kills:$COLOR_WHITE $count")
         killsScore!!.score = 2
+    }
+
+    internal fun updateSurviveTime() {
+        val ticks = gameObject.get<TargetComponent>(TYPE_GAMEPLAY_TARGET).surviveTime
+
+        if (lastSurviveTime == ticks)
+            return
+
+        lastSurviveTime = ticks
+
+        if (surviveTimeTeam == null) {
+            surviveTimeTeam = scoreboard!!.getEntryTeam("@survive-time") ?: scoreboard!!.registerNewTeam("@survive-time")
+            surviveTimeTeam!!.addEntry("§0§1 ")
+
+            sidebar!!.getScore("§0§0 ").score = 1
+            sidebar!!.getScore("§0§1 ").score = 1
+
+            surviveTimeTeam!!.prefix = "§eSurvive Time:"
+        }
+
+        var seconds = ticks / 20
+        var minutes = seconds / 60
+        seconds %= 60
+        minutes %= 60
+
+        surviveTimeTeam!!.suffix = "§f${if (minutes <= 9) "0${minutes}" else minutes}§e:§f${if (seconds <= 9) "0${seconds}" else seconds}"
     }
 
     @EventHandler
