@@ -64,11 +64,12 @@ import org.bukkit.Location
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
-class Lobby : GameObject(
-        components = listOf(LobbyChatComponent())
+class Lobby: GameObject(
+        components = listOf(LobbyChatComponent()),
 ), Listener {
 
     private val config = ConfigurationComponent("lobby", true)
+    internal var defaultCountdown: Int = 60
 
     init {
         add(config)
@@ -78,7 +79,7 @@ class Lobby : GameObject(
 
     private val countdown = CountdownComponent(
             id = COUNTDOWN_LOBBY,
-            defaultStart = 20 * 30,
+            defaultStart = 20 * defaultCountdown,
             onFinish = {
                 Game.start()
             }
@@ -227,7 +228,7 @@ class Lobby : GameObject(
         }
     }
 
-    fun start(defaultStart: Int? = null) {
+    fun start(defaultStart: Int? = defaultCountdown) {
         if (defaultStart != null) {
             countdown.defaultStart = defaultStart
             countdown.reset()

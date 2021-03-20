@@ -1,5 +1,6 @@
 # Game Options
 countdown:
+  lobby: 30
   restart: 60
 
 # Copy World Options

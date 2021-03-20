@@ -106,6 +106,8 @@ class Game : GameInstance (name, components, children) {
 
         override fun afterInit() {
                 config.run {
+                        lobby.defaultCountdown = getCountdownFromConfig("lobby")
+
                         writeDefault("world-name", "the_hunters")
                         writeDefault("worlds.normal", "world")
                         writeDefault("worlds.nether", "world_nether")
